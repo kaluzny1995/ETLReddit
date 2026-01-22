@@ -1,0 +1,6 @@
+{
+  "batch_size": 10000,
+  "is_author_loaded": false,
+  "files_reddit_source_folder_pattern": "DownloadReddit/jsons/reddits/{phrase}",
+  "files_author_source_folder_pattern": "DownloadReddit/jsons/authors/{phrase}"
+}
