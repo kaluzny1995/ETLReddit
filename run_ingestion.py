@@ -14,11 +14,11 @@ logger = util.setup_logger(name="run_ingestion",
                            log_file=f"logs/run_ingestion/run_ingestion_{dt.datetime.now().isoformat()}.log")
 
 
-def _load_config() -> AppConfig:
+def get_config() -> AppConfig:
     return AppConfig.from_json()
 
 
-def _parse_args(defaults: AppConfig) -> argparse.Namespace:
+def parse_args(defaults: AppConfig) -> argparse.Namespace:
     parser = argparse.ArgumentParser(description="Reddits ETL Python 3.11 application.")
 
     parser.add_argument("phrase", type=str, help="phrase which contain reddits to do the ETL with")
@@ -40,8 +40,8 @@ def main():
     print("---- Reddits ETL app ----\n")
     logger.info("---- Reddits ETL app ----")
 
-    config = _load_config()
-    args = _parse_args(config)
+    config = get_config()
+    args = parse_args(config)
 
     phrase = args.phrase
     batch_size = args.batch_size
@@ -63,7 +63,7 @@ def main():
     print("Source file dates:", source_file_dates)
 
     supabase_postgres_reddit_provider = SupabasePostgresRedditProvider()
-    target_file_dates = supabase_postgres_reddit_provider.get_file_dates()
+    target_file_dates = supabase_postgres_reddit_provider.get_file_dates(phrase=phrase)
     print("Target file dates:", target_file_dates)
 
     missing_file_dates = sorted(list(set(source_file_dates) - set(target_file_dates)))
@@ -80,12 +80,11 @@ def main():
     logger.info(f"Reddits processed: {len(reddits)}")
     supabase_postgres_reddit_provider.insert_reddits(reddits, batch_size=batch_size)
 
-    supabase_postgres_comment_provider = SupabasePostgresCommentProvider()
-
     json_comment_provider = JsonCommentProvider(json_reddit_file_object_provider)
     comments = json_comment_provider.get_comments(missing_file_dates, phrase=phrase)
     print("Comments processed:", len(comments))
     logger.info(f"Comments processed: {len(comments)}")
+    supabase_postgres_comment_provider = SupabasePostgresCommentProvider()
     supabase_postgres_comment_provider.insert_comments(comments, batch_size=batch_size)
 
     if is_author_loaded:

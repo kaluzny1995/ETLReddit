@@ -8,8 +8,8 @@ class IRedditProvider(ABC):
     """ Reddits provider interface """
 
     @abstractmethod
-    def get_file_dates(self, which: str = "start") -> List[str]:
-        """ Returns the file dates of reddits """
+    def get_file_dates(self, phrase: str, which: str = "start") -> List[str]:
+        """ Returns the file dates of reddits of given phrase """
         pass
 
     @abstractmethod

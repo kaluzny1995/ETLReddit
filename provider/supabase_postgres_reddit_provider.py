@@ -23,13 +23,14 @@ class SupabasePostgresRedditProvider(IRedditProvider):
         if not sqlalchemy.inspect(self.db_engine).has_table(table_name="reddits", schema="reddit"):
             SQLModel.metadata.create_all(self.db_engine, tables=[Reddit.__table__])
 
-    def get_file_dates(self, which: EFileDateType = EFileDateType.START) -> List[str]:
-        """ Returns the file dates of reddits """
+    def get_file_dates(self, phrase: str, which: EFileDateType = EFileDateType.START) -> List[str]:
+        """ Returns the file dates of reddits of given phrase """
         self._create_if_not_exists()
 
         with Session(self.db_engine) as db_session:
             statement = select(Reddit.start_file_date) if which == EFileDateType.START else select(Reddit.end_file_date)
-            file_dates = db_session.exec(statement.distinct()).all()
+            statement = statement.where(Reddit.phrase == phrase).distinct()
+            file_dates = db_session.exec(statement).all()
         return list(file_dates)
 
     def insert_reddits(self, reddits: list[Reddit], batch_size: int = 100) -> None:
