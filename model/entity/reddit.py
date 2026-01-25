@@ -6,9 +6,9 @@ from sqlmodel import SQLModel, Field, Column, Integer, String, DateTime, Float, 
 
 class Reddit(SQLModel, table=True):
     reddit_id: str = Field(sa_column=Column("reddit_id", String, primary_key=True, nullable=False))
-    name: str = Field(sa_column=Column("name", String, nullable=False, unique=True))
-    permalink: str = Field(sa_column=Column("permalink", String, nullable=False, unique=True))
-    phrase: str = Field(sa_column=Column("phrase", String, nullable=False))
+    phrase: str = Field(sa_column=Column("phrase", String, primary_key=True, nullable=False))
+    name: str = Field(sa_column=Column("name", String, nullable=False))
+    permalink: str = Field(sa_column=Column("permalink", String, nullable=False))
     author: str | None = Field(sa_column=Column("author", String, nullable=True))
     title: str = Field(sa_column=Column("title", String, nullable=False))
     body: str | None = Field(sa_column=Column("body", String, nullable=True))

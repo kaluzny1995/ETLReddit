@@ -1,18 +1,18 @@
 import datetime as dt
 from typing import Dict, Any
 
-from sqlmodel import SQLModel, Field, Column, Integer, String, DateTime, Float, Boolean, ForeignKey
+from sqlmodel import SQLModel, Field, Column, Integer, String, DateTime, Float, Boolean, ForeignKeyConstraint
 
 from model import Reddit
 
 
 class Comment(SQLModel, table=True):
     comment_id: str = Field(sa_column=Column("comment_id", String, primary_key=True, nullable=False))
-    reddit_id: str = Field(sa_column=Column("reddit_id", String, ForeignKey(Reddit.reddit_id), nullable=False))
-    parent_comment_id: str | None = Field(sa_column=Column("parent_comment_id", String, foreign_key="comments.comment_id", nullable=True))
-    name: str = Field(sa_column=Column("name", String, nullable=False, unique=True))
-    permalink: str = Field(sa_column=Column("permalink", String, nullable=False, unique=True))
-    phrase: str = Field(sa_column=Column("phrase", String, nullable=False))
+    phrase: str = Field(sa_column=Column("phrase", String, primary_key=True, nullable=False))
+    reddit_id: str = Field(sa_column=Column("reddit_id", String, nullable=False))
+    parent_comment_id: str | None = Field(sa_column=Column("parent_comment_id", String, nullable=True))
+    name: str = Field(sa_column=Column("name", String, nullable=False))
+    permalink: str = Field(sa_column=Column("permalink", String, nullable=False))
     author: str | None = Field(sa_column=Column("author", String, nullable=True))
     body: str | None = Field(sa_column=Column("body", String, nullable=True))
     datetime_created: dt.datetime = Field(sa_column=Column("datetime_created", DateTime, nullable=False))
@@ -29,7 +29,10 @@ class Comment(SQLModel, table=True):
     end_file_date: str = Field(sa_column=Column("end_file_date", String, nullable=False))
 
     __tablename__ = "comments"
-    __table_args__ = {'schema': "reddit"}
+    __table_args__ = (
+        ForeignKeyConstraint(["reddit_id", "phrase"], [Reddit.reddit_id, Reddit.phrase]),
+        {'schema': "reddit"}
+    )
 
 
     class Config:

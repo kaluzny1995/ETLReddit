@@ -37,8 +37,12 @@ class JsonFileObjectProvider:
         json_files = list(filter(lambda f: f.split("_")[-2] in file_dates, self.get_file_names()))
         json_objects = list([])
         for json_file in json_files:
-            with open(os.path.join(self.source_folder, json_file), "r") as jf:
-                json_objects.append(json.load(jf))
+            try:
+                with open(os.path.join(self.source_folder, json_file), "r") as jf:
+                    json_objects.append(json.load(jf))
+            except json.decoder.JSONDecodeError:
+                json_objects.append([])
+                print(f"File '{os.path.join(self.source_folder, json_file)}' is not a valid JSON file.")
 
         return json_objects
 
