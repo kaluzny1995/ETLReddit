@@ -58,15 +58,18 @@ def main():
     json_reddit_file_object_provider = JsonFileObjectProvider(_get_source_folder_path(files_reddit_source_folder))
     json_author_file_object_provider = JsonFileObjectProvider(_get_source_folder_path(files_author_source_folder))
 
-    source_file_dates = list(map(lambda f: util.get_start_date_string_from_filename(f),
+    source_file_dates = sorted(map(lambda f: util.get_start_date_string_from_filename(f),
                                  json_reddit_file_object_provider.get_file_names()))
-    print("Source file dates:", source_file_dates)
+    print("Source file dates:\n", source_file_dates)
 
     supabase_postgres_reddit_provider = SupabasePostgresRedditProvider()
-    target_file_dates = supabase_postgres_reddit_provider.get_file_dates(phrase=phrase)
-    print("Target file dates:", target_file_dates)
+    target_file_dates = sorted(supabase_postgres_reddit_provider.get_file_dates(phrase=phrase))
+    print("Target file dates:\n", source_file_dates)
+    recent_target_file_date = None if len(target_file_dates) == 0 else target_file_dates[-1]
+    print("Recent target file date:", recent_target_file_date)
 
-    missing_file_dates = sorted(list(set(source_file_dates) - set(target_file_dates)))
+    missing_file_dates = source_file_dates if recent_target_file_date is None \
+        else list(filter(lambda fd: fd > recent_target_file_date, source_file_dates))
     if len(missing_file_dates) == 0:
         print("No new files available. Finishing.")
         logger.info(f"No new files available. Finishing.")
