@@ -64,9 +64,10 @@ def main():
 
     supabase_postgres_reddit_provider = SupabasePostgresRedditProvider()
     target_file_dates = sorted(supabase_postgres_reddit_provider.get_file_dates(phrase=phrase))
-    print("Target file dates:\n", source_file_dates)
+    print("Target file dates:\n", target_file_dates)
     recent_target_file_date = None if len(target_file_dates) == 0 else target_file_dates[-1]
     print("Recent target file date:", recent_target_file_date)
+    print()
 
     missing_file_dates = source_file_dates if recent_target_file_date is None \
         else list(filter(lambda fd: fd > recent_target_file_date, source_file_dates))
