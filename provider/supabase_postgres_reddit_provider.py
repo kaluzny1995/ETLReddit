@@ -33,11 +33,22 @@ class SupabasePostgresRedditProvider(IRedditProvider):
             file_dates = db_session.exec(statement).all()
         return list(file_dates)
 
+    def get_reddits(self, phrase: str, file_dates: List[str], which: EFileDateType = EFileDateType.START) -> List[Reddit]:
+        """ Returns the reddits of given phrase for given list of file dates """
+        self._create_if_not_exists()
+
+        with Session(self.db_engine) as db_session:
+            statement = select(Reddit).where(Reddit.phrase == phrase)
+            statement = statement.where(Reddit.start_file_date.in_(file_dates)) \
+                if which == EFileDateType.START else statement.where(Reddit.end_file_date.in_(file_dates))
+            reddits = db_session.exec(statement).all()
+        return list(reddits)
+
     def insert_reddits(self, reddits: list[Reddit], batch_size: int = 100) -> None:
         """ Inserts the reddits into database """
         self._create_if_not_exists()
 
-        reddit_chunks = util.chunk_list(reddits, batch_size)
+        reddit_chunks = util.chunk_list_equal_size(reddits, batch_size)
         with Session(self.db_engine) as db_session:
             num_inserted = 0
             print("Inserting reddits:")

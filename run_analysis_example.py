@@ -10,10 +10,10 @@ def main():
     clean_text = analysis_service.get_autocorrected_text(input_text)
     print("Cleaned text: ", clean_text)
 
-    nltk_sentiment = analysis_service.get_nltk_setiment(clean_text)
+    nltk_sentiment = analysis_service.get_nltk_sentiment(clean_text)
     print("NLTK sentiment: ", nltk_sentiment)
 
-    textblob_sentiment = analysis_service.get_textblob_setiment(clean_text)
+    textblob_sentiment = analysis_service.get_textblob_sentiment(clean_text)
     print("Textblob sentiment: ", textblob_sentiment)
 
     sentiment = Sentiment.from_ntlk_and_textblob(nltk_sentiment, textblob_sentiment)

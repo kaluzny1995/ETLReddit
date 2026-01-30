@@ -2,10 +2,10 @@ from pydantic import BaseModel
 
 
 class NLTKSentiment(BaseModel):
-    negative: float
-    neutral: float
-    positive: float
-    compound: float
+    negative: float = 0.
+    neutral: float = 0.
+    positive: float = 0.
+    compound: float = 0.
 
     class Config:
         frozen = True
@@ -13,8 +13,8 @@ class NLTKSentiment(BaseModel):
 
 class TextblobSentiment(BaseModel):
 
-    polarity: float
-    subjectivity: float
+    polarity: float = 0.
+    subjectivity: float = 0.
 
     class Config:
         frozen = True

@@ -1,7 +1,7 @@
 from abc import ABC, abstractmethod
 from typing import List
 
-from model import Reddit
+from model import EFileDateType, Reddit
 
 
 class IRedditProvider(ABC):
@@ -13,8 +13,13 @@ class IRedditProvider(ABC):
         pass
 
     @abstractmethod
-    def get_file_dates(self, phrase: str, which: str = "start") -> List[str]:
+    def get_file_dates(self, phrase: str, which: EFileDateType = EFileDateType.START) -> List[str]:
         """ Returns the file dates of reddits of given phrase """
+        pass
+
+    @abstractmethod
+    def get_reddits(self, phrase: str, file_dates: List[str], which: EFileDateType = EFileDateType.START) -> List[Reddit]:
+        """ Returns the reddits of given phrase for given list of file dates """
         pass
 
     @abstractmethod

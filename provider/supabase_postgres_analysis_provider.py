@@ -47,7 +47,7 @@ class SupabasePostgresAnalysisProvider(IAnalysisProvider):
         """ Inserts the analyses into database """
         self._create_if_not_exists()
 
-        analysis_chunks = util.chunk_list(analyses, batch_size)
+        analysis_chunks = util.chunk_list_equal_size(analyses, batch_size)
         with Session(self.db_engine) as db_session:
             num_inserted = 0
             print("Inserting analyses:")

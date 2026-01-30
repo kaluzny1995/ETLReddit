@@ -1,7 +1,7 @@
 from abc import ABC, abstractmethod
 from typing import List
 
-from model import Comment
+from model import EFileDateType, Comment
 
 
 class ICommentProvider(ABC):
@@ -10,6 +10,11 @@ class ICommentProvider(ABC):
     @abstractmethod
     def _create_if_not_exists(self) -> None:
         """ Creates 'comments' table if not exists """
+        pass
+
+    @abstractmethod
+    def get_comments(self, phrase: str, file_dates: List[str], which: EFileDateType = EFileDateType.START) -> List[Comment]:
+        """ Returns the comments of given phrase for given list of file dates """
         pass
 
     @abstractmethod

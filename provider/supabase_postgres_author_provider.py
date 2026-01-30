@@ -36,7 +36,7 @@ class SupabasePostgresAuthorProvider(IAuthorProvider):
         """ Inserts the authors into database """
         self._create_if_not_exists()
 
-        author_chunks = util.chunk_list(authors, batch_size)
+        author_chunks = util.chunk_list_equal_size(authors, batch_size)
         with Session(self.db_engine) as db_session:
             num_inserted = 0
             print("Inserting authors:")

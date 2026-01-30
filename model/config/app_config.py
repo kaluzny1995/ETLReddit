@@ -8,6 +8,8 @@ class AppConfig(BaseModel):
     is_author_loaded: bool
     files_reddit_source_folder_pattern: str
     files_author_source_folder_pattern: str
+    is_multiprocessing_used: bool
+    num_processes: int
 
     class Config:
         frozen = True
