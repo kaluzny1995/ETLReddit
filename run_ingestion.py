@@ -59,13 +59,13 @@ def main():
     json_author_file_object_provider = JsonFileObjectProvider(get_source_folder_path(files_author_source_folder))
 
     # load source file dates
-    source_file_dates = list(map(util.get_start_date_string_from_filename,
-                                 json_reddit_file_object_provider.get_file_names()))
+    source_file_dates = sorted(map(util.get_start_date_string_from_filename,
+                                   json_reddit_file_object_provider.get_file_names()))
     print("Source file dates:\n", source_file_dates)
 
     # load target files dates
     supabase_postgres_reddit_provider = SupabasePostgresRedditProvider()
-    target_file_dates = supabase_postgres_reddit_provider.get_file_dates(phrase=phrase)
+    target_file_dates = sorted(supabase_postgres_reddit_provider.get_file_dates(phrase=phrase))
     print("Target file dates:\n", target_file_dates)
     recent_target_file_date = None if len(target_file_dates) == 0 else target_file_dates[-1]
     print("Recent target file date:", recent_target_file_date)

@@ -16,7 +16,10 @@ class JsonFileObjectProvider:
 
     def get_file_names(self, file_dates: List[str] = None) -> List[str]:
         """ Returns the names of the JSON files """
-        file_names = os.listdir(self.source_folder)
+        try:
+            file_names = os.listdir(self.source_folder)
+        except FileNotFoundError:
+            raise JsonFileNotFoundError(f"JSON folder not found. Folder: {self.source_folder}")
         if file_dates is not None:
             file_names = list(filter(lambda file_name: get_start_date_string_from_filename(file_name) in file_dates, file_names))
         if len(file_names) == 0:

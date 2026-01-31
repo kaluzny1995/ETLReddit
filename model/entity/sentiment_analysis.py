@@ -6,7 +6,7 @@ from sqlmodel import SQLModel, Field, Column, String, DateTime, Integer, Float, 
 from model import Reddit, Comment, Sentiment
 
 
-class Analysis(SQLModel, table=True):
+class SentimentAnalysis(SQLModel, table=True):
     reddit_id: str | None = Field(sa_column=Column("reddit_id", String, primary_key=True, nullable=False))
     comment_id: str | None = Field(sa_column=Column("comment_id", String, primary_key=True, nullable=False))
     phrase: str = Field(sa_column=Column("phrase", String, primary_key=True, nullable=False))
@@ -16,7 +16,7 @@ class Analysis(SQLModel, table=True):
     score: int = Field(sa_column=Column("score", Integer, nullable=False))
     upvote_ratio: float = Field(sa_column=Column("upvote_ratio", Float, nullable=False))
     gilded: bool = Field(sa_column=Column("gilded", Boolean, nullable=False))
-    number_of_comments: int | None = Field(sa_column=Column("number_of_comments", Integer, nullable=True))
+    number_of_comments: int = Field(sa_column=Column("number_of_comments", Integer, nullable=False))
     controversiality: bool = Field(sa_column=Column("controversiality", Boolean, nullable=False))
     s_neg: float = Field(sa_column=Column("s_neg", Float, nullable=False))
     s_neu: float = Field(sa_column=Column("s_neu", Float, nullable=False))
@@ -26,7 +26,7 @@ class Analysis(SQLModel, table=True):
     s_sub: float = Field(sa_column=Column("s_sub", Float, nullable=False))
     file_date: str = Field(sa_column=Column("file_date", String, nullable=False))
 
-    __tablename__ = "analyses"
+    __tablename__ = "sentiment_analyses"
     __table_args__ = (
         UniqueConstraint("reddit_id", "comment_id", "phrase", name="unique_reddit_comment_phrase"),
         CheckConstraint("reddit_id is not null or comment_id is not null", name="reddit_or_comment_not_null"),
@@ -59,8 +59,8 @@ class Analysis(SQLModel, table=True):
         }
 
     @staticmethod
-    def from_reddit(reddit: Reddit, text: str, sentiment: Sentiment) -> 'Analysis':
-        return Analysis(
+    def from_reddit(reddit: Reddit, text: str, sentiment: Sentiment) -> 'SentimentAnalysis':
+        return SentimentAnalysis(
             reddit_id=reddit.reddit_id,
             comment_id="N/A",
             phrase=reddit.phrase,
@@ -82,8 +82,8 @@ class Analysis(SQLModel, table=True):
         )
 
     @staticmethod
-    def from_comment(comment: Comment, text: str, sentiment: Sentiment) -> 'Analysis':
-        return Analysis(
+    def from_comment(comment: Comment, text: str, sentiment: Sentiment) -> 'SentimentAnalysis':
+        return SentimentAnalysis(
             reddit_id="N/A",
             comment_id=comment.comment_id,
             phrase=comment.phrase,
@@ -93,7 +93,7 @@ class Analysis(SQLModel, table=True):
             score=comment.score,
             upvote_ratio=comment.upvote_ratio,
             gilded=comment.gilded,
-            number_of_comments=None,
+            number_of_comments=comment.number_of_replies,
             controversiality=comment.controversiality,
             s_neg=sentiment.negative,
             s_neu=sentiment.neutral,

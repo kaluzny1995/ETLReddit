@@ -8,4 +8,4 @@ from model.enum.e_file_date_type import EFileDateType
 from model.entity.author import Author
 from model.entity.reddit import Reddit
 from model.entity.comment import Comment
-from model.entity.analysis import Analysis
+from model.entity.sentiment_analysis import SentimentAnalysis

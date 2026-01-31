@@ -19,7 +19,7 @@ class SupabasePostgresAuthorProvider(IAuthorProvider):
         self.db_engine = db_engine or create_engine(self.connection_string)
 
     def _create_if_not_exists(self) -> None:
-        """ Creates 'authors' database if not exists """
+        """ Creates 'authors' table if not exists """
         if not sqlalchemy.inspect(self.db_engine).has_table(table_name="authors", schema="reddit"):
             SQLModel.metadata.create_all(self.db_engine, tables=[Author.__table__])
 

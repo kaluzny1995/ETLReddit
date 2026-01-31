@@ -1,5 +1,5 @@
 import datetime as dt
-from typing import Dict, Any
+from typing import Dict, Any, List
 
 from sqlmodel import SQLModel, Field, Column, Integer, String, DateTime, Float, Boolean, ForeignKeyConstraint
 
@@ -25,6 +25,7 @@ class Comment(SQLModel, table=True):
     score: int = Field(sa_column=Column("score", Integer, nullable=False))
     upvote_ratio: float = Field(sa_column=Column("upvote_ratio", Float, nullable=False))
     gilded: bool = Field(sa_column=Column("gilded", Boolean, nullable=False))
+    number_of_replies: int = Field(sa_column=Column("number_of_replies", Integer, nullable=False))
     start_file_date: str = Field(sa_column=Column("start_file_date", String, nullable=False))
     end_file_date: str = Field(sa_column=Column("end_file_date", String, nullable=False))
 
@@ -56,10 +57,18 @@ class Comment(SQLModel, table=True):
                 "score": 1983,
                 "upvote_ratio": 1.0,
                 "gilded": False,
+                "number_of_replies": 27,
                 "start_file_date": "2026-01-01T00:00:00",
                 "start_end_date": "2027-01-01T00:00:00"
             }
         }
+
+    @staticmethod
+    def _get_number_of_replies(json_replies: List[Dict[str, Any]]) -> int:
+        num_replies = len(json_replies)
+        for json_reply in json_replies:
+            num_replies += Comment._get_number_of_replies(json_reply['replies'])
+        return num_replies
 
     @staticmethod
     def from_raw_json(json_object: Dict[str, Any], reddit_id: str, phrase: str,
@@ -83,6 +92,7 @@ class Comment(SQLModel, table=True):
             score=json_object['score'],
             upvote_ratio=json_object['upvote_ratio'],
             gilded=bool(json_object['gilded']),
+            number_of_replies = Comment._get_number_of_replies(json_object['replies']),
             start_file_date=start_file_date,
             end_file_date=end_file_date
         )

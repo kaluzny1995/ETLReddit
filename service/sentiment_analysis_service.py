@@ -8,12 +8,12 @@ from tqdm import tqdm
 
 import error
 import util
-from model import NLTKSentiment, TextblobSentiment, Sentiment, Reddit, Comment, Analysis
-from service import IAnalysisService
+from model import NLTKSentiment, TextblobSentiment, Sentiment, Reddit, Comment, SentimentAnalysis
+from service import ISentimentAnalysisService
 
 
-class AnalysisService(IAnalysisService):
-    """ Analysis service class """
+class SentimentAnalysisService(ISentimentAnalysisService):
+    """ SentimentAnalysis service class """
     speller: Speller
     nltk_sentiment_analyzer: SentimentIntensityAnalyzer
 
@@ -46,8 +46,8 @@ class AnalysisService(IAnalysisService):
             sentiments = TextBlob(text).sentiment
             return TextblobSentiment(polarity=sentiments.polarity, subjectivity=sentiments.subjectivity)
 
-    def _process_entry(self, entry: Reddit | Comment) -> Analysis:
-        """ Process single reddit or comment entry and return an analysis """
+    def _process_entry(self, entry: Reddit | Comment) -> SentimentAnalysis:
+        """ Process single reddit or comment entry and return sentiment analysis """
         if type(entry) not in [Reddit, Comment]:
             raise error.WrongEntityError(f"The provided entity for ETL has improper type: {type(entry)}.")
 
@@ -61,32 +61,32 @@ class AnalysisService(IAnalysisService):
         sentiment = Sentiment.from_ntlk_and_textblob(nltk_sentiment, textblob_sentiment)
 
         if isinstance(entry, Reddit):
-            return Analysis.from_reddit(entry, autocorrected_text, sentiment)
+            return SentimentAnalysis.from_reddit(entry, autocorrected_text, sentiment)
         else:
-            return Analysis.from_comment(entry, autocorrected_text, sentiment)
+            return SentimentAnalysis.from_comment(entry, autocorrected_text, sentiment)
 
     def _multiprocess_entries(self, entries: List[Reddit | Comment], num: int, queue: multiprocessing.Queue) -> None:
         """ Partially processes reddit and comment entries (utilizes multiprocessing) """
         print(f"P{num + 1}: Starting processing reddit and comment entries.")
 
-        processed_analyses = list([])
+        processed_sentiment_analyses = list([])
         for i, entry in enumerate(entries):
-            analysis = self._process_entry(entry)
-            processed_analyses.append(analysis)
+            sentiment_analysis = self._process_entry(entry)
+            processed_sentiment_analyses.append(sentiment_analysis)
 
-            if len(processed_analyses) % 100 == 0 and len(processed_analyses) > 0:
-                print(f"P{num + 1}: Processed {len(processed_analyses)} out of {len(entries)} entries.")
+            if len(processed_sentiment_analyses) % 100 == 0 and len(processed_sentiment_analyses) > 0:
+                print(f"P{num + 1}: Processed {len(processed_sentiment_analyses)} out of {len(entries)} entries.")
 
-        print(f"P{num + 1}: Finished processing entries. Processed: {len(processed_analyses)}.")
+        print(f"P{num + 1}: Finished processing entries. Processed: {len(processed_sentiment_analyses)}.")
 
-        queue.put((processed_analyses, num))
+        queue.put((processed_sentiment_analyses, num))
 
-    def run_etl(self, entries: List[Reddit | Comment]) -> List[Analysis]:
-        """ Returns a list of analysis objects according to the provided reddits and comments """
+    def run_etl(self, entries: List[Reddit | Comment]) -> List[SentimentAnalysis]:
+        """ Returns a list of sentiment analysis objects according to the provided reddits and comments """
 
         print("Processing reddits and comments:")
 
-        analyses = list([])
+        sentiment_analyses = list([])
         if self.is_multiprocessing_used and len(entries) > self.num_processes ** 2:
             queue = multiprocessing.Queue()
             for i, entries_chunk in enumerate(util.chunk_list_n_elements(entries, self.num_processes)):
@@ -95,11 +95,11 @@ class AnalysisService(IAnalysisService):
 
             for i in range(self.num_processes):
                 results, num = queue.get()
-                analyses.extend(results)
+                sentiment_analyses.extend(results)
         else:
             for entry in tqdm(entries):
-                analyses.append(self._process_entry(entry))
+                sentiment_analyses.append(self._process_entry(entry))
 
         print("Processing finished.")
 
-        return analyses
+        return sentiment_analyses

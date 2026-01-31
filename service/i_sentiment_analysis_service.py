@@ -4,8 +4,8 @@ from model import NLTKSentiment, TextblobSentiment
 from service import IETLService
 
 
-class IAnalysisService(IETLService):
-    """ Analysis service interface """
+class ISentimentAnalysisService(IETLService):
+    """ SentimentAnalysis service interface """
 
     @abstractmethod
     def get_autocorrected_text(self, text: str | None) -> str | None:

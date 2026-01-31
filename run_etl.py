@@ -4,8 +4,8 @@ import datetime as dt
 import util
 import error
 from model import AppConfig
-from provider import SupabasePostgresRedditProvider, SupabasePostgresCommentProvider, SupabasePostgresAnalysisProvider
-from service import AnalysisService
+from provider import SupabasePostgresRedditProvider, SupabasePostgresCommentProvider, SupabasePostgresSentimentAnalysisProvider
+from service import SentimentAnalysisService
 
 logger = util.setup_logger(name="run_etl",
                            log_file=f"logs/run_etl/run_etl_{dt.datetime.now().isoformat()}.log")
@@ -51,12 +51,12 @@ def main():
 
     # load source file dates
     supabase_postgres_reddit_provider = SupabasePostgresRedditProvider()
-    source_file_dates = supabase_postgres_reddit_provider.get_file_dates(phrase=phrase)
+    source_file_dates = sorted(supabase_postgres_reddit_provider.get_file_dates(phrase=phrase))
     print("Source file dates:\n", source_file_dates)
 
     # load target files dates
-    supabase_postgres_analysis_provider = SupabasePostgresAnalysisProvider()
-    target_file_dates = supabase_postgres_analysis_provider.get_file_dates(phrase=phrase)
+    supabase_postgres_sentiment_analysis_provider = SupabasePostgresSentimentAnalysisProvider()
+    target_file_dates = sorted(supabase_postgres_sentiment_analysis_provider.get_file_dates(phrase=phrase))
     print("Target file dates:\n", target_file_dates)
     recent_target_file_date = None if len(target_file_dates) == 0 else target_file_dates[-1]
     print("Recent target file date:", recent_target_file_date)
@@ -68,7 +68,7 @@ def main():
     if len(missing_file_dates) == 0:
         print("No new files available. Finishing.")
         logger.info(f"No new files available. Finishing.")
-        raise error.NoNewFileError("No new files available for ETL.")
+        raise error.NoNewDataError("No new files available for ETL.")
     print(f"\nLoading data for the following dates:\n{missing_file_dates}\n")
     logger.info(f"Loading data for the following dates: {missing_file_dates}")
 
@@ -81,13 +81,13 @@ def main():
     # process reddit and comment entries
     print("Reddit and comment entries loaded:", len(entries))
     logger.info(f"Reddit and comment entries loaded: {len(entries)}")
-    analysis_service = AnalysisService(is_multiprocessing_used=is_multiprocessing_used, num_processes=num_processes)
-    analyses = analysis_service.run_etl(entries)
-    print(f"Analyses processed: {len(analyses)}.\n")
-    logger.info(f"Analyses processed: {len(analyses)}.")
+    sentiment_analysis_service = SentimentAnalysisService(is_multiprocessing_used=is_multiprocessing_used, num_processes=num_processes)
+    sentiment_analyses = sentiment_analysis_service.run_etl(entries)
+    print(f"Sentiment analyses processed: {len(sentiment_analyses)}.\n")
+    logger.info(f"Sentiment analyses processed: {len(sentiment_analyses)}.")
 
-    # insert analyses
-    supabase_postgres_analysis_provider.insert_analyses(analyses, batch_size=batch_size)
+    # insert sentiment analyses
+    supabase_postgres_sentiment_analysis_provider.insert_sentiment_analyses(sentiment_analyses, batch_size=batch_size)
 
     print("\nDone.")
     logger.info("Done.")

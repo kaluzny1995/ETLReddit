@@ -1,3 +1,3 @@
 from service.i_etl_service import IETLService
-from service.i_analysis_service import IAnalysisService
-from service.analysis_service import AnalysisService
+from service.i_sentiment_analysis_service import ISentimentAnalysisService
+from service.sentiment_analysis_service import SentimentAnalysisService
