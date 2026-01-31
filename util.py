@@ -29,9 +29,17 @@ def get_end_date_string_from_filename(filename: str) -> str:
     return filename.split("_")[-1].split(".")[0]
 
 
-def chunk_list(objects: List[Any], batch_size: int) -> List[List[Any]]:
-    """ Returns a list of objects divided into chunks of size batch_size """
+def chunk_list_equal_size(objects: List[Any], batch_size: int) -> List[List[Any]]:
+    """ Returns a list of objects divided into chunks of size 'batch_size' """
     result = list([])
     for i in range(0, len(objects), batch_size):
         result.append(objects[i:i + batch_size])
+    return result
+
+
+def chunk_list_n_elements(elements: List[Any], number: int) -> List[List[Any]]:
+    """ Returns a list of objects divided into 'number' chunks """
+    result = list([])
+    for i in range(0, number):
+        result.append(elements[i::number])
     return result
