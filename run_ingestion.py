@@ -61,7 +61,7 @@ def main():
     # load source file dates
     source_file_dates = list(map(util.get_start_date_string_from_filename,
                                  json_reddit_file_object_provider.get_file_names()))
-    print("Source file dates:", source_file_dates)
+    print("Source file dates:\n", source_file_dates)
 
     # load target files dates
     supabase_postgres_reddit_provider = SupabasePostgresRedditProvider()
@@ -88,7 +88,6 @@ def main():
     logger.info(f"Reddits processed: {len(reddits)}")
     supabase_postgres_reddit_provider.insert_reddits(reddits, batch_size=batch_size)
 
-    # insert comments
     json_comment_provider = JsonCommentProvider(json_reddit_file_object_provider)
     comments = json_comment_provider.get_comments(missing_file_dates, phrase=phrase)
     print("Comments processed:", len(comments))
@@ -96,7 +95,6 @@ def main():
     supabase_postgres_comment_provider = SupabasePostgresCommentProvider()
     supabase_postgres_comment_provider.insert_comments(comments, batch_size=batch_size)
 
-    # insert authors if applicable
     if is_author_loaded:
         supabase_postgres_author_provider = SupabasePostgresAuthorProvider()
         existing_names = supabase_postgres_author_provider.get_names()

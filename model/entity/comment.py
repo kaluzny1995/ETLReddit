@@ -72,7 +72,7 @@ class Comment(SQLModel, table=True):
             permalink=json_object['permalink'],
             phrase=phrase,
             author=json_object['author'] if json_object['author'] != "[deleted]" else None,
-            body=json_object['body'] if json_object['body'] != "" else None,
+            body=json_object['body'] if json_object['body'] not in ["", "[deleted]", "[removed]"] else None,
             datetime_created=dt.datetime.fromtimestamp(json_object['created']),
             datetime_created_utc=dt.datetime.fromtimestamp(json_object['created_utc']),
             depth_level=json_object['depth_level'],
