@@ -1,4 +1,5 @@
 import sqlalchemy
+import logging
 from sqlmodel import create_engine, Session, select, SQLModel
 from typing import List
 
@@ -12,11 +13,16 @@ class SupabasePostgresAuthorProvider(IAuthorProvider):
 
     connection_string: str
     db_engine: sqlalchemy.engine.Engine
+    logger: logging.Logger
 
-    def __init__(self, connection_string: str | None = None, db_engine: sqlalchemy.engine.Engine | None = None):
+    def __init__(self, connection_string: str | None = None,
+                 db_engine: sqlalchemy.engine.Engine | None = None,
+                 logger: logging.Logger | None = None):
         super(SupabasePostgresAuthorProvider, self).__init__()
         self.connection_string = connection_string or SupabaseConnectionConfig.get_db_connection_string()
         self.db_engine = db_engine or create_engine(self.connection_string)
+        self.logger = logger or util.setup_logger(name="sp_author_provider",
+                                                  log_file=f"logs/other/sp_author_provider.log")
 
     def _create_if_not_exists(self) -> None:
         """ Creates 'authors' table if not exists """
@@ -40,9 +46,12 @@ class SupabasePostgresAuthorProvider(IAuthorProvider):
         with Session(self.db_engine) as db_session:
             num_inserted = 0
             print("Inserting authors:")
+            self.logger.info("Inserting authors:")
             for chunk in author_chunks:
                 db_session.add_all(chunk)
                 db_session.commit()
                 num_inserted += len(chunk)
                 print(f"{num_inserted} out of {len(authors)}")
+                self.logger.info(f"{num_inserted} out of {len(authors)}")
             print("Authors inserted.")
+            self.logger.info("Authors inserted.")

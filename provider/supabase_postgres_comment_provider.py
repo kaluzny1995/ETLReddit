@@ -1,4 +1,5 @@
 import sqlalchemy
+import logging
 from sqlmodel import create_engine, Session, select, SQLModel
 from typing import List
 
@@ -12,11 +13,16 @@ class SupabasePostgresCommentProvider(ICommentProvider):
 
     connection_string: str
     db_engine: sqlalchemy.engine.Engine
+    logger: logging.Logger
 
-    def __init__(self, connection_string: str | None = None, db_engine: sqlalchemy.engine.Engine | None = None):
+    def __init__(self, connection_string: str | None = None,
+                 db_engine: sqlalchemy.engine.Engine | None = None,
+                 logger: logging.Logger = None):
         super(SupabasePostgresCommentProvider, self).__init__()
         self.connection_string = connection_string or SupabaseConnectionConfig.get_db_connection_string()
         self.db_engine = db_engine or create_engine(self.connection_string)
+        self.logger = logger or util.setup_logger(name="sp_comment_provider",
+                                                  log_file=f"logs/other/sp_comment_provider.log")
 
     def _create_if_not_exists(self) -> None:
         """ Creates 'comments' table if not exists """
@@ -42,10 +48,12 @@ class SupabasePostgresCommentProvider(ICommentProvider):
         with Session(self.db_engine) as db_session:
             num_inserted = 0
             print("Inserting comments:")
+            self.logger.info("Inserting comments:")
             for chunk in comment_chunks:
                 db_session.add_all(chunk)
                 db_session.commit()
                 num_inserted += len(chunk)
                 print(f"{num_inserted} out of {len(comments)}")
+                self.logger.info(f"{num_inserted} out of {len(comments)}")
             print("Comments inserted.")
-
+            self.logger.info("Comments inserted.")

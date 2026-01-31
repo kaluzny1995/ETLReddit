@@ -1,5 +1,6 @@
 import nltk
 import multiprocessing
+import logging
 from nltk.sentiment.vader import SentimentIntensityAnalyzer
 from textblob import TextBlob
 from autocorrect import Speller
@@ -16,14 +17,18 @@ class SentimentAnalysisService(ISentimentAnalysisService):
     """ SentimentAnalysis service class """
     speller: Speller
     nltk_sentiment_analyzer: SentimentIntensityAnalyzer
+    logger: logging.Logger
 
-    def __init__(self, is_multiprocessing_used: bool = False, num_processes: int = 8) -> None:
+    def __init__(self, is_multiprocessing_used: bool = False, num_processes: int = 8,
+                 logger: logging.Logger | None = None) -> None:
         nltk.download("vader_lexicon")
 
         self.speller = Speller()
         self.nltk_sentiment_analyzer = SentimentIntensityAnalyzer()
         self.is_multiprocessing_used = is_multiprocessing_used
         self.num_processes = num_processes
+        self.logger = logger or util.setup_logger(name="sentiment_analysis_service",
+                                                  log_file=f"logs/other/sentiment_analysis_service.log")
 
     def get_autocorrected_text(self, text: str | None) -> str | None:
         """ Returns the autocorrected text """
@@ -49,6 +54,7 @@ class SentimentAnalysisService(ISentimentAnalysisService):
     def _process_entry(self, entry: Reddit | Comment) -> SentimentAnalysis:
         """ Process single reddit or comment entry and return sentiment analysis """
         if type(entry) not in [Reddit, Comment]:
+            self.logger.error(f"The provided entity for ETL has improper type: {type(entry)}.")
             raise error.WrongEntityError(f"The provided entity for ETL has improper type: {type(entry)}.")
 
         if isinstance(entry, Reddit):
@@ -68,6 +74,7 @@ class SentimentAnalysisService(ISentimentAnalysisService):
     def _multiprocess_entries(self, entries: List[Reddit | Comment], num: int, queue: multiprocessing.Queue) -> None:
         """ Partially processes reddit and comment entries (utilizes multiprocessing) """
         print(f"P{num + 1}: Starting processing reddit and comment entries.")
+        self.logger.info(f"P{num + 1}: Starting processing reddit and comment entries.")
 
         processed_sentiment_analyses = list([])
         for i, entry in enumerate(entries):
@@ -76,8 +83,10 @@ class SentimentAnalysisService(ISentimentAnalysisService):
 
             if len(processed_sentiment_analyses) % 100 == 0 and len(processed_sentiment_analyses) > 0:
                 print(f"P{num + 1}: Processed {len(processed_sentiment_analyses)} out of {len(entries)} entries.")
+                self.logger.info(f"P{num + 1}: Processed {len(processed_sentiment_analyses)} out of {len(entries)} entries.")
 
         print(f"P{num + 1}: Finished processing entries. Processed: {len(processed_sentiment_analyses)}.")
+        self.logger.info(f"P{num + 1}: Finished processing entries. Processed: {len(processed_sentiment_analyses)}.")
 
         queue.put((processed_sentiment_analyses, num))
 
@@ -85,6 +94,7 @@ class SentimentAnalysisService(ISentimentAnalysisService):
         """ Returns a list of sentiment analysis objects according to the provided reddits and comments """
 
         print("Processing reddits and comments:")
+        self.logger.info("Processing reddits and comments.")
 
         sentiment_analyses = list([])
         if self.is_multiprocessing_used and len(entries) > self.num_processes ** 2:
@@ -101,5 +111,6 @@ class SentimentAnalysisService(ISentimentAnalysisService):
                 sentiment_analyses.append(self._process_entry(entry))
 
         print("Processing finished.")
+        self.logger.info("Processing finished.")
 
         return sentiment_analyses
