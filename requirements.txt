@@ -1,0 +1,9 @@
+conda-forge::supabase=2.25.0
+conda-forge::gotrue=2.12.4
+conda-forge::sqlmodel==0.0.27
+anaconda::psycopg2==2.9.3
+conda-forge::tqdm==4.67.1
+conda-forge::autocorrect==2.6.1
+anaconda::nltk==3.9.1
+anaconda::textblob==0.18.0.post0
+conda-forge::pytest
