@@ -64,6 +64,6 @@ class SupabasePostgresRedditProvider(IRedditProvider):
                 db_session.commit()
                 num_inserted += len(chunk)
                 print(f"{num_inserted} out of {len(reddits)}")
-                self.looger.info(f"{num_inserted} out of {len(reddits)}")
+                self.logger.info(f"{num_inserted} out of {len(reddits)}")
             print("Reddits inserted.")
             self.logger.info("Reddits inserted.")
