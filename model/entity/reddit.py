@@ -1,7 +1,7 @@
 import datetime as dt
 from typing import Dict, Any
 
-from sqlmodel import SQLModel, Field, Column, Integer, String, DateTime, Float, Boolean
+from sqlmodel import SQLModel, Field, Column, Integer, String, DateTime, Float
 
 
 class Reddit(SQLModel, table=True):
@@ -19,7 +19,7 @@ class Reddit(SQLModel, table=True):
     downs: int = Field(sa_column=Column("downs", Integer, nullable=False))
     score: int = Field(sa_column=Column("score", Integer, nullable=False))
     upvote_ratio: float = Field(sa_column=Column("upvote_ratio", Float, nullable=False))
-    gilded: bool = Field(sa_column=Column("gilded", Boolean, nullable=False))
+    gilded_number: int = Field(sa_column=Column("gilded_number", Integer, nullable=False))
     number_of_comments: int = Field(sa_column=Column("number_of_comments", Integer, nullable=False))
     start_file_date: str = Field(sa_column=Column("start_file_date", String, nullable=False))
     end_file_date: str = Field(sa_column=Column("end_file_date", String, nullable=False))
@@ -45,7 +45,7 @@ class Reddit(SQLModel, table=True):
                 "downs": 0,
                 "score": 23885,
                 "upvote_ratio": 0.98,
-                "gilded": False,
+                "gilded_number": 1,
                 "number_of_comments": 209,
                 "start_file_date": "2026-01-01T00:00:00",
                 "start_end_date": "2027-01-01T00:00:00"
@@ -70,7 +70,7 @@ class Reddit(SQLModel, table=True):
             downs=json_object['downs'],
             score=json_object['score'],
             upvote_ratio=json_object['upvote_ratio'],
-            gilded=bool(json_object['gilded']),
+            gilded_number=json_object['gilded'],
             number_of_comments=json_object['num_comments'],
             start_file_date=start_file_date,
             end_file_date=end_file_date

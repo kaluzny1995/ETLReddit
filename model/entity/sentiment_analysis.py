@@ -15,7 +15,7 @@ class SentimentAnalysis(SQLModel, table=True):
     datetime_created: dt.datetime = Field(sa_column=Column("datetime_created", DateTime, nullable=False))
     score: int = Field(sa_column=Column("score", Integer, nullable=False))
     upvote_ratio: float = Field(sa_column=Column("upvote_ratio", Float, nullable=False))
-    gilded: bool = Field(sa_column=Column("gilded", Boolean, nullable=False))
+    gilded_number: int = Field(sa_column=Column("gilded_number", Integer, nullable=False))
     number_of_comments: int = Field(sa_column=Column("number_of_comments", Integer, nullable=False))
     controversiality: bool = Field(sa_column=Column("controversiality", Boolean, nullable=False))
     s_neg: float = Field(sa_column=Column("s_neg", Float, nullable=False))
@@ -45,7 +45,7 @@ class SentimentAnalysis(SQLModel, table=True):
                 "datetime_created": dt.datetime(2026, 1, 19, 17, 12 , 56),
                 "score": 23885,
                 "upvote_ratio": 0.98,
-                "gilded": False,
+                "gilded_number": 1,
                 "number_of_comments": 209,
                 "controversiality": False,
                 "s_neg": 0.,
@@ -69,7 +69,7 @@ class SentimentAnalysis(SQLModel, table=True):
             datetime_created=reddit.datetime_created_utc,
             score=reddit.score,
             upvote_ratio=reddit.upvote_ratio,
-            gilded=reddit.gilded,
+            gilded_number=reddit.gilded_number,
             number_of_comments=reddit.number_of_comments,
             controversiality=False,
             s_neg=sentiment.negative,
@@ -92,7 +92,7 @@ class SentimentAnalysis(SQLModel, table=True):
             datetime_created=comment.datetime_created_utc,
             score=comment.score,
             upvote_ratio=comment.upvote_ratio,
-            gilded=comment.gilded,
+            gilded_number=comment.gilded_number,
             number_of_comments=comment.number_of_replies,
             controversiality=comment.controversiality,
             s_neg=sentiment.negative,
