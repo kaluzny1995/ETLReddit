@@ -1,16 +1,17 @@
 from typing import List, Dict, Any
 
 from model import Comment
-from provider import JsonFileObjectProvider
+from provider import IJsonFileObjectProvider, IFileCommentProvider
 
 import util
 
 
-class JsonCommentProvider:
+class JsonCommentProvider(IFileCommentProvider):
     """ Provides comments data based on JSON objects """
-    json_file_object_provider: JsonFileObjectProvider
 
-    def __init__(self, json_file_object_provider: JsonFileObjectProvider):
+    json_file_object_provider: IJsonFileObjectProvider
+
+    def __init__(self, json_file_object_provider: IJsonFileObjectProvider):
         self.json_file_object_provider = json_file_object_provider
 
     def _get_comment_replies(self, comments_json: List[Dict[str, Any]], reddit_id: str, phrase: str,

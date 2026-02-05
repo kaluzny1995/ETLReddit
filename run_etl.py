@@ -4,7 +4,8 @@ import datetime as dt
 import util
 import error
 from model import AppConfig
-from provider import SupabasePostgresRedditProvider, SupabasePostgresCommentProvider, SupabasePostgresSentimentAnalysisProvider
+from provider import SupabasePostgresProvider, \
+    SupabasePostgresDbRedditProvider, SupabasePostgresDbCommentProvider, SupabasePostgresDbSentimentAnalysisProvider
 from service import SentimentAnalysisService
 
 logger = util.setup_logger(name="run_etl",
@@ -57,13 +58,13 @@ def run_sentiment_analysis(args: argparse.Namespace) -> None:
     logger.info(f"Number of processes: {num_processes}")
 
     # load source file dates
-    supabase_postgres_reddit_provider = SupabasePostgresRedditProvider(logger=logger)
+    supabase_postgres_reddit_provider = SupabasePostgresDbRedditProvider(SupabasePostgresProvider(logger=logger))
     source_file_dates = sorted(supabase_postgres_reddit_provider.get_file_dates(phrase=phrase))
     print("Source file dates:\n", source_file_dates)
     logger.info(f"Source file dates: {source_file_dates}")
 
     # load target files dates
-    supabase_postgres_sentiment_analysis_provider = SupabasePostgresSentimentAnalysisProvider(logger=logger)
+    supabase_postgres_sentiment_analysis_provider = SupabasePostgresDbSentimentAnalysisProvider(SupabasePostgresProvider(logger=logger))
     target_file_dates = sorted(supabase_postgres_sentiment_analysis_provider.get_file_dates(phrase=phrase))
     print("Target file dates:\n", target_file_dates)
     logger.info(f"Target file dates: {target_file_dates}")
@@ -84,7 +85,7 @@ def run_sentiment_analysis(args: argparse.Namespace) -> None:
 
     # get reddit and comment entries
     reddits = supabase_postgres_reddit_provider.get_reddits(phrase=phrase, file_dates=missing_file_dates)
-    supabase_postgres_comment_provider = SupabasePostgresCommentProvider(logger=logger)
+    supabase_postgres_comment_provider = SupabasePostgresDbCommentProvider(SupabasePostgresProvider(logger=logger))
     comments = supabase_postgres_comment_provider.get_comments(phrase=phrase, file_dates=missing_file_dates)
     entries = reddits + comments
 

@@ -1,57 +1,32 @@
-import sqlalchemy
-import logging
-from sqlmodel import create_engine, Session, select, SQLModel
+from sqlmodel import select
 from typing import List
 
-import util
-from model import SupabaseConnectionConfig, Author
-from provider.i_author_provider import IAuthorProvider
+from model import Author
+from provider import IDbProvider, IDbAuthorProvider, SupabasePostgresProvider
 
 
-class SupabasePostgresAuthorProvider(IAuthorProvider):
+class SupabasePostgresDbAuthorProvider(IDbAuthorProvider):
     """ Authors provider from Postgres Supabase database """
 
-    connection_string: str
-    db_engine: sqlalchemy.engine.Engine
-    logger: logging.Logger
+    supabase_postgres_provider: IDbProvider
 
-    def __init__(self, connection_string: str | None = None,
-                 db_engine: sqlalchemy.engine.Engine | None = None,
-                 logger: logging.Logger | None = None):
-        super(SupabasePostgresAuthorProvider, self).__init__()
-        self.connection_string = connection_string or SupabaseConnectionConfig.get_db_connection_string()
-        self.db_engine = db_engine or create_engine(self.connection_string)
-        self.logger = logger or util.setup_logger(name="sp_author_provider",
-                                                  log_file=f"logs/other/sp_author_provider.log")
+    def __init__(self, supabase_postgres_provider: IDbProvider | None = None) -> None:
+        super(SupabasePostgresDbAuthorProvider, self).__init__()
+        self.supabase_postgres_provider = supabase_postgres_provider or SupabasePostgresProvider()
 
-    def _create_if_not_exists(self) -> None:
+    def create_if_not_exists(self) -> None:
         """ Creates 'authors' table if not exists """
-        if not sqlalchemy.inspect(self.db_engine).has_table(table_name="authors", schema="reddit"):
-            SQLModel.metadata.create_all(self.db_engine, tables=[Author.__table__])
+        self.supabase_postgres_provider.create_table_if_not_exists(Author, table="authors", schema="reddit")
 
     def get_names(self) -> List[str]:
         """ Return a list of authors names """
-        self._create_if_not_exists()
+        self.create_if_not_exists()
 
-        with Session(self.db_engine) as db_session:
-            statement = select(Author.name).distinct()
-            names = db_session.exec(statement).all()
+        statement = select(Author.name).distinct()
+        names = self.supabase_postgres_provider.run_select_statement(statement)
         return list(names)
 
-    def insert_authors(self, authors: List[Author], batch_size: int = 100) -> None:
+    def insert_authors(self, authors: List[Author], batch_size: int = 10000) -> None:
         """ Inserts the authors into database """
-        self._create_if_not_exists()
-
-        author_chunks = util.chunk_list_equal_size(authors, batch_size)
-        with Session(self.db_engine) as db_session:
-            num_inserted = 0
-            print("Inserting authors:")
-            self.logger.info("Inserting authors:")
-            for chunk in author_chunks:
-                db_session.add_all(chunk)
-                db_session.commit()
-                num_inserted += len(chunk)
-                print(f"{num_inserted} out of {len(authors)}")
-                self.logger.info(f"{num_inserted} out of {len(authors)}")
-            print("Authors inserted.")
-            self.logger.info("Authors inserted.")
+        self.create_if_not_exists()
+        self.supabase_postgres_provider.run_insert_statement(authors, batch_size, num_entities=len(authors), name="authors")

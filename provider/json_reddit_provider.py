@@ -1,16 +1,17 @@
 from typing import List
 
 from model import Reddit
-from provider import JsonFileObjectProvider
+from provider import IJsonFileObjectProvider, IFileRedditProvider
 
 import util
 
 
-class JsonRedditProvider:
+class JsonRedditProvider(IFileRedditProvider):
     """ Provides reddits data based on JSON objects """
-    json_file_object_provider: JsonFileObjectProvider
 
-    def __init__(self, json_file_object_provider: JsonFileObjectProvider):
+    json_file_object_provider: IJsonFileObjectProvider
+
+    def __init__(self, json_file_object_provider: IJsonFileObjectProvider):
         self.json_file_object_provider = json_file_object_provider
 
     def get_reddits(self, file_dates: List[str], phrase: str) -> List[Reddit]:

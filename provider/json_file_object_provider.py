@@ -3,10 +3,11 @@ import json
 from typing import List, Dict, Any
 
 from error import JsonFileNotFoundError
+from provider import IJsonFileObjectProvider
 from util import get_start_date_string_from_filename
 
 
-class JsonFileObjectProvider:
+class JsonFileObjectProvider(IJsonFileObjectProvider):
     """ Provides JSON objects (reddits, authors, etc.) from files """
 
     source_folder: str
@@ -36,7 +37,7 @@ class JsonFileObjectProvider:
         return file_names[0]
 
     def get_json_objects(self, file_dates: List[str]) -> List[List[Dict[str, Any] | List[Any]]]:
-        """ Returns a list of JSON objects lists which creation dates match the provided dates """
+        """ Returns a list of JSON objects lists which creation dates match the provided file dates """
         json_files = list(filter(lambda f: f.split("_")[-2] in file_dates, self.get_file_names()))
         json_objects = list([])
         for json_file in json_files:
@@ -50,7 +51,7 @@ class JsonFileObjectProvider:
         return json_objects
 
     def get_json_object(self, file_date: str) -> Dict[str, Any]:
-        """ Returns a JSON object which creation dates match the provided date """
+        """ Returns a JSON object which creation dates match the provided file date """
         file_name = self.get_file_name(file_date)
         with open(os.path.join(self.source_folder, file_name), "r") as jf:
             return json.load(jf)

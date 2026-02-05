@@ -1,14 +1,15 @@
 from typing import List
 
 from model import Author
-from provider import JsonFileObjectProvider
+from provider import IJsonFileObjectProvider, IFileAuthorProvider
 
 
-class JsonAuthorProvider:
+class JsonAuthorProvider(IFileAuthorProvider):
     """ Provides authors data based on JSON objects """
-    json_file_object_provider: JsonFileObjectProvider
 
-    def __init__(self, json_file_object_provider: JsonFileObjectProvider):
+    json_file_object_provider: IJsonFileObjectProvider
+
+    def __init__(self, json_file_object_provider: IJsonFileObjectProvider):
         self.json_file_object_provider = json_file_object_provider
 
     def get_authors(self, file_dates: List[str]) -> List[Author]:

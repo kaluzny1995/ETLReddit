@@ -4,11 +4,11 @@ from typing import List
 from model import SentimentAnalysis
 
 
-class ISentimentAnalysisProvider(ABC):
+class IDbSentimentAnalysisProvider(ABC):
     """ SentimentAnalysis provider interface """
 
     @abstractmethod
-    def _create_if_not_exists(self) -> None:
+    def create_if_not_exists(self) -> None:
         """ Creates 'sentiment_analyses' table if not exists """
         pass
 
@@ -23,6 +23,6 @@ class ISentimentAnalysisProvider(ABC):
         pass
 
     @abstractmethod
-    def insert_sentiment_analyses(self, sentiment_analyses: List[SentimentAnalysis], batch_size: int = 100) -> None:
+    def insert_sentiment_analyses(self, sentiment_analyses: List[SentimentAnalysis], batch_size: int = 10000) -> None:
         """ Inserts the sentiment analyses into database """
         pass

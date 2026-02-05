@@ -4,11 +4,11 @@ from typing import List
 from model import Author
 
 
-class IAuthorProvider(ABC):
+class IDbAuthorProvider(ABC):
     """ Authors provider interface """
 
     @abstractmethod
-    def _create_if_not_exists(self) -> None:
+    def create_if_not_exists(self) -> None:
         """ Creates 'authors' table if not exists """
         pass
 
@@ -18,6 +18,6 @@ class IAuthorProvider(ABC):
         pass
 
     @abstractmethod
-    def insert_authors(self, authors: List[Author], batch_size: int = 100) -> None:
+    def insert_authors(self, authors: List[Author], batch_size: int = 10000) -> None:
         """ Inserts the authors into database """
         pass

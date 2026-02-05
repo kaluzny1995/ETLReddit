@@ -4,11 +4,11 @@ from typing import List
 from model import EFileDateType, Reddit
 
 
-class IRedditProvider(ABC):
+class IDbRedditProvider(ABC):
     """ Reddits provider interface """
 
     @abstractmethod
-    def _create_if_not_exists(self) -> None:
+    def create_if_not_exists(self) -> None:
         """ Creates 'reddits' table if not exists """
         pass
 
@@ -23,6 +23,6 @@ class IRedditProvider(ABC):
         pass
 
     @abstractmethod
-    def insert_reddits(self, reddits: List[Reddit], batch_size: int = 100) -> None:
+    def insert_reddits(self, reddits: List[Reddit], batch_size: int = 10000) -> None:
         """ Inserts the reddits into database """
         pass
