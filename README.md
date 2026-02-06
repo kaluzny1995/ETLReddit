@@ -13,6 +13,19 @@ Then establish new Anaconda Python 3.11 environment, like _etl_reddit_311_ with 
 
 Activate the Anaconda environment via: `conda activate etl_reddit_311`. The application is now ready to be used.
 
+## Setting up the Supabase Postgres database
+To set the Supabase Postgres database server run the folllowing steps:
+1. Create `supabase_config.json` file in main project directory like.
+2. Create new database project. **Important!** Remember your **username** and **password** for further steps!
+3. Select **Project Overview** and then click **Connect** icon at the top toolbar.
+![supabase connection settings](/assets/images/supabase_connection_settings.png)
+4. The illustration above shows you the database connection string you should use to connect `[postgresql://postgres.<YOUR-USERNAME>:<YOUR-PASSWORD>@aws-1-eu-west-1.pooler.supabase.com:5432/postgres]`
+5. Put inside the following content like in the illustration below:
+![supabase config json file content](/assets/images/supabase_config_json.png)
+
+where "your database username" and "your password" should refer you own Supabase credentials.
+6. Voila! You've done the supabase config setup.
+
 ## Running the application
 ### Ingestion
 Running the help command: `python run_ingestion.py -h` yields the following:
