@@ -7,7 +7,7 @@ class NLTKSentiment(BaseModel):
     positive: float = 0.
     compound: float = 0.
 
-    class Config:
+    class ConfigDict:
         frozen = True
 
 
@@ -16,13 +16,13 @@ class TextblobSentiment(BaseModel):
     polarity: float = 0.
     subjectivity: float = 0.
 
-    class Config:
+    class ConfigDict:
         frozen = True
 
 
 class Sentiment(NLTKSentiment, TextblobSentiment):
 
-    class Config:
+    class ConfigDict:
         frozen = True
 
     @staticmethod

@@ -11,7 +11,7 @@ class AppConfig(BaseModel):
     is_multiprocessing_used: bool
     num_processes: int
 
-    class Config:
+    class ConfigDict:
         frozen = True
 
     @staticmethod

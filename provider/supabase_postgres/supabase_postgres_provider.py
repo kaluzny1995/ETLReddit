@@ -5,6 +5,7 @@ from typing import List, Any
 from sqlmodel import create_engine, Session, SQLModel, Sequence
 from sqlmodel.sql._expression_select_cls import Select, SelectOfScalar
 
+import error
 import util
 from model.config.supabase_connection_config import SupabaseConnectionConfig
 from provider import IDbProvider
@@ -32,10 +33,15 @@ class SupabasePostgresProvider(IDbProvider):
 
     def create_table_if_not_exists(self, entity: SQLModel, table: str, schema: str) -> None:
         """ Creates table if not exists """
-        if not sqlalchemy.inspect(self.db_engine).has_table(table_name=table, schema=schema):
-            SQLModel.metadata.create_all(self.db_engine, tables=[entity.__table__])
-            print(f"Table {table} created.")
-            self.logger.info(f"Table {table} created.")
+        try:
+            if not sqlalchemy.inspect(self.db_engine).has_table(table_name=table, schema=schema):
+                SQLModel.metadata.create_all(self.db_engine, tables=[entity.__table__])
+                print(f"Table {table} created.")
+                self.logger.info(f"Table {table} created.")
+        except sqlalchemy.exc.OperationalError as e:
+            print(f"Supabase Postgres DB server is down.")
+            self.logger.error(f"Supabase Postgres DB server is down.")
+            raise error.SupabaseServerDownError(f"Supabase Postgres DB server is down. Message: {e}")
 
     def run_select_statement(self, statement: Select | SelectOfScalar) -> Sequence[Any]:
         """ Executes select statement and returns results """

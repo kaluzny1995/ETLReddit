@@ -10,7 +10,7 @@ class SupabaseConnectionConfig(BaseModel):
     port: int
     database: str
 
-    class Config:
+    class ConfigDict:
         frozen = True
 
     @staticmethod

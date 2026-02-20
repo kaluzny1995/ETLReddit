@@ -13,6 +13,6 @@ class IJsonFileObjectProvider(IFileObjectProvider):
         pass
 
     @abstractmethod
-    def get_json_object(self, file_date: str) -> Dict[str, Any]:
+    def get_json_object(self, file_date: str) -> List[Dict[str, Any]]:
         """ Returns a JSON object which creation dates match the provided file date """
         pass
