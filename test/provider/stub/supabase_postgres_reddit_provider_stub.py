@@ -19,7 +19,7 @@ class SupabasePostgresRedditProviderStub(IDbRedditProvider):
 
     def get_file_dates(self, phrase: str, which: EFileDateType = EFileDateType.START) -> List[str]:
         """ Returns the file dates of reddits of given phrase """
-        return list(set(map(lambda x: x.start_file_date if which == EFileDateType.START else x.end_file_date, self.data)))
+        return list(map(lambda x: x.start_file_date if which == EFileDateType.START else x.end_file_date, self.data))
 
     def get_reddits(self, phrase: str, file_dates: List[str], which: EFileDateType = EFileDateType.START) -> List[Reddit]:
         """ Returns the reddits of given phrase for given list of file dates """

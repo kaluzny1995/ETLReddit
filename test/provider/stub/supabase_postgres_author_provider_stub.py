@@ -18,7 +18,7 @@ class SupabasePostgresDbAuthorProviderStub(IDbAuthorProvider):
 
     def get_names(self) -> List[str]:
         """ Return a list of authors names """
-        return list(set(map(lambda x: x.name, self.data)))
+        return list(map(lambda x: x.name, self.data))
 
     def insert_authors(self, authors: List[Author], batch_size: int = 10000) -> None:
         """ Inserts the authors into database """

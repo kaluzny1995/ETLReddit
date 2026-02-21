@@ -26,6 +26,4 @@ class JsonAuthorProvider(IFileAuthorProvider):
                         authors.append(author)
                         author_names.append(author.name)
 
-
-
         return authors

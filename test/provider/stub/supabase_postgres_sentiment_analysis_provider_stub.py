@@ -18,11 +18,11 @@ class SupabasePostgresSentimentAnalysisProviderStub(IDbSentimentAnalysisProvider
 
     def get_file_dates(self, phrase: str) -> List[str]:
         """ Returns the file dates of sentiment analysis of given phrase """
-        pass
+        return list(map(lambda x: x.file_date, self.data))
 
     def get_sentiment_analyses(self, phrase: str) -> List[SentimentAnalysis]:
         """ Returns the sentiment analyses of given phrase """
-        pass
+        return self.data
 
     def insert_sentiment_analyses(self, sentiment_analyses: List[SentimentAnalysis], batch_size: int = 10000) -> None:
         """ Inserts the sentiment analyses into database """

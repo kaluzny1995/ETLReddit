@@ -19,7 +19,7 @@ class SupabasePostgresCommentProviderStub(IDbCommentProvider):
 
     def get_comments(self, phrase: str, file_dates: List[str], which: EFileDateType = EFileDateType.START) -> List[Comment]:
         """ Returns the comments of given phrase for given list of file dates """
-        return list(set(map(lambda x: x.start_file_date if which == EFileDateType.START else x.end_file_date, self.data)))
+        return self.data
 
     def insert_comments(self, comments: List[Comment], batch_size: int = 10000) -> None:
         """ Inserts the comments into database """
