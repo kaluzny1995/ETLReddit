@@ -52,7 +52,7 @@ class SentimentAnalysisService(ISentimentAnalysisService):
             return TextblobSentiment(polarity=sentiments.polarity, subjectivity=sentiments.subjectivity)
 
     def _process_entry(self, entry: Reddit | Comment) -> SentimentAnalysis:
-        """ Process single reddit or comment entry and return sentiment analysis """
+        """ Processes single reddit or comment entry and return sentiment analysis """
         if type(entry) not in [Reddit, Comment]:
             self.logger.error(f"The provided entity for ETL has improper type: {type(entry)}.")
             raise error.WrongEntityError(f"The provided entity for ETL has improper type: {type(entry)}.")
