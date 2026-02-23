@@ -1,10 +1,10 @@
 from typing import List
 
 from model import Author
-from provider import IJsonFileObjectProvider, IFileAuthorProvider
+from provider import IJsonFileObjectProvider, IJsonAuthorProvider
 
 
-class JsonAuthorProvider(IFileAuthorProvider):
+class JsonAuthorProvider(IJsonAuthorProvider):
     """ Provides authors data based on JSON objects """
 
     json_file_object_provider: IJsonFileObjectProvider

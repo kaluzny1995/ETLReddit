@@ -3,7 +3,7 @@ from typing import List
 
 
 class IFileObjectProvider(ABC):
-    """ FileObjectProvider interface """
+    """ FileObjectProvider interface (for JSON, CSV, etc. files) """
 
     @abstractmethod
     def get_file_names(self, file_dates: List[str] = None) -> List[str]:

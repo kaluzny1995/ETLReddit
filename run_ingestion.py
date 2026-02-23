@@ -89,13 +89,14 @@ def main():
     print(f"\nLoading data for the following dates:\n{missing_file_dates}\n")
     logger.info(f"Loading data for the following dates: {missing_file_dates}")
 
-    # insert reddits
+    # get and insert reddits
     json_reddit_provider = JsonRedditProvider(json_reddit_file_object_provider)
     reddits = json_reddit_provider.get_reddits(missing_file_dates, phrase=phrase)
     print("Reddits processed:", len(reddits))
     logger.info(f"Reddits processed: {len(reddits)}")
     supabase_postgres_reddit_provider.insert_reddits(reddits, batch_size=batch_size)
 
+    # get and insert comments
     json_comment_provider = JsonCommentProvider(json_reddit_file_object_provider)
     comments = json_comment_provider.get_comments(missing_file_dates, phrase=phrase)
     print("Comments processed:", len(comments))
@@ -107,6 +108,7 @@ def main():
         supabase_postgres_author_provider = SupabasePostgresDbAuthorProvider(SupabasePostgresProvider(logger=logger))
         existing_names = supabase_postgres_author_provider.get_names()
 
+        # get and insert authors
         json_author_provider = JsonAuthorProvider(json_author_file_object_provider)
         authors = json_author_provider.get_authors(missing_file_dates)
         authors = list(filter(lambda a: a.name not in existing_names, authors))

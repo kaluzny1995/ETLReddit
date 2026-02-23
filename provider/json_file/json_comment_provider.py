@@ -1,12 +1,12 @@
 from typing import List, Dict, Any
 
 from model import Comment
-from provider import IJsonFileObjectProvider, IFileCommentProvider
+from provider import IJsonFileObjectProvider, IJsonCommentProvider
 
 import util
 
 
-class JsonCommentProvider(IFileCommentProvider):
+class JsonCommentProvider(IJsonCommentProvider):
     """ Provides comments data based on JSON objects """
 
     json_file_object_provider: IJsonFileObjectProvider

@@ -5,7 +5,7 @@ import error
 from provider import IJsonFileObjectProvider
 
 
-class JsonFileObjectProviderStub(IJsonFileObjectProvider):
+class JsonFileFileObjectProviderStub(IJsonFileObjectProvider):
     """ JsonFileObjectProvider interface """
 
     file_names: List[str]

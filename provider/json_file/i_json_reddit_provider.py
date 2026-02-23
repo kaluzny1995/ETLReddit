@@ -4,8 +4,8 @@ from typing import List
 from model import Reddit
 
 
-class IFileRedditProvider(ABC):
-    """ FileRedditProvider interface """
+class IJsonRedditProvider(ABC):
+    """ JsonRedditProvider interface """
 
     @abstractmethod
     def get_reddits(self, file_dates: List[str], phrase: str) -> List[Reddit]:

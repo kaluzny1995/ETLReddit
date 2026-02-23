@@ -3,7 +3,7 @@ from typing import List, Dict, Any
 import pytest
 
 from test.provider.json_file.fixtures_test_cases import file_names, json_objects
-from test.provider.stub.json_file_object_provider_stub import JsonFileObjectProviderStub
+from test.provider.stub.json_file_object_provider_stub import JsonFileFileObjectProviderStub
 
 
 @pytest.mark.parametrize("file_dates, expected_file_names", [
@@ -12,7 +12,7 @@ from test.provider.stub.json_file_object_provider_stub import JsonFileObjectProv
 ])
 def test_get_file_names(file_dates: List[str], expected_file_names: List[str]) -> None:
     # Arrange
-    json_file_object_provider = JsonFileObjectProviderStub(file_names, json_objects)
+    json_file_object_provider = JsonFileFileObjectProviderStub(file_names, json_objects)
     # Act
     found_file_names = json_file_object_provider.get_file_names(file_dates)
     # Assert
@@ -29,7 +29,7 @@ def test_get_file_names(file_dates: List[str], expected_file_names: List[str]) -
 ])
 def test_get_file_name(file_date: str, expected_file_name: str) -> None:
     # Arrange
-    json_file_object_provider = JsonFileObjectProviderStub(file_names, json_objects)
+    json_file_object_provider = JsonFileFileObjectProviderStub(file_names, json_objects)
     # Act
     found_file_name = json_file_object_provider.get_file_name(file_date)
     # Assert
@@ -42,7 +42,7 @@ def test_get_file_name(file_date: str, expected_file_name: str) -> None:
 ])
 def test_get_json_objects(file_dates: List[str], expected_json_objects: List[List[Dict[str, Any] | List[Any]]]) -> None:
     # Arrange
-    json_file_object_provider = JsonFileObjectProviderStub(file_names, json_objects)
+    json_file_object_provider = JsonFileFileObjectProviderStub(file_names, json_objects)
     # Act
     found_json_objects = json_file_object_provider.get_json_objects(file_dates)
     # Assert
@@ -62,7 +62,7 @@ def test_get_json_objects(file_dates: List[str], expected_json_objects: List[Lis
 ])
 def test_get_json_object(file_date: str, expected_json_object: Dict[str, Any]) -> None:
     # Arrange
-    json_file_object_provider = JsonFileObjectProviderStub(file_names, json_objects)
+    json_file_object_provider = JsonFileFileObjectProviderStub(file_names, json_objects)
     # Act
     found_json_object = json_file_object_provider.get_json_object(file_date)
     # Assert

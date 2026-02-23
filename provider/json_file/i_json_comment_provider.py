@@ -4,8 +4,8 @@ from typing import List
 from model import Comment
 
 
-class IFileCommentProvider(ABC):
-    """ FileCommentProvider interface """
+class IJsonCommentProvider(ABC):
+    """ JsonCommentProvider interface """
 
     @abstractmethod
     def get_comments(self, file_dates: List[str], phrase: str) -> List[Comment]:

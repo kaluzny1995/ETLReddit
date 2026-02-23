@@ -1,12 +1,14 @@
 # File objects providers
 from provider.file.i_file_object_provider import IFileObjectProvider
+
+# JSON objects providers
 from provider.json_file.i_json_file_object_provider import IJsonFileObjectProvider
 from provider.json_file.json_file_object_provider import JsonFileObjectProvider
 
 # JSON entities providers
-from provider.file.i_file_reddit_provider import IFileRedditProvider
-from provider.file.i_file_comment_provider import IFileCommentProvider
-from provider.file.i_file_author_provider import IFileAuthorProvider
+from provider.json_file.i_json_reddit_provider import IJsonRedditProvider
+from provider.json_file.i_json_comment_provider import IJsonCommentProvider
+from provider.json_file.i_json_author_provider import IJsonAuthorProvider
 from provider.json_file.json_reddit_provider import JsonRedditProvider
 from provider.json_file.json_comment_provider import JsonCommentProvider
 from provider.json_file.json_author_provider import JsonAuthorProvider

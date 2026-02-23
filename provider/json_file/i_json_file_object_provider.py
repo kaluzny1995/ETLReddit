@@ -5,7 +5,7 @@ from provider import IFileObjectProvider
 
 
 class IJsonFileObjectProvider(IFileObjectProvider):
-    """ JsonFileObjectProvider interface """
+    """ JsonFileObjectProvider interface (for JSON files) """
 
     @abstractmethod
     def get_json_objects(self, file_dates: List[str]) -> List[List[Dict[str, Any] | List[Any]]]:

@@ -4,8 +4,8 @@ from typing import List
 from model import Author
 
 
-class IFileAuthorProvider(ABC):
-    """ FileAuthorProvider interface """
+class IJsonAuthorProvider(ABC):
+    """ JsonAuthorProvider interface """
 
     @abstractmethod
     def get_authors(self, file_dates: List[str]) -> List[Author]:

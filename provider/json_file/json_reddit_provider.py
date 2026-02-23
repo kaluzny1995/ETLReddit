@@ -1,12 +1,12 @@
 from typing import List
 
 from model import Reddit
-from provider import IJsonFileObjectProvider, IFileRedditProvider
+from provider import IJsonFileObjectProvider, IJsonRedditProvider
 
 import util
 
 
-class JsonRedditProvider(IFileRedditProvider):
+class JsonRedditProvider(IJsonRedditProvider):
     """ Provides reddits data based on JSON objects """
 
     json_file_object_provider: IJsonFileObjectProvider
