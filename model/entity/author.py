@@ -52,12 +52,12 @@ class Author(SQLModel, table=True):
     def from_raw_json(json_object: Dict[str, Any]) -> 'Author':
         return Author(
             name=json_object["author"],
-            background_color=json_object["author_flair_background_color"] if json_object["author_flair_background_color"] is not None else None,
-            css_class=json_object["author_flair_css_class"] if json_object["author_flair_css_class"] is not None else None,
-            richtext=json.dumps(json_object["author_flair_richtext"]) if json.dumps(json_object["author_flair_richtext"]) else None,
-            template_id=json_object["author_flair_template_id"] if json_object["author_flair_template_id"] is not None else None,
-            text=json_object["author_flair_text"] if json_object["author_flair_text"] is not None else None,
-            text_color=json_object["author_flair_text_color"] if json_object["author_flair_text_color"] is not None else None,
+            background_color=json_object["author_flair_background_color"] if json_object["author_flair_background_color"] else None,
+            css_class=json_object["author_flair_css_class"] if json_object["author_flair_css_class"] else None,
+            richtext=json.dumps(json_object["author_flair_richtext"]) if json_object["author_flair_richtext"] else None,
+            template_id=json_object["author_flair_template_id"] if json_object["author_flair_template_id"] else None,
+            text=json_object["author_flair_text"] if json_object["author_flair_text"] else None,
+            text_color=json_object["author_flair_text_color"] if json_object["author_flair_text_color"] else None,
             type=json_object["author_flair_type"],
             fullname=json_object["author_fullname"],
             is_blocked=bool(json_object["author_is_blocked"]),

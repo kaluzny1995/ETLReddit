@@ -13,6 +13,19 @@ Then establish new Anaconda Python 3.11 environment, like _etl_reddit_311_ with 
 
 Activate the Anaconda environment via: `conda activate etl_reddit_311`. The application is now ready to be used.
 
+## Setting up the Supabase Postgres database
+To set the Supabase Postgres database server run the folllowing steps:
+1. Create `supabase_config.json` file in main project directory like.
+2. Create new database project. **Important!** Remember your **username** and **password** for further steps!
+3. Select **Project Overview** and then click **Connect** icon at the top toolbar.
+![supabase connection settings](/assets/images/supabase_connection_settings.png)
+4. The illustration above shows you the database connection string you should use to connect `[postgresql://postgres.<YOUR-USERNAME>:<YOUR-PASSWORD>@aws-1-eu-west-1.pooler.supabase.com:5432/postgres]`
+5. Put inside the following content like in the illustration below:
+![supabase config json file content](/assets/images/supabase_config_json.png)
+
+where "your database username" and "your password" should refer to your own Supabase credentials.
+6. Voila! You've done the supabase config setup.
+
 ## Running the application
 ### Ingestion
 Running the help command: `python run_ingestion.py -h` yields the following:
@@ -116,3 +129,21 @@ The illustration above shows the solution dataflow diagram. The dash-frame highl
 ## Data model
 ![Data model class diagram](/assets/images/reddits_data_model.png)
 The illustration above shows the data model diagram class. The **Author**, **Reddit** and **Comment** class instances are used during JSON files ingestion (insertion) as well as ETL processes (reading). The **SentimentAnalysis** class instances are used (currently) only during persistence of processed reddits and comments (insertion).
+
+## Detailed class diagrams
+### Ingestion
+![Data model class diagram](/assets/images/reddits_ingestion_class_diagram.png)
+1. **Source file dates** -- reading file dates from **file** names in source directory
+2. **Target file dates** -- reading file dates from **reddits** target database table
+3. **Missing file dates** -- determining of which file dates the application should load the data for
+4. **Reddits extraction** -- extraction of **reddit** objects from JSON files and persisting in database
+5. **Comments extraction** -- extraction of **comment** objects from JSON files and persisting in database
+6. **Authors extraction** -- extraction of **author** objects from JSON files and persisting in database
+
+### ETL - sentiment analysis
+![Data model class diagram](/assets/images/reddits_etl_sentiment_analysis_class_diagram.png)
+1. **Source file dates** -- reading file dates from **reddits** source database table
+2. **Target file dates** -- reading file dates from **sentiment_analyses** target database table
+3. **Missing file dates** -- determining of which file dates the application should load the data for
+4. **ETL process** -- loading **reddits** and **comments** from database and sentiment analysis ETL processes
+5. **Results persistence** -- persisting sentiment analysis results in **sentiment_analyses** database table

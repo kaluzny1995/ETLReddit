@@ -6,6 +6,10 @@ class JsonFileNotFoundError(Exception):
     """ Raised when a JSON file is not found """
     pass
 
+class SupabaseServerDownError(Exception):
+    """ Raised when the Supabase Postgres server is down """
+    pass
+
 class NoNewDataError(Exception):
     """ Raised when no new data is available for ETL process """
     pass
