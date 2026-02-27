@@ -5,10 +5,10 @@ from pydantic import BaseModel
 class AppConfig(BaseModel):
     """ App settings config """
     batch_size: int
-    is_author_loaded: bool
+    is_no_authors_load: bool
     files_reddit_source_folder_pattern: str
     files_author_source_folder_pattern: str
-    is_multiprocessing_used: bool
+    is_no_multiprocessing_used: bool
     num_processes: int
 
     class ConfigDict:

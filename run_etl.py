@@ -25,8 +25,8 @@ def parse_args(defaults: AppConfig) -> argparse.Namespace:
                         help="phrase which contain reddits to do the ETL with")
     parser.add_argument("-b", "--batch_size", type=int, required=False, default=defaults.batch_size,
                         help=f"size of inserted batch of reddits into database, default: {defaults.batch_size}")
-    parser.add_argument("--use_multiprocessing", required=False, default=defaults.is_multiprocessing_used,
-                        help=f"flag whether to use multiprocessing while processing entries, default: {defaults.is_multiprocessing_used}",
+    parser.add_argument("--no_multiprocessing", required=False, default=defaults.is_no_multiprocessing_used,
+                        help=f"flag whether not to use multiprocessing while processing entries, default: {defaults.is_no_multiprocessing_used}",
                         action="store_true")
     parser.add_argument("--num_processes", type=int, required=False, default=defaults.num_processes,
                         help=f"number of processes if multiprocessing is used, default: {defaults.num_processes}")
@@ -40,7 +40,7 @@ def run_sentiment_analysis(args: argparse.Namespace) -> None:
     phrase = args.phrase
     script_name = args.script
     batch_size = args.batch_size
-    is_multiprocessing_used = args.use_multiprocessing
+    is_multiprocessing_used = not args.no_multiprocessing
     num_processes = args.num_processes
 
     # Show parameters

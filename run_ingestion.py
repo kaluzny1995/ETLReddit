@@ -25,8 +25,8 @@ def parse_args(defaults: AppConfig) -> argparse.Namespace:
     parser.add_argument("phrase", type=str, help="phrase which contain reddits to do the ETL with")
     parser.add_argument("-b", "--batch_size", type=int, required=False, default=defaults.batch_size,
                         help=f"size of inserted batch of reddits into database, default: {defaults.batch_size}")
-    parser.add_argument("--load_authors", required=False, default=defaults.is_author_loaded,
-                        help=f"flag whether to load reddit authors information, default: {defaults.is_author_loaded}",
+    parser.add_argument("--no_authors_load", required=False, default=defaults.is_no_authors_load,
+                        help=f"flag whether not to load reddit authors information, default: {defaults.is_no_authors_load}",
                         action="store_true")
 
     return parser.parse_args()
@@ -46,7 +46,7 @@ def main():
 
     phrase = args.phrase
     batch_size = args.batch_size
-    is_author_loaded = args.load_authors
+    is_author_loaded = not args.no_authors_load
 
     # Show parameters
     print("Reddits phrase:", phrase)
