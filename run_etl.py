@@ -30,6 +30,9 @@ def parse_args(defaults: AppConfig) -> argparse.Namespace:
                         action="store_true")
     parser.add_argument("--interval", type=str, required=False, choices=["h", "d", "m", "y"], default=defaults.date_interval,
                         help=f"period between every file date if for missing dates blank records are added, default: {defaults.date_interval}")
+    parser.add_argument("--until_today", required=False, default=defaults.is_until_today,
+                        help=f"flag whether to insert blank records until the current datetime, ie. moment of script launch (if no data for present date), default: {defaults.is_until_today}",
+                        action="store_true")
     parser.add_argument("--no_multiprocessing", required=False, default=defaults.is_no_multiprocessing_used,
                         help=f"flag whether not to use multiprocessing while processing entries, default: {defaults.is_no_multiprocessing_used}",
                         action="store_true")
@@ -47,6 +50,7 @@ def run_sentiment_analysis(args: argparse.Namespace) -> None:
     batch_size = args.batch_size
     is_filled_missing_dates = not args.skip_missing_dates
     date_interval = "N/A" if not is_filled_missing_dates else args.interval
+    is_until_previous_day = False if not is_filled_missing_dates else not args.until_today
     is_multiprocessing_used = not args.no_multiprocessing
     num_processes = 1 if not is_multiprocessing_used else args.num_processes
 
@@ -56,6 +60,7 @@ def run_sentiment_analysis(args: argparse.Namespace) -> None:
     print("Batch size:", batch_size)
     print("Fill in for missing dates:", is_filled_missing_dates)
     print("File date interval:", date_interval)
+    print("Is filled in until previous date:", is_until_previous_day)
     print("Use multiprocessing:", is_multiprocessing_used)
     print("Number of processes:", num_processes)
     print()
@@ -65,6 +70,7 @@ def run_sentiment_analysis(args: argparse.Namespace) -> None:
     logger.info(f"Batch size: {batch_size}")
     logger.info(f"Fill in for missing dates: {is_filled_missing_dates}")
     logger.info(f"File date interval: {date_interval}")
+    logger.info(f"Is filled in until previous date: {is_until_previous_day}")
     logger.info(f"Use multiprocessing: {is_multiprocessing_used}")
     logger.info(f"Number of processes: {num_processes}")
 

@@ -10,6 +10,7 @@ class AppConfig(BaseModel):
     files_author_source_folder_pattern: str
     is_missing_dates_skipped: bool
     date_interval: str
+    is_until_today: bool
     is_no_multiprocessing_used: bool
     num_processes: int
 
