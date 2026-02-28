@@ -101,9 +101,13 @@ options:
     python run_etl.py "corgi"
 The application will load all reddits and comments according to "corgi", perform the sentiment analysis utilizing multiprocess approach and store processed data into _sentiment_analysis_ table.
 
+#### Skipping missing dates
+    python run_etl.py "corgi" --skip_missing_dates
+The application will load "corgi" reddits and comments and then perform the sentiment analysis without filling data with blank records for missing file dates.
+
 #### No multiprocessing
     python run_etl.py "corgi" --no_multiprocessing
-The application will load all reddits and comments according to "corgi", perform the sentiment analysis however not using multiprocess approach and store processed data into _sentiment_analysis_ table.
+The application will load "corgi" reddits and comments and then perform the sentiment analysis however not using multiprocess approach and store processed data into _sentiment_analysis_ table.
 
 ### Testing
 To perform application unit testing simply run the command `pytest` in main project directory. The output should look like the following:
