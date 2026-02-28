@@ -8,6 +8,8 @@ class AppConfig(BaseModel):
     is_no_authors_load: bool
     files_reddit_source_folder_pattern: str
     files_author_source_folder_pattern: str
+    is_missing_dates_skipped: bool
+    date_interval: str
     is_no_multiprocessing_used: bool
     num_processes: int
 

@@ -66,7 +66,7 @@ Running the help command: `python run_etl.py -h` yields the following:
 ```
 ---- Reddits ETL app ----
 
-usage: run_etl.py [-h] [-b BATCH_SIZE] [--no_multiprocessing] [--num_processes NUM_PROCESSES] {sentiment_analysis,vectorization} phrase
+usage: run_etl.py [-h] [-b BATCH_SIZE] [--skip_missing_dates] [--interval {h,d,m,y}] [--no_multiprocessing] [--num_processes NUM_PROCESSES] {sentiment_analysis,vectorization} phrase
 
 Reddits ETL Python 3.11 application.
 
@@ -79,6 +79,8 @@ options:
   -h, --help            show this help message and exit
   -b BATCH_SIZE, --batch_size BATCH_SIZE
                         size of inserted batch of reddits into database, default: 10000
+  --skip_missing_dates  flag whether not to add blank records for periods without any data, default: False
+  --interval {h,d,m,y}  period between every file date if for missing dates blank records are added, default: d
   --no_multiprocessing  flag whether not to use multiprocessing while processing entries, default: False
   --num_processes NUM_PROCESSES
                         number of processes if multiprocessing is used, default: 8
@@ -89,8 +91,10 @@ options:
 1. **script** -- **_required_** -- etl script to run. Currently, **"sentiment_analysis"** is only available. The _"vectorization"_ will be developed furtherly.  
 2. **phrase** -- **_required_** -- word or sentence fragment according to which the reddits should be ingested.
 3. **-b**, **--batch_size** -- _optional_ -- **10000** by default -- maximum number of entries inserted into database at once.
-4. **--no_multiprocessing** -- _optional_ -- **False** by default -- flag whether not to utilize multiprocess approach for results downloading. Unless set the application will divide the list of input entries and forward them to separate processes.
-5. **--num_processes** -- _optional_ -- **8** by default -- number of processes for multiprocess approach, not applicable if _--no_multiprocessing_ flag is set. **IMPORTANT:** For 2xQuadCore processors the number should not be larger than 8
+4. **--skip_missing_dates** -- _optional_ -- **False** by default -- flag whether not to load blank records for file dates for which the data do not exist.
+5. **--interval** -- _optional_ -- **"d"** by default -- period of time between each of file dates. Useful for loading blank records: _"y"_ denotes year, _"m"_ - month, _"d"_ - day and _"h"_ - hour. Not applicable if _--skip_missing_dates_ flag is set.
+6. **--no_multiprocessing** -- _optional_ -- **False** by default -- flag whether not to utilize multiprocess approach for results downloading. Unless set the application will divide the list of input entries and forward them to separate processes.
+7. **--num_processes** -- _optional_ -- **8** by default -- number of processes for multiprocess approach, not applicable if _--no_multiprocessing_ flag is set. **IMPORTANT:** For 2xQuadCore processors the number should not be larger than 8.
 
 ### Command examples
 #### Simple
