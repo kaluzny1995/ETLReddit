@@ -1,7 +1,6 @@
 import datetime as dt
 
-from sqlmodel import SQLModel, Field, Column, String, DateTime, Integer, Float, Boolean, \
-    UniqueConstraint, CheckConstraint
+from sqlmodel import SQLModel, Field, Column, String, DateTime, Integer, Float, Boolean, CheckConstraint
 
 from model import Reddit, Comment, Sentiment
 
@@ -28,7 +27,6 @@ class SentimentAnalysis(SQLModel, table=True):
 
     __tablename__ = "sentiment_analyses"
     __table_args__ = (
-        UniqueConstraint("reddit_id", "comment_id", "phrase", name="unique_reddit_comment_phrase"),
         CheckConstraint("reddit_id is not null or comment_id is not null", name="reddit_or_comment_not_null"),
         {'schema': "reddit"}
     )
@@ -57,6 +55,29 @@ class SentimentAnalysis(SQLModel, table=True):
                 "file_date": "2026-01-01T00:00:00"
             }
         }
+
+    @staticmethod
+    def blank(phrase: str, file_date: str) -> 'SentimentAnalysis':
+        return SentimentAnalysis(
+            reddit_id=f"N/A_{file_date}",
+            comment_id=f"N/A_{file_date}",
+            phrase=phrase,
+            author="N/A",
+            text="N/A",
+            datetime_created=dt.datetime.fromisoformat(file_date),
+            score=0,
+            upvote_ratio=0.,
+            gilded_number=0,
+            number_of_comments=0,
+            controversiality=False,
+            s_neg=0.,
+            s_neu=0.,
+            s_pos=0.,
+            s_com=0.,
+            s_pol=0.,
+            s_sub=0.,
+            file_date=file_date
+        )
 
     @staticmethod
     def from_reddit(reddit: Reddit, text: str, sentiment: Sentiment) -> 'SentimentAnalysis':

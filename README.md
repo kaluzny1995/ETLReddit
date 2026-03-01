@@ -32,7 +32,7 @@ Running the help command: `python run_ingestion.py -h` yields the following:
 ```
 ---- Reddits ingestion app ----
 
-usage: run_ingestion.py [-h] [-b BATCH_SIZE] [--load_authors] phrase
+usage: run_ingestion.py [-h] [-b BATCH_SIZE] [--no_authors_load] phrase
 
 Reddits ingestion Python 3.11 application.
 
@@ -43,35 +43,36 @@ options:
   -h, --help            show this help message and exit
   -b BATCH_SIZE, --batch_size BATCH_SIZE
                         size of inserted batch of reddits into database, default: 10000
-  --load_authors        flag whether to load reddit authors information, default: False
+  --no_authors_load     flag whether not to load reddit authors information, default: False
 
 ```
 
 ### Parameters overview
-1. **phrase** -- required -- word or sentence fragment according to which the reddits should be ingested.
-2. **-b**, **--batch_size** -- optional -- **10000** by default -- maximum number of entries inserted into database at once.
-3. **--load_authors** -- optional -- **False** by default -- flag whether to insert authors into database. If unset the application will only insert reddits and their comments.
+1. **phrase** -- **_required_** -- word or sentence fragment according to which the reddits should be ingested.
+2. **-b**, **--batch_size** -- _optional_ -- **10000** by default -- maximum number of entries inserted into database at once.
+3. **--no_authors_load** -- _optional_ -- **False** by default -- flag whether not to insert authors into database. If set the application will only insert reddits and their comments.
 
 ### Command examples
 #### Simple
     python run_ingestion.py "corgi"
-The application will ingest all JSON files according to "corgi" word however without ingestioning author JSON files.
+The application will ingest all JSON files according to "corgi" word including author JSON files.
 
-#### Authors ingestion
-    python run_ingestion.py "corgi" --load_authors
-The application beside the "corgi" JSON files will ingest also author "corgi" JSONs.
+#### No authors ingestion
+    python run_ingestion.py "corgi" --no_authors_load
+The application will ingest the "corgi" JSON files however without ingestion of author JSON files.
 
 ### ETL
 Running the help command: `python run_etl.py -h` yields the following:
 ```
 ---- Reddits ETL app ----
 
-usage: run_etl.py [-h] [-b BATCH_SIZE] [--use_multiprocessing] [--num_processes NUM_PROCESSES] {sentiment_analysis,vectorization} phrase
+usage: run_etl.py [-h] [-b BATCH_SIZE] [--skip_missing_dates] [--start_date START_DATE] [--interval {h,d,m,y}] [--until_today] [--no_multiprocessing] [--num_processes NUM_PROCESSES]
+                  {sentiment_analysis,vectorization} phrase
 
 Reddits ETL Python 3.11 application.
 
 positional arguments:
-  script                {sentiment_analysis,vectorization}
+  {sentiment_analysis,vectorization}
                         ETL script to run
   phrase                phrase which contain reddits to do the ETL with
 
@@ -79,28 +80,44 @@ options:
   -h, --help            show this help message and exit
   -b BATCH_SIZE, --batch_size BATCH_SIZE
                         size of inserted batch of reddits into database, default: 10000
-  --use_multiprocessing
-                        flag whether to use multiprocessing while processing entries, default: False
+  --skip_missing_dates  flag whether not to add blank records for periods without any data, default: False
+  --start_date START_DATE
+                        start date of missing file date gaps detection, default: 2020-01-01
+  --interval {h,d,m,y}  period between every file date if for missing dates blank records are added, default: d
+  --until_today         flag whether to insert blank records until the current datetime, ie. moment of script launch (if no data for present date), default: False
+  --no_multiprocessing  flag whether not to use multiprocessing while processing entries, default: False
   --num_processes NUM_PROCESSES
                         number of processes if multiprocessing is used, default: 8
 
 ```
 
 ### Parameters overview
-1. **script** -- required -- etl script to run. Currently, **"sentiment_analysis"** is only available. The _"vectorization"_ will be developed furtherly.  
-2. **phrase** -- required -- word or sentence fragment according to which the reddits should be ingested.
-3. **-b**, **--batch_size** -- optional -- **10000** by default -- maximum number of entries inserted into database at once.
-4. **--use_multiprocessing** -- optional -- **False** by default -- flag whether to utilize multiprocess approach for results downloading. If set up the application will divide the list of reddit permalinks to download them from to separate processes. For 2xQuadCore processors the number should not be larger than 8.
-5. **--num_processes** -- optional -- **8** by default -- number of processes for multiprocess approach, not applicable if _--use_multiprocessing_ flag is unset.
+1. **script** -- **_required_** -- etl script to run. Currently, **"sentiment_analysis"** is only available. The _"vectorization"_ will be developed furtherly.  
+2. **phrase** -- **_required_** -- word or sentence fragment according to which the reddits should be ingested.
+3. **-b**, **--batch_size** -- _optional_ -- **10000** by default -- maximum number of entries inserted into database at once.
+4. **--skip_missing_dates** -- _optional_ -- **False** by default -- flag whether not to load blank records for file dates for which the data do not exist.
+5. **--start_date** -- _optional_ -- **2020-01-01** by default -- start date of missing file date gaps detection. Not applicable if _--skip_missing_dates_ flag is set.
+6. **--interval** -- _optional_ -- **"d"** by default -- period of time between each of file dates. Useful for loading blank records: _"y"_ denotes year, _"m"_ - month, _"d"_ - day and _"h"_ - hour. Not applicable if _--skip_missing_dates_ flag is set.
+7. **--until_today** -- _optional_ -- **False** by default -- flag whether to insert blank records until the current datetime, i.e. moment of script launch (if no data for present date). Not applicable if _--skip_missing_dates_ flag is set.
+8. **--no_multiprocessing** -- _optional_ -- **False** by default -- flag whether not to utilize multiprocess approach for results downloading. Unless set the application will divide the list of input entries and forward them to separate processes.
+9. **--num_processes** -- _optional_ -- **8** by default -- number of processes for multiprocess approach, not applicable if _--no_multiprocessing_ flag is set. **IMPORTANT:** For 2xQuadCore processors the number should not be larger than 8.
 
 ### Command examples
 #### Simple
     python run_etl.py "corgi"
-The application will load all reddits and comments according to "corgi", perform the sentiment analysis with one single process and store processed data into _sentiment_analysis_ table.
+The application will load all reddits and comments according to "corgi", perform the sentiment analysis utilizing multiprocess approach and store processed data into _sentiment_analysis_ table. The solution will also insert blank records for file date gaps.
 
-#### Multiprocessing
-    python run_etl.py "corgi" --use_multiprocessing
-The application will load all reddits and comments according to "corgi", perform the sentiment analysis using multi process approach and store processed data into _sentiment_analysis_ table.
+#### Skipping missing dates
+    python run_etl.py "corgi" --skip_missing_dates
+The application will load "corgi" entries and then perform the sentiment analysis without filling data with blank records for missing file dates.
+
+#### Filling in with blank records until date of launch
+    python run_etl.py "corgi" --until_today
+The application will load "corgi" entries and filling in with blank records for missing file dates including the day of script launch (if no data for such date).
+
+#### No multiprocessing
+    python run_etl.py "corgi" --no_multiprocessing
+The application will load "corgi" entries and then perform the sentiment analysis however not using multiprocess approach and store processed data into _sentiment_analysis_ table.
 
 ### Testing
 To perform application unit testing simply run the command `pytest` in main project directory. The output should look like the following:
