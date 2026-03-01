@@ -4,6 +4,7 @@
   "files_reddit_source_folder_pattern": "DownloadReddit/jsons/reddits/{phrase}",
   "files_author_source_folder_pattern": "DownloadReddit/jsons/authors/{phrase}",
   "is_missing_dates_skipped": false,
+  "start_date": "2020-01-01",
   "date_interval": "d",
   "is_until_today": false,
   "is_no_multiprocessing_used": false,

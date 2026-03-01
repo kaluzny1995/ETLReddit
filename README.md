@@ -66,7 +66,7 @@ Running the help command: `python run_etl.py -h` yields the following:
 ```
 ---- Reddits ETL app ----
 
-usage: run_etl.py [-h] [-b BATCH_SIZE] [--skip_missing_dates] [--interval {h,d,m,y}] [--until_today] [--no_multiprocessing] [--num_processes NUM_PROCESSES]
+usage: run_etl.py [-h] [-b BATCH_SIZE] [--skip_missing_dates] [--start_date START_DATE] [--interval {h,d,m,y}] [--until_today] [--no_multiprocessing] [--num_processes NUM_PROCESSES]
                   {sentiment_analysis,vectorization} phrase
 
 Reddits ETL Python 3.11 application.
@@ -81,8 +81,10 @@ options:
   -b BATCH_SIZE, --batch_size BATCH_SIZE
                         size of inserted batch of reddits into database, default: 10000
   --skip_missing_dates  flag whether not to add blank records for periods without any data, default: False
+  --start_date START_DATE
+                        start date of missing file date gaps detection, default: 2020-01-01
   --interval {h,d,m,y}  period between every file date if for missing dates blank records are added, default: d
-  --until_today         flag whether to insert blank records until the current datetime, i.e. moment of script launch (if no data for present date), default: False
+  --until_today         flag whether to insert blank records until the current datetime, ie. moment of script launch (if no data for present date), default: False
   --no_multiprocessing  flag whether not to use multiprocessing while processing entries, default: False
   --num_processes NUM_PROCESSES
                         number of processes if multiprocessing is used, default: 8
@@ -94,10 +96,11 @@ options:
 2. **phrase** -- **_required_** -- word or sentence fragment according to which the reddits should be ingested.
 3. **-b**, **--batch_size** -- _optional_ -- **10000** by default -- maximum number of entries inserted into database at once.
 4. **--skip_missing_dates** -- _optional_ -- **False** by default -- flag whether not to load blank records for file dates for which the data do not exist.
-5. **--interval** -- _optional_ -- **"d"** by default -- period of time between each of file dates. Useful for loading blank records: _"y"_ denotes year, _"m"_ - month, _"d"_ - day and _"h"_ - hour. Not applicable if _--skip_missing_dates_ flag is set.
-6. **--until_today** -- _optional_ -- **False** by default -- flag whether to insert blank records until the current datetime, i.e. moment of script launch (if no data for present date). Not applicable if _--skip_missing_dates_ flag is set.
-7. **--no_multiprocessing** -- _optional_ -- **False** by default -- flag whether not to utilize multiprocess approach for results downloading. Unless set the application will divide the list of input entries and forward them to separate processes.
-8. **--num_processes** -- _optional_ -- **8** by default -- number of processes for multiprocess approach, not applicable if _--no_multiprocessing_ flag is set. **IMPORTANT:** For 2xQuadCore processors the number should not be larger than 8.
+5. **--start_date** -- _optional_ -- **2020-01-01** by default -- start date of missing file date gaps detection. Not applicable if _--skip_missing_dates_ flag is set.
+6. **--interval** -- _optional_ -- **"d"** by default -- period of time between each of file dates. Useful for loading blank records: _"y"_ denotes year, _"m"_ - month, _"d"_ - day and _"h"_ - hour. Not applicable if _--skip_missing_dates_ flag is set.
+7. **--until_today** -- _optional_ -- **False** by default -- flag whether to insert blank records until the current datetime, i.e. moment of script launch (if no data for present date). Not applicable if _--skip_missing_dates_ flag is set.
+8. **--no_multiprocessing** -- _optional_ -- **False** by default -- flag whether not to utilize multiprocess approach for results downloading. Unless set the application will divide the list of input entries and forward them to separate processes.
+9. **--num_processes** -- _optional_ -- **8** by default -- number of processes for multiprocess approach, not applicable if _--no_multiprocessing_ flag is set. **IMPORTANT:** For 2xQuadCore processors the number should not be larger than 8.
 
 ### Command examples
 #### Simple
