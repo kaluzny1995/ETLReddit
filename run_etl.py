@@ -2,10 +2,7 @@ import argparse
 import datetime as dt
 
 import util
-import error
-from model import AppConfig
-from provider import SupabasePostgresProvider, \
-    SupabasePostgresDbRedditProvider, SupabasePostgresDbCommentProvider, SupabasePostgresDbSentimentAnalysisProvider
+from model import AppConfig, ETLParams
 from service import SentimentAnalysisService
 
 logger = util.setup_logger(name="run_etl",
@@ -28,6 +25,8 @@ def parse_args(defaults: AppConfig) -> argparse.Namespace:
     parser.add_argument("--skip_missing_dates", required=False, default=defaults.is_missing_dates_skipped,
                         help=f"flag whether not to add blank records for periods without any data, default: {defaults.is_missing_dates_skipped}",
                         action="store_true")
+    parser.add_argument("--start_date", type=str, required=False, default=defaults.start_date,
+                        help=f"start date of missing file dates detection, default: {defaults.start_date}")
     parser.add_argument("--interval", type=str, required=False, choices=["h", "d", "m", "y"], default=defaults.date_interval,
                         help=f"period between every file date if for missing dates blank records are added, default: {defaults.date_interval}")
     parser.add_argument("--until_today", required=False, default=defaults.is_until_today,
@@ -44,80 +43,32 @@ def parse_args(defaults: AppConfig) -> argparse.Namespace:
 
 def run_sentiment_analysis(args: argparse.Namespace) -> None:
     """ Executes sentiment analysis script """
-
-    phrase = args.phrase
-    script_name = args.script
-    batch_size = args.batch_size
-    is_filled_missing_dates = not args.skip_missing_dates
-    date_interval = "N/A" if not is_filled_missing_dates else args.interval
-    is_until_previous_day = False if not is_filled_missing_dates else not args.until_today
-    is_multiprocessing_used = not args.no_multiprocessing
-    num_processes = 1 if not is_multiprocessing_used else args.num_processes
+    etl_params = ETLParams.from_argparse_namespace(args)
 
     # Show parameters
-    print("Reddits phrase:", phrase)
-    print("ETL script name:", script_name)
-    print("Batch size:", batch_size)
-    print("Fill in for missing dates:", is_filled_missing_dates)
-    print("File date interval:", date_interval)
-    print("Is filled in until previous date:", is_until_previous_day)
-    print("Use multiprocessing:", is_multiprocessing_used)
-    print("Number of processes:", num_processes)
+    print("Reddits phrase:", etl_params.phrase)
+    print("ETL script name:", etl_params.script_name)
+    print("Batch size:", etl_params.batch_size)
+    print("Fill in for missing dates:", etl_params.is_filled_missing_dates)
+    print("Start date of searching missing dates:", etl_params.start_date)
+    print("File date interval:", etl_params.date_interval)
+    print("Is filled in until previous date:", etl_params.is_until_previous_day)
+    print("Use multiprocessing:", etl_params.is_multiprocessing_used)
+    print("Number of processes:", etl_params.num_processes)
     print()
 
-    logger.info(f"Reddits phrase: {phrase}")
-    logger.info(f"ETL script name: {script_name}")
-    logger.info(f"Batch size: {batch_size}")
-    logger.info(f"Fill in for missing dates: {is_filled_missing_dates}")
-    logger.info(f"File date interval: {date_interval}")
-    logger.info(f"Is filled in until previous date: {is_until_previous_day}")
-    logger.info(f"Use multiprocessing: {is_multiprocessing_used}")
-    logger.info(f"Number of processes: {num_processes}")
+    logger.info(f"Reddits phrase: {etl_params.phrase}")
+    logger.info(f"ETL script name: {etl_params.script_name}")
+    logger.info(f"Batch size: {etl_params.batch_size}")
+    logger.info(f"Fill in for missing dates: {etl_params.is_filled_missing_dates}")
+    logger.info(f"Start date of searching missing dates: {etl_params.start_date}")
+    logger.info(f"File date interval: {etl_params.date_interval}")
+    logger.info(f"Is filled in until previous date: {etl_params.is_until_previous_day}")
+    logger.info(f"Use multiprocessing: {etl_params.is_multiprocessing_used}")
+    logger.info(f"Number of processes: {etl_params.num_processes}")
 
-    # load source file dates
-    supabase_postgres_reddit_provider = SupabasePostgresDbRedditProvider(SupabasePostgresProvider(logger=logger))
-    source_file_dates = sorted(supabase_postgres_reddit_provider.get_file_dates(phrase=phrase))
-    print("Source file dates:\n", source_file_dates)
-    logger.info(f"Source file dates: {source_file_dates}")
-
-    # load target files dates
-    supabase_postgres_sentiment_analysis_provider = SupabasePostgresDbSentimentAnalysisProvider(SupabasePostgresProvider(logger=logger))
-    target_file_dates = sorted(supabase_postgres_sentiment_analysis_provider.get_file_dates(phrase=phrase))
-    print("Target file dates:\n", target_file_dates)
-    logger.info(f"Target file dates: {target_file_dates}")
-    recent_target_file_date = None if len(target_file_dates) == 0 else target_file_dates[-1]
-    print("Recent target file date:", recent_target_file_date)
-    logger.info(f"Recent target file date: {recent_target_file_date}")
-    print()
-
-    # determine the missing file dates to load the data for
-    missing_file_dates = source_file_dates if recent_target_file_date is None \
-        else list(filter(lambda fd: fd > recent_target_file_date, source_file_dates))
-    if len(missing_file_dates) == 0:
-        print("No new files available. Finishing.")
-        logger.info(f"No new files available. Finishing.")
-        raise error.NoNewDataError("No new files available for ETL.")
-    print(f"\nLoading data for the following dates:\n{missing_file_dates}\n")
-    logger.info(f"Loading data for the following dates: {missing_file_dates}")
-
-    # get reddit and comment entries
-    reddits = supabase_postgres_reddit_provider.get_reddits(phrase=phrase, file_dates=missing_file_dates)
-    supabase_postgres_comment_provider = SupabasePostgresDbCommentProvider(SupabasePostgresProvider(logger=logger))
-    comments = supabase_postgres_comment_provider.get_comments(phrase=phrase, file_dates=missing_file_dates)
-    entries = reddits + comments
-
-    # process reddit and comment entries
-    print("Reddit and comment entries loaded:", len(entries))
-    logger.info(f"Reddit and comment entries loaded: {len(entries)}")
-    sentiment_analysis_service = SentimentAnalysisService(is_multiprocessing_used=is_multiprocessing_used,
-                                                          num_processes=num_processes, logger=logger)
-    sentiment_analyses = sentiment_analysis_service.run_etl(entries)
-    print(f"Sentiment analyses processed: {len(sentiment_analyses)}.\n")
-    logger.info(f"Sentiment analyses processed: {len(sentiment_analyses)}.")
-
-    # insert sentiment analyses
-    supabase_postgres_sentiment_analysis_provider.insert_sentiment_analyses(sentiment_analyses,
-                                                                            batch_size=batch_size)
+    sentiment_analysis_service = SentimentAnalysisService(logger=logger)
+    sentiment_analysis_service.run_etl(**etl_params.model_dump())
 
 
 def run_vectorization(args: argparse.Namespace) -> None:

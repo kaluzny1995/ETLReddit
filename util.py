@@ -1,5 +1,7 @@
 import logging
-from typing import List, Any
+import datetime as dt
+from dateutil.relativedelta import relativedelta
+from typing import List, Any, Generator, Tuple
 
 
 def setup_logger(name, log_file, level=logging.INFO):
@@ -43,3 +45,36 @@ def chunk_list_n_elements(elements: List[Any], number: int) -> List[List[Any]]:
     for i in range(0, number):
         result.append(elements[i::number])
     return result
+
+
+def date_range(start_date: dt.datetime, end_date: dt.datetime | None = None, interval: str = "d") -> Generator[Tuple[dt.datetime, dt.datetime], None, None]:
+    if end_date is None:
+        end_date = dt.datetime.now()
+
+    if interval == "h":
+        sd = start_date.replace(minute=0, second=0)
+        ed = end_date.replace(minute=0, second=0)
+        for i in range(int((ed - sd).total_seconds()//3600) + 1):
+            date = sd + dt.timedelta(hours=i)
+            yield date, sd + dt.timedelta(hours=i+1)
+    elif interval == "d":
+        sd = start_date.replace(hour=0, minute=0, second=0)
+        ed = end_date.replace(hour=0, minute=0, second=0)
+        for i in range((ed - sd).days + 1):
+            date = sd + dt.timedelta(days=i)
+            yield date, sd + dt.timedelta(days=i+1)
+    elif interval == "m":
+        sd = start_date.replace(day=1, hour=0, minute=0, second=0)
+        ed = end_date.replace(day=1, hour=0, minute=0, second=0)
+        for i in range((ed.year - sd.year) * 12 + (ed.month - sd.month) + 1):
+            date = sd + relativedelta(months=i)
+            yield date, sd + relativedelta(months=i+1)
+    elif interval == "y":
+        sd = start_date.replace(month=1, day=1, hour=0, minute=0, second=0)
+        ed = end_date.replace(month=1, day=1, hour=0, minute=0, second=0)
+        for i in range(ed.year - sd.year + 1):
+            date = sd + relativedelta(years=i)
+            yield date, sd + relativedelta(years=i+1)
+    else:
+        raise ValueError(f"Unknown interval '{interval}'. Should be 'h', 'd', 'm' or 'y'.")
+

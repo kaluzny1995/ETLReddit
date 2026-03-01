@@ -1,13 +1,10 @@
 from abc import ABC, abstractmethod
-from typing import List
-
-from sqlmodel import SQLModel
 
 
 class IETLService(ABC):
     """ Interface for all ETL services """
 
     @abstractmethod
-    def run_etl(self, entries: List[SQLModel]) -> List[SQLModel]:
-        """ Runs ETL service processing input entries and returning output results """
+    def run_etl(self, **etl_params_dict) -> None:
+        """ Runs ETL process loading expected input entries, processing and persisting expected output data """
         pass
