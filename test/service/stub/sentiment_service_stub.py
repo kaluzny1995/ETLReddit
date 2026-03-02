@@ -6,11 +6,11 @@ from autocorrect import Speller
 from typing import List
 
 from model.util.sentiment_result import TextblobSentiment, NLTKSentiment
-from service import ISentimentAnalysisService
+from service import ISentimentService
 
 
-class SentimentAnalysisServiceStub(ISentimentAnalysisService):
-    """ SentimentAnalysis service class """
+class SentimentServiceStub(ISentimentService):
+    """ Sentiment service class """
     speller: Speller
     nltk_sentiment_analyzer: SentimentIntensityAnalyzer
 
@@ -42,5 +42,5 @@ class SentimentAnalysisServiceStub(ISentimentAnalysisService):
             return TextblobSentiment(polarity=sentiments.polarity, subjectivity=sentiments.subjectivity)
 
     def run_etl(self, entries: List[SQLModel]) -> List[SQLModel]:
-        """ Returns a list of sentiment analysis objects according to the provided reddits and comments """
+        """ Returns a list of sentiment objects according to the provided reddits and comments """
         pass

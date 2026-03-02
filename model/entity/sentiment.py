@@ -5,7 +5,7 @@ from sqlmodel import SQLModel, Field, Column, String, DateTime, Integer, Float, 
 from model import Reddit, Comment, SentimentResult
 
 
-class SentimentAnalysis(SQLModel, table=True):
+class Sentiment(SQLModel, table=True):
     reddit_id: str | None = Field(sa_column=Column("reddit_id", String, primary_key=True, nullable=False))
     comment_id: str | None = Field(sa_column=Column("comment_id", String, primary_key=True, nullable=False))
     phrase: str = Field(sa_column=Column("phrase", String, primary_key=True, nullable=False))
@@ -25,7 +25,7 @@ class SentimentAnalysis(SQLModel, table=True):
     s_sub: float = Field(sa_column=Column("s_sub", Float, nullable=False))
     file_date: str = Field(sa_column=Column("file_date", String, nullable=False))
 
-    __tablename__ = "sentiment_analyses"
+    __tablename__ = "sentiments"
     __table_args__ = (
         CheckConstraint("reddit_id is not null or comment_id is not null", name="reddit_or_comment_not_null"),
         {'schema': "reddit"}
@@ -57,8 +57,8 @@ class SentimentAnalysis(SQLModel, table=True):
         }
 
     @staticmethod
-    def blank(phrase: str, file_date: str) -> 'SentimentAnalysis':
-        return SentimentAnalysis(
+    def blank(phrase: str, file_date: str) -> 'Sentiment':
+        return Sentiment(
             reddit_id=f"N/A_{file_date}",
             comment_id=f"N/A_{file_date}",
             phrase=phrase,
@@ -80,8 +80,8 @@ class SentimentAnalysis(SQLModel, table=True):
         )
 
     @staticmethod
-    def from_reddit(reddit: Reddit, text: str, sentiment_result: SentimentResult) -> 'SentimentAnalysis':
-        return SentimentAnalysis(
+    def from_reddit(reddit: Reddit, text: str, sentiment_result: SentimentResult) -> 'Sentiment':
+        return Sentiment(
             reddit_id=reddit.reddit_id,
             comment_id="N/A",
             phrase=reddit.phrase,
@@ -103,8 +103,8 @@ class SentimentAnalysis(SQLModel, table=True):
         )
 
     @staticmethod
-    def from_comment(comment: Comment, text: str, sentiment_result: SentimentResult) -> 'SentimentAnalysis':
-        return SentimentAnalysis(
+    def from_comment(comment: Comment, text: str, sentiment_result: SentimentResult) -> 'Sentiment':
+        return Sentiment(
             reddit_id="N/A",
             comment_id=comment.comment_id,
             phrase=comment.phrase,

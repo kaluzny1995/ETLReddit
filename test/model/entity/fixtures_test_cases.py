@@ -1,6 +1,6 @@
 import datetime as dt
 
-from model import SentimentResult, Author, Reddit, Comment, SentimentAnalysis
+from model import SentimentResult, Author, Reddit, Comment, Sentiment
 
 test_author_from_raw_json_cases = [
     (
@@ -289,7 +289,7 @@ test_comment_from_raw_json_cases = [
     )
 ]
 
-test_sentiment_analysis_from_reddit_cases = [
+test_sentiment_from_reddit_cases = [
     (
         Reddit(
             reddit_id="jgz2uz",
@@ -313,7 +313,7 @@ test_sentiment_analysis_from_reddit_cases = [
         ),
         "We live in a basement suite. So I built a loft for our cgi Wolfgang.",
         SentimentResult(negative=0., neutral=1., positive=0., compound=0., polarity=0.13636363636363635, subjectivity=0.5),
-        SentimentAnalysis(
+        Sentiment(
             reddit_id="jgz2uz",
             comment_id="N/A",
             phrase="corgi",
@@ -356,7 +356,7 @@ test_sentiment_analysis_from_reddit_cases = [
         ),
         "Corgi-sized meteor as heavy as 4 baby elephants",
         SentimentResult(negative=0., neutral=1., positive=0., compound=0., polarity=-0.2, subjectivity=0.5),
-        SentimentAnalysis(
+        Sentiment(
             reddit_id="135yzs1",
             comment_id="N/A",
             phrase="corgi",
@@ -379,7 +379,7 @@ test_sentiment_analysis_from_reddit_cases = [
     )
 ]
 
-test_sentiment_analysis_from_comment_cases = [
+test_sentiment_from_comment_cases = [
     (
         Comment(
             comment_id="g9tw6ow",
@@ -406,7 +406,7 @@ test_sentiment_analysis_from_comment_cases = [
         ),
         "I like Wolfgang.",
         SentimentResult(negative=0., neutral=0.286, positive=0.714, compound=0.3612, polarity=0., subjectivity=0.),
-        SentimentAnalysis(
+        Sentiment(
             reddit_id="N/A",
             comment_id="g9tw6ow",
             phrase="corgi",
@@ -452,7 +452,7 @@ test_sentiment_analysis_from_comment_cases = [
         ),
         "Please tell me he's named Wolfgang Puck, after the chef, but you call him Wolfgang Pup",
         SentimentResult(negative=0., neutral=0.901, positive=0.099, compound=0.1655, polarity=0., subjectivity=0.),
-        SentimentAnalysis(
+        Sentiment(
             reddit_id="N/A",
             comment_id="g9v8jbi",
             phrase="corgi",

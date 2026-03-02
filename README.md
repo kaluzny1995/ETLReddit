@@ -67,12 +67,12 @@ Running the help command: `python run_etl.py -h` yields the following:
 ---- Reddits ETL app ----
 
 usage: run_etl.py [-h] [-b BATCH_SIZE] [--skip_missing_dates] [--start_date START_DATE] [--interval {h,d,m,y}] [--until_today] [--no_multiprocessing] [--num_processes NUM_PROCESSES]
-                  {sentiment_analysis,vectorization} phrase
+                  {sentiment,vectorization} phrase
 
 Reddits ETL Python 3.11 application.
 
 positional arguments:
-  {sentiment_analysis,vectorization}
+  {sentiment,vectorization}
                         ETL script to run
   phrase                phrase which contain reddits to do the ETL with
 
@@ -92,7 +92,7 @@ options:
 ```
 
 ### Parameters overview
-1. **script** -- **_required_** -- etl script to run. Currently, **"sentiment_analysis"** is only available. The _"vectorization"_ will be developed furtherly.  
+1. **script** -- **_required_** -- etl script to run. Currently, **"sentiment"** is only available. The _"vectorization"_ will be developed furtherly.  
 2. **phrase** -- **_required_** -- word or sentence fragment according to which the reddits should be ingested.
 3. **-b**, **--batch_size** -- _optional_ -- **10000** by default -- maximum number of entries inserted into database at once.
 4. **--skip_missing_dates** -- _optional_ -- **False** by default -- flag whether not to load blank records for file dates for which the data do not exist.
@@ -105,11 +105,11 @@ options:
 ### Command examples
 #### Simple
     python run_etl.py "corgi"
-The application will load all reddits and comments according to "corgi", perform the sentiment analysis utilizing multiprocess approach and store processed data into _sentiment_analysis_ table. The solution will also insert blank records for file date gaps.
+The application will load all reddits and comments according to "corgi", perform the sentiment utilizing multiprocess approach and store processed data into _sentiment_ table. The solution will also insert blank records for file date gaps.
 
 #### Skipping missing dates
     python run_etl.py "corgi" --skip_missing_dates
-The application will load "corgi" entries and then perform the sentiment analysis without filling data with blank records for missing file dates.
+The application will load "corgi" entries and then perform the sentiment without filling data with blank records for missing file dates.
 
 #### Filling in with blank records until date of launch
     python run_etl.py "corgi" --until_today
@@ -117,7 +117,7 @@ The application will load "corgi" entries and filling in with blank records for 
 
 #### No multiprocessing
     python run_etl.py "corgi" --no_multiprocessing
-The application will load "corgi" entries and then perform the sentiment analysis however not using multiprocess approach and store processed data into _sentiment_analysis_ table.
+The application will load "corgi" entries and then perform the sentiment however not using multiprocess approach and store processed data into _sentiment_ table.
 
 ### Testing
 To perform application unit testing simply run the command `pytest` in main project directory. The output should look like the following:
@@ -145,7 +145,7 @@ The illustration above shows the solution dataflow diagram. The dash-frame highl
 
 ## Data model
 ![Data model class diagram](/assets/images/reddits_data_model.png)
-The illustration above shows the data model diagram class. The **Author**, **Reddit** and **Comment** class instances are used during JSON files ingestion (insertion) as well as ETL processes (reading). The **SentimentAnalysis** class instances are used (currently) only during persistence of processed reddits and comments (insertion).
+The illustration above shows the data model diagram class. The **Author**, **Reddit** and **Comment** class instances are used during JSON files ingestion (insertion) as well as ETL processes (reading). The **Sentiment** class instances are used (currently) only during persistence of processed reddits and comments (insertion).
 
 ## Detailed class diagrams
 ### Ingestion
@@ -157,10 +157,10 @@ The illustration above shows the data model diagram class. The **Author**, **Red
 5. **Comments extraction** -- extraction of **comment** objects from JSON files and persisting in database
 6. **Authors extraction** -- extraction of **author** objects from JSON files and persisting in database
 
-### ETL - sentiment analysis
-![Data model class diagram](/assets/images/reddits_etl_sentiment_analysis_class_diagram.png)
+### ETL - sentiment
+![Data model class diagram](/assets/images/reddits_etl_sentiment_class_diagram.png)
 1. **Source file dates** -- reading file dates from **reddits** source database table
-2. **Target file dates** -- reading file dates from **sentiment_analyses** target database table
+2. **Target file dates** -- reading file dates from **sentiments** target database table
 3. **Missing file dates** -- determining of which file dates the application should load the data for
-4. **ETL process** -- loading **reddits** and **comments** from database and sentiment analysis ETL processes
-5. **Results persistence** -- persisting sentiment analysis results in **sentiment_analyses** database table
+4. **ETL process** -- loading **reddits** and **comments** from database and sentiment ETL processes
+5. **Results persistence** -- persisting sentiment results in **sentiments** database table
