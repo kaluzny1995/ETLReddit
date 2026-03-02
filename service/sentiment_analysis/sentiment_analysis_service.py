@@ -10,7 +10,7 @@ from tqdm import tqdm
 
 import error
 import util
-from model import ETLParams, NLTKSentiment, TextblobSentiment, Sentiment, Reddit, Comment, SentimentAnalysis
+from model import ETLParams, NLTKSentiment, TextblobSentiment, SentimentResult, Reddit, Comment, SentimentAnalysis
 from provider import SupabasePostgresProvider, SupabasePostgresDbSentimentAnalysisProvider, IDbRedditProvider, \
     IDbCommentProvider, IDbSentimentAnalysisProvider, SupabasePostgresDbRedditProvider, \
     SupabasePostgresDbCommentProvider
@@ -94,12 +94,12 @@ class SentimentAnalysisService(ISentimentAnalysisService):
         autocorrected_text = self.get_autocorrected_text(dirty_text)
         nltk_sentiment = self.get_nltk_sentiment(autocorrected_text)
         textblob_sentiment = self.get_textblob_sentiment(autocorrected_text)
-        sentiment = Sentiment.from_ntlk_and_textblob(nltk_sentiment, textblob_sentiment)
+        sentiment_result = SentimentResult.from_ntlk_and_textblob(nltk_sentiment, textblob_sentiment)
 
         if isinstance(entry, Reddit):
-            return SentimentAnalysis.from_reddit(entry, autocorrected_text, sentiment)
+            return SentimentAnalysis.from_reddit(entry, autocorrected_text, sentiment_result)
         else:
-            return SentimentAnalysis.from_comment(entry, autocorrected_text, sentiment)
+            return SentimentAnalysis.from_comment(entry, autocorrected_text, sentiment_result)
 
     def _multiprocess_entries(self, entries: List[Reddit | Comment], num: int, queue: multiprocessing.Queue) -> None:
         """ Partially processes reddit and comment entries (utilizes multiprocessing) """

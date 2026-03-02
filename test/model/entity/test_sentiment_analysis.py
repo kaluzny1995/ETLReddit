@@ -1,16 +1,16 @@
 import pytest
 
-from model import Sentiment, Reddit, Comment, SentimentAnalysis
+from model import SentimentResult, Reddit, Comment, SentimentAnalysis
 
 from test.model.entity.fixtures_test_cases import (test_sentiment_analysis_from_reddit_cases,
                                                    test_sentiment_analysis_from_comment_cases)
 
 
-@pytest.mark.parametrize("reddit, text, sentiment, expected_sentiment_analysis", test_sentiment_analysis_from_reddit_cases)
-def test_from_reddit(reddit: Reddit, text: str, sentiment: Sentiment, expected_sentiment_analysis: SentimentAnalysis) -> None:
+@pytest.mark.parametrize("reddit, text, sentiment_result, expected_sentiment_analysis", test_sentiment_analysis_from_reddit_cases)
+def test_from_reddit(reddit: Reddit, text: str, sentiment_result: SentimentResult, expected_sentiment_analysis: SentimentAnalysis) -> None:
     # Arrange
     # Act
-    sentiment_analysis = SentimentAnalysis.from_reddit(reddit, text, sentiment)
+    sentiment_analysis = SentimentAnalysis.from_reddit(reddit, text, sentiment_result)
 
     # Assert
     assert sentiment_analysis.reddit_id == expected_sentiment_analysis.reddit_id
@@ -33,11 +33,11 @@ def test_from_reddit(reddit: Reddit, text: str, sentiment: Sentiment, expected_s
     assert sentiment_analysis.file_date == expected_sentiment_analysis.file_date
 
 
-@pytest.mark.parametrize("comment, text, sentiment, expected_sentiment_analysis", test_sentiment_analysis_from_comment_cases)
-def test_from_comment(comment: Comment, text: str, sentiment: Sentiment, expected_sentiment_analysis: SentimentAnalysis) -> None:
+@pytest.mark.parametrize("comment, text, sentiment_result, expected_sentiment_analysis", test_sentiment_analysis_from_comment_cases)
+def test_from_comment(comment: Comment, text: str, sentiment_result: SentimentResult, expected_sentiment_analysis: SentimentAnalysis) -> None:
     # Arrange
     # Act
-    sentiment_analysis = SentimentAnalysis.from_comment(comment, text, sentiment)
+    sentiment_analysis = SentimentAnalysis.from_comment(comment, text, sentiment_result)
 
     # Assert
     assert sentiment_analysis.reddit_id == expected_sentiment_analysis.reddit_id

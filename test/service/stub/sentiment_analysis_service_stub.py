@@ -5,7 +5,7 @@ from textblob import TextBlob
 from autocorrect import Speller
 from typing import List
 
-from model.util.sentiment import TextblobSentiment, NLTKSentiment
+from model.util.sentiment_result import TextblobSentiment, NLTKSentiment
 from service import ISentimentAnalysisService
 
 

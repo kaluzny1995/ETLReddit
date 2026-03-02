@@ -2,7 +2,7 @@ from model.config.app_config import AppConfig
 from model.config.supabase_connection_config import SupabaseConnectionConfig
 
 from model.util.etl_params import ETLParams
-from model.util.sentiment import NLTKSentiment, TextblobSentiment, Sentiment
+from model.util.sentiment_result import NLTKSentiment, TextblobSentiment, SentimentResult
 
 from model.enum.e_file_date_type import EFileDateType
 

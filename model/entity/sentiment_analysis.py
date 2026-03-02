@@ -2,7 +2,7 @@ import datetime as dt
 
 from sqlmodel import SQLModel, Field, Column, String, DateTime, Integer, Float, Boolean, CheckConstraint
 
-from model import Reddit, Comment, Sentiment
+from model import Reddit, Comment, SentimentResult
 
 
 class SentimentAnalysis(SQLModel, table=True):
@@ -80,7 +80,7 @@ class SentimentAnalysis(SQLModel, table=True):
         )
 
     @staticmethod
-    def from_reddit(reddit: Reddit, text: str, sentiment: Sentiment) -> 'SentimentAnalysis':
+    def from_reddit(reddit: Reddit, text: str, sentiment_result: SentimentResult) -> 'SentimentAnalysis':
         return SentimentAnalysis(
             reddit_id=reddit.reddit_id,
             comment_id="N/A",
@@ -93,17 +93,17 @@ class SentimentAnalysis(SQLModel, table=True):
             gilded_number=reddit.gilded_number,
             number_of_comments=reddit.number_of_comments,
             controversiality=False,
-            s_neg=sentiment.negative,
-            s_neu=sentiment.neutral,
-            s_pos=sentiment.positive,
-            s_com=sentiment.compound,
-            s_pol=sentiment.polarity,
-            s_sub=sentiment.subjectivity,
+            s_neg=sentiment_result.negative,
+            s_neu=sentiment_result.neutral,
+            s_pos=sentiment_result.positive,
+            s_com=sentiment_result.compound,
+            s_pol=sentiment_result.polarity,
+            s_sub=sentiment_result.subjectivity,
             file_date=reddit.start_file_date
         )
 
     @staticmethod
-    def from_comment(comment: Comment, text: str, sentiment: Sentiment) -> 'SentimentAnalysis':
+    def from_comment(comment: Comment, text: str, sentiment_result: SentimentResult) -> 'SentimentAnalysis':
         return SentimentAnalysis(
             reddit_id="N/A",
             comment_id=comment.comment_id,
@@ -116,11 +116,11 @@ class SentimentAnalysis(SQLModel, table=True):
             gilded_number=comment.gilded_number,
             number_of_comments=comment.number_of_replies,
             controversiality=comment.controversiality,
-            s_neg=sentiment.negative,
-            s_neu=sentiment.neutral,
-            s_pos=sentiment.positive,
-            s_com=sentiment.compound,
-            s_pol=sentiment.polarity,
-            s_sub=sentiment.subjectivity,
+            s_neg=sentiment_result.negative,
+            s_neu=sentiment_result.neutral,
+            s_pos=sentiment_result.positive,
+            s_com=sentiment_result.compound,
+            s_pol=sentiment_result.polarity,
+            s_sub=sentiment_result.subjectivity,
             file_date=comment.start_file_date
         )

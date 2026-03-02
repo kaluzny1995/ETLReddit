@@ -20,12 +20,12 @@ class TextblobSentiment(BaseModel):
         frozen = True
 
 
-class Sentiment(NLTKSentiment, TextblobSentiment):
+class SentimentResult(NLTKSentiment, TextblobSentiment):
 
     class ConfigDict:
         frozen = True
 
     @staticmethod
-    def from_ntlk_and_textblob(nltk_sentiment: NLTKSentiment, textblob_sentiment: TextblobSentiment) -> 'Sentiment':
-        return Sentiment(**dict(nltk_sentiment.model_dump() | textblob_sentiment.model_dump()))
+    def from_ntlk_and_textblob(nltk_sentiment: NLTKSentiment, textblob_sentiment: TextblobSentiment) -> 'SentimentResult':
+        return SentimentResult(**dict(nltk_sentiment.model_dump() | textblob_sentiment.model_dump()))
 

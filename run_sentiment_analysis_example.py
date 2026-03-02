@@ -1,4 +1,4 @@
-from model import Sentiment
+from model import SentimentResult
 from service import SentimentAnalysisService
 
 
@@ -16,8 +16,8 @@ def main():
     textblob_sentiment = sentiment_analysis_service.get_textblob_sentiment(clean_text)
     print("Textblob sentiment: ", textblob_sentiment)
 
-    sentiment = Sentiment.from_ntlk_and_textblob(nltk_sentiment, textblob_sentiment)
-    print("Sentiment: ", sentiment)
+    sentiment_result = SentimentResult.from_ntlk_and_textblob(nltk_sentiment, textblob_sentiment)
+    print("Sentiment result: ", sentiment_result)
 
 
 if __name__ == "__main__":
