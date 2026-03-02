@@ -1,10 +1,12 @@
 from model.config.app_config import AppConfig
 from model.config.supabase_connection_config import SupabaseConnectionConfig
 
+from model.enum.e_file_date_type import EFileDateType
+from model.enum.e_entry_type import EEntryType
+from model.enum.e_sentiment_class import ESentimentClass
+
 from model.util.etl_params import ETLParams
 from model.util.sentiment_result import NLTKSentiment, TextblobSentiment, SentimentResult
-
-from model.enum.e_file_date_type import EFileDateType
 
 from model.entity.author import Author
 from model.entity.reddit import Reddit

@@ -1,6 +1,6 @@
 import datetime as dt
 
-from model import SentimentResult, Author, Reddit, Comment, Sentiment
+from model import ESentimentClass, SentimentResult, Author, Reddit, Comment, Sentiment
 
 test_author_from_raw_json_cases = [
     (
@@ -312,7 +312,7 @@ test_sentiment_from_reddit_cases = [
             end_file_date="2027-01-01"
         ),
         "We live in a basement suite. So I built a loft for our cgi Wolfgang.",
-        SentimentResult(negative=0., neutral=1., positive=0., compound=0., polarity=0.13636363636363635, subjectivity=0.5),
+        SentimentResult(negative=0., neutral=1., positive=0., compound=0., polarity=0.13636363636363635, subjectivity=0.5, sentiment_class=ESentimentClass.NEUTRAL),
         Sentiment(
             reddit_id="jgz2uz",
             comment_id="N/A",
@@ -355,7 +355,7 @@ test_sentiment_from_reddit_cases = [
             end_file_date="2023-01-01"
         ),
         "Corgi-sized meteor as heavy as 4 baby elephants",
-        SentimentResult(negative=0., neutral=1., positive=0., compound=0., polarity=-0.2, subjectivity=0.5),
+        SentimentResult(negative=0., neutral=1., positive=0., compound=0., polarity=-0.2, subjectivity=0.5, sentiment_class=ESentimentClass.NEUTRAL),
         Sentiment(
             reddit_id="135yzs1",
             comment_id="N/A",
@@ -405,7 +405,7 @@ test_sentiment_from_comment_cases = [
             end_file_date="2023-01-01"
         ),
         "I like Wolfgang.",
-        SentimentResult(negative=0., neutral=0.286, positive=0.714, compound=0.3612, polarity=0., subjectivity=0.),
+        SentimentResult(negative=0., neutral=0.286, positive=0.714, compound=0.3612, polarity=0., subjectivity=0., sentiment_class=ESentimentClass.POSITIVE),
         Sentiment(
             reddit_id="N/A",
             comment_id="g9tw6ow",
@@ -451,7 +451,7 @@ test_sentiment_from_comment_cases = [
             end_file_date="2027-01-01"
         ),
         "Please tell me he's named Wolfgang Puck, after the chef, but you call him Wolfgang Pup",
-        SentimentResult(negative=0., neutral=0.901, positive=0.099, compound=0.1655, polarity=0., subjectivity=0.),
+        SentimentResult(negative=0., neutral=0.901, positive=0.099, compound=0.1655, polarity=0., subjectivity=0., sentiment_class=ESentimentClass.NEUTRAL),
         Sentiment(
             reddit_id="N/A",
             comment_id="g9v8jbi",
