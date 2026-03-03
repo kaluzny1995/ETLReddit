@@ -1,6 +1,6 @@
 from typing import List
 
-from model.entity.sentiment import Sentiment
+from model import Sentiment
 from provider import IDbSentimentProvider
 
 

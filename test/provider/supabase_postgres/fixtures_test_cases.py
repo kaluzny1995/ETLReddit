@@ -1,6 +1,6 @@
 import datetime as dt
 
-from model import EEntryType, ESentimentClass, Author, Reddit, Comment, Sentiment
+from model import EEntryType, ESentimentClass, Author, Reddit, Comment, Sentiment, Popularity
 
 authors = [
     Author(name="MooseWhisperer09",
@@ -143,5 +143,24 @@ sentiments = [
               clean_text="She will find better people for her life after her deed.",
               s_neg=0., s_neu=0.775, s_pos=0.225, s_com=-0.4404, s_pol=0.5, s_sub=0.5,
               s_class=ESentimentClass.POSITIVE, file_date="2020-01-01"
+    )
+]
+
+popularities = [
+    Popularity(reddit_id="jgz2uz", comment_id="N/A", phrase="corgi", author="CocaKoller", entry_type=EEntryType.REDDIT,
+               entry_level=-1, score=115320, upvote_ratio=0.94, gilded_count=4, comments_count=820,
+               is_controversial=False, file_date="2026-01-01"
+    ),
+    Popularity(reddit_id="135yzs1", comment_id="N/A", phrase="corgi", author="HELL-OAT", entry_type=EEntryType.REDDIT,
+               entry_level=-1, score=37097, upvote_ratio=0.96, gilded_count=0, comments_count=643,
+               is_controversial=False, file_date="2022-01-01"
+    ),
+    Popularity(reddit_id="N/A", comment_id="g9tw6ow", phrase="corgi", author=None, entry_type=EEntryType.COMMENT,
+               entry_level=0, score=1013, upvote_ratio=1., gilded_count=0, comments_count=7,
+               is_controversial=False, file_date="2022-01-01"
+    ),
+    Popularity(reddit_id="N/A", comment_id="g9v8jbi", phrase="corgi", author="rognabologna", entry_type=EEntryType.COMMENT,
+               entry_level=2, score=72, upvote_ratio=1., gilded_count=3, comments_count=0,
+               is_controversial=True, file_date="2026-01-01"
     )
 ]
