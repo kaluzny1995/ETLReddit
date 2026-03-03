@@ -11,9 +11,9 @@ from tqdm import tqdm
 import error
 import util
 from model import ETLParams, NLTKSentiment, TextblobSentiment, SentimentResult, Reddit, Comment, Sentiment
-from provider import SupabasePostgresProvider, SupabasePostgresDbSentimentProvider, IDbRedditProvider, \
-    IDbCommentProvider, IDbSentimentProvider, SupabasePostgresDbRedditProvider, \
-    SupabasePostgresDbCommentProvider
+from provider import IDbRedditProvider, IDbCommentProvider, IDbSentimentProvider, \
+    SupabasePostgresProvider, SupabasePostgresDbSentimentProvider, \
+    SupabasePostgresDbRedditProvider, SupabasePostgresDbCommentProvider
 from service import ISentimentService
 
 
@@ -30,7 +30,7 @@ class SentimentService(ISentimentService):
     def __init__(self, logger: logging.Logger | None = None,
                  reddit_provider: IDbRedditProvider | None = None,
                  comment_provider: IDbCommentProvider | None = None,
-                 sentiment_provider: IDbSentimentProvider | None = None) -> None:
+                 sentiment_provider: IDbSentimentProvider | None = None):
         nltk.download("vader_lexicon")
 
         self.logger = logger or util.setup_logger(name="sentiment_service",
@@ -65,7 +65,8 @@ class SentimentService(ISentimentService):
             sentiments = TextBlob(text).sentiment
             return TextblobSentiment(polarity=sentiments.polarity, subjectivity=sentiments.subjectivity)
 
-    def _get_sentiments(self, entries: List[Reddit | Comment], params: ETLParams) -> List[Sentiment]:
+    def get_sentiments(self, entries: List[Reddit | Comment], params: ETLParams) -> List[Sentiment]:
+        """ Returns the processed sentiments from given entries """
         results = list([])
         if params.is_multiprocessing_used and len(entries) > params.num_processes ** 2:
             queue = multiprocessing.Queue()
@@ -82,7 +83,7 @@ class SentimentService(ISentimentService):
         return results
 
     def _process_entry(self, entry: Reddit | Comment) -> Sentiment:
-        """ Processes single reddit or comment entry and return sentiment """
+        """ Processes single reddit or comment entry and returns sentiment """
         if type(entry) not in [Reddit, Comment]:
             self.logger.error(f"The provided entity for ETL has improper type: {type(entry)}.")
             raise error.WrongEntityError(f"The provided entity for ETL has improper type: {type(entry)}.")
@@ -191,7 +192,7 @@ class SentimentService(ISentimentService):
         print("Processing reddits and comments:")
         self.logger.info("Processing reddits and comments.")
 
-        sentiments = self._get_sentiments(entries, etl_params)
+        sentiments = self.get_sentiments(entries, etl_params)
 
         print(f"Sentiments processed: {len(sentiments)}.\n")
         self.logger.info(f"Sentiments processed: {len(sentiments)}.")

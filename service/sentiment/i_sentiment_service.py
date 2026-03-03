@@ -1,6 +1,7 @@
 from abc import abstractmethod
+from typing import List
 
-from model import NLTKSentiment, TextblobSentiment
+from model import ETLParams, NLTKSentiment, TextblobSentiment, Reddit, Comment, Sentiment
 from service import IETLService
 
 
@@ -20,4 +21,9 @@ class ISentimentService(IETLService):
     @abstractmethod
     def get_textblob_sentiment(self, text: str | None) -> TextblobSentiment:
         """ Returns the textblob sentiment """
+        pass
+
+    @abstractmethod
+    def get_sentiments(self, entries: List[Reddit | Comment], params: ETLParams) -> List[Sentiment]:
+        """ Returns the processed sentiments from given entries """
         pass

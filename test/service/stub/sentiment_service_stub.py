@@ -1,9 +1,11 @@
+from typing import List
+
 import nltk
 from nltk.sentiment.vader import SentimentIntensityAnalyzer
 from textblob import TextBlob
 from autocorrect import Speller
 
-from model.util.sentiment_result import TextblobSentiment, NLTKSentiment
+from model import ETLParams, TextblobSentiment, NLTKSentiment, Reddit, Comment, Sentiment
 from service import ISentimentService
 
 
@@ -12,7 +14,7 @@ class SentimentServiceStub(ISentimentService):
     speller: Speller
     nltk_sentiment_analyzer: SentimentIntensityAnalyzer
 
-    def __init__(self) -> None:
+    def __init__(self):
         nltk.download("vader_lexicon")
 
         self.speller = Speller()
@@ -38,6 +40,10 @@ class SentimentServiceStub(ISentimentService):
         else:
             sentiments = TextBlob(text).sentiment
             return TextblobSentiment(polarity=sentiments.polarity, subjectivity=sentiments.subjectivity)
+
+    def get_sentiments(self, entries: List[Reddit | Comment], params: ETLParams) -> List[Sentiment]:
+        """ Returns the processed sentiments from given entries """
+        pass
 
     def run_etl(self, **etl_params) -> None:
         """ Returns a list of sentiment objects according to the provided reddits and comments """
