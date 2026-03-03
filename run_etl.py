@@ -1,12 +1,10 @@
 import argparse
 import datetime as dt
+import logging
 
 import util
-from model import AppConfig, ETLParams
-from service import SentimentAnalysisService
-
-logger = util.setup_logger(name="run_etl",
-                           log_file=f"logs/run_etl/run_etl_{dt.datetime.now().isoformat()}.log")
+from model import AppConfig, EETLScript, ETLParams
+from service import SentimentService, PopularityService
 
 
 def get_config() -> AppConfig:
@@ -16,7 +14,7 @@ def get_config() -> AppConfig:
 def parse_args(defaults: AppConfig) -> argparse.Namespace:
     parser = argparse.ArgumentParser(description="Reddits ETL Python 3.11 application.")
 
-    parser.add_argument("script", type=str, choices=["sentiment_analysis", "vectorization"],
+    parser.add_argument("script", type=str, choices=list(map(lambda v: v.lower(), EETLScript.__members__)),
                         help="ETL script to run")
     parser.add_argument("phrase", type=str,
                         help="phrase which contain reddits to do the ETL with")
@@ -41,8 +39,8 @@ def parse_args(defaults: AppConfig) -> argparse.Namespace:
     return parser.parse_args()
 
 
-def run_sentiment_analysis(args: argparse.Namespace) -> None:
-    """ Executes sentiment analysis script """
+def run_sentiment(args: argparse.Namespace, logger: logging.Logger) -> None:
+    """ Executes sentiment script """
     etl_params = ETLParams.from_argparse_namespace(args)
 
     # Show parameters
@@ -67,8 +65,38 @@ def run_sentiment_analysis(args: argparse.Namespace) -> None:
     logger.info(f"Use multiprocessing: {etl_params.is_multiprocessing_used}")
     logger.info(f"Number of processes: {etl_params.num_processes}")
 
-    sentiment_analysis_service = SentimentAnalysisService(logger=logger)
-    sentiment_analysis_service.run_etl(**etl_params.model_dump())
+    sentiment_service = SentimentService(logger=logger)
+    sentiment_service.run_etl(**etl_params.model_dump())
+
+
+def run_popularity(args: argparse.Namespace, logger: logging.Logger) -> None:
+    """ Executes popularity script """
+    etl_params = ETLParams.from_argparse_namespace(args)
+
+    # Show parameters
+    print("Reddits phrase:", etl_params.phrase)
+    print("ETL script name:", etl_params.script_name)
+    print("Batch size:", etl_params.batch_size)
+    print("Fill in for missing dates:", etl_params.is_filled_missing_dates)
+    print("Start date of searching missing dates:", etl_params.start_date)
+    print("File date interval:", etl_params.date_interval)
+    print("Is filled in until previous date:", etl_params.is_until_previous_day)
+    print("Use multiprocessing:", etl_params.is_multiprocessing_used)
+    print("Number of processes:", etl_params.num_processes)
+    print()
+
+    logger.info(f"Reddits phrase: {etl_params.phrase}")
+    logger.info(f"ETL script name: {etl_params.script_name}")
+    logger.info(f"Batch size: {etl_params.batch_size}")
+    logger.info(f"Fill in for missing dates: {etl_params.is_filled_missing_dates}")
+    logger.info(f"Start date of searching missing dates: {etl_params.start_date}")
+    logger.info(f"File date interval: {etl_params.date_interval}")
+    logger.info(f"Is filled in until previous date: {etl_params.is_until_previous_day}")
+    logger.info(f"Use multiprocessing: {etl_params.is_multiprocessing_used}")
+    logger.info(f"Number of processes: {etl_params.num_processes}")
+
+    popularity_service = PopularityService(logger=logger)
+    popularity_service.run_etl(**etl_params.model_dump())
 
 
 def run_vectorization(args: argparse.Namespace) -> None:
@@ -77,18 +105,22 @@ def run_vectorization(args: argparse.Namespace) -> None:
 
 
 def main():
-    print("---- Reddits ETL app ----\n")
-    logger.info("---- Reddits ETL app ----")
-
     config = get_config()
     args = parse_args(config)
 
+    logger = util.setup_logger(name="run_etl",
+                               log_file=f"logs/run_etl/run_etl_{args.script}_{args.phrase}_{dt.datetime.now().isoformat()}.log")
+
+    print("---- Reddits ETL app ----\n")
+    logger.info("---- Reddits ETL app ----")
+
     # run ETL script
-    etl_scripts = dict({
-        'sentiment_analysis': run_sentiment_analysis,
+    run_etl_script = dict({
+        'sentiment': run_sentiment,
+        'popularity': run_popularity,
         'vectorization': run_vectorization
     })
-    etl_scripts[args.script](args)
+    run_etl_script[args.script](args, logger)
 
     print("\nDone.")
     logger.info("Done.")

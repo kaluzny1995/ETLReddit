@@ -1,6 +1,10 @@
 # ETL service
 from service.etl.i_etl_service import IETLService
 
-# Sentiment analysis service
-from service.sentiment_analysis.i_sentiment_analysis_service import ISentimentAnalysisService
-from service.sentiment_analysis.sentiment_analysis_service import SentimentAnalysisService
+# Sentiment service
+from service.sentiment.i_sentiment_service import ISentimentService
+from service.sentiment.sentiment_service import SentimentService
+
+# Popularity service
+from service.popularity.i_popularity_service import IPopularityService
+from service.popularity.popularity_service import PopularityService

@@ -1,6 +1,6 @@
 import datetime as dt
 
-from model import Author, Reddit, Comment, SentimentAnalysis
+from model import EEntryType, ESentimentClass, Author, Reddit, Comment, Sentiment, Popularity
 
 authors = [
     Author(name="MooseWhisperer09",
@@ -123,37 +123,44 @@ comments = [
     )
 ]
 
-sentiment_analyses = [
-    SentimentAnalysis(reddit_id="jgz2uz", comment_id="N/A", phrase="corgi", author="CocaKoller",
-                      text="We live in a basement suite. So I built a loft for our cgi Wolfgang.",
-                      datetime_created=dt.datetime(2020, 10, 24, 0, 14, 42),
-                      score=115320, upvote_ratio=0.94, gilded_number=4, number_of_comments=820,
-                      controversiality=False,
-                      s_neg=0., s_neu=1., s_pos=0., s_com=0., s_pol=0.13636363636363635, s_sub=0.5,
-                      file_date="2026-01-01"
+sentiments = [
+    Sentiment(reddit_id="jgz2uz", comment_id="N/A", phrase="corgi", author="CocaKoller", entry_type=EEntryType.REDDIT,
+              clean_text="We live in a basement suite. So I built a loft for our cgi Wolfgang.",
+              s_neg=0., s_neu=1., s_pos=0., s_com=0., s_pol=0.13636363636363635, s_sub=0.5,
+              s_class=ESentimentClass.NEUTRAL, file_date="2026-01-01"
     ),
-    SentimentAnalysis(reddit_id="135yzs1", comment_id="N/A", phrase="corgi", author="HELL-OAT",
-                      text="Corgi-sized meteor as heavy as 4 baby elephants",
-                      datetime_created=dt.datetime(2023, 5, 2, 20, 18, 4),
-                      score=37097, upvote_ratio=0.96, gilded_number=0, number_of_comments=643,
-                      controversiality=False,
-                      s_neg=0., s_neu=1., s_pos=0., s_com=0., s_pol=-0.2, s_sub=0.5,
-                      file_date="2022-01-01"
+    Sentiment(reddit_id="135yzs1", comment_id="N/A", phrase="corgi", author="HELL-OAT", entry_type=EEntryType.REDDIT,
+              clean_text="Corgi-sized meteor as heavy as 4 baby elephants",
+              s_neg=0., s_neu=1., s_pos=0., s_com=0., s_pol=-0.2, s_sub=0.5,
+              s_class=ESentimentClass.NEUTRAL, file_date="2022-01-01"
     ),
-    SentimentAnalysis(reddit_id="N/A", comment_id="fddgp16", phrase="aussie", author="num1AusDoto",
-                      text="Man people really be listening to that man but not a scientist fuck me dead can the fires just take me",
-                      datetime_created=dt.datetime(2020, 1, 6, 12, 51, 33),
-                      score=89, upvote_ratio=1., gilded_number=0, number_of_comments=0,
-                      controversiality=False,
-                      s_neg=0.215, s_neu=0.649, s_pos=0.136, s_com=-0.4897, s_pol=-0.1333, s_sub=0.4,
-                      file_date="2020-01-01"
+    Sentiment(reddit_id="N/A", comment_id="fddgp16", phrase="aussie", author="num1AusDoto", entry_type=EEntryType.COMMENT,
+              clean_text="Man people really be listening to that man but not a scientist fuck me dead can the fires just take me",
+              s_neg=0.215, s_neu=0.649, s_pos=0.136, s_com=-0.4897, s_pol=-0.1333, s_sub=0.4,
+              s_class=ESentimentClass.NEGATIVE, file_date="2020-01-01"
     ),
-    SentimentAnalysis(reddit_id="N/A", comment_id="fddgv1o", phrase="aussie", author="LeonardDeVir",
-                      text="She will find better people for her life after her deed.",
-                      datetime_created=dt.datetime(2020, 1, 6, 12, 55, 3),
-                      score=268, upvote_ratio=1., gilded_number=0, number_of_comments=0,
-                      controversiality=False,
-                      s_neg=0., s_neu=0.775, s_pos=0.225, s_com=-0.4404, s_pol=0.5, s_sub=0.5,
-                      file_date="2020-01-01"
+    Sentiment(reddit_id="N/A", comment_id="fddgv1o", phrase="aussie", author="LeonardDeVir", entry_type=EEntryType.COMMENT,
+              clean_text="She will find better people for her life after her deed.",
+              s_neg=0., s_neu=0.775, s_pos=0.225, s_com=-0.4404, s_pol=0.5, s_sub=0.5,
+              s_class=ESentimentClass.POSITIVE, file_date="2020-01-01"
+    )
+]
+
+popularities = [
+    Popularity(reddit_id="jgz2uz", comment_id="N/A", phrase="corgi", author="CocaKoller", entry_type=EEntryType.REDDIT,
+               entry_level=-1, score=115320, upvote_ratio=0.94, gilded_count=4, comments_count=820,
+               is_controversial=False, file_date="2026-01-01"
+    ),
+    Popularity(reddit_id="135yzs1", comment_id="N/A", phrase="corgi", author="HELL-OAT", entry_type=EEntryType.REDDIT,
+               entry_level=-1, score=37097, upvote_ratio=0.96, gilded_count=0, comments_count=643,
+               is_controversial=False, file_date="2022-01-01"
+    ),
+    Popularity(reddit_id="N/A", comment_id="g9tw6ow", phrase="corgi", author=None, entry_type=EEntryType.COMMENT,
+               entry_level=0, score=1013, upvote_ratio=1., gilded_count=0, comments_count=7,
+               is_controversial=False, file_date="2022-01-01"
+    ),
+    Popularity(reddit_id="N/A", comment_id="g9v8jbi", phrase="corgi", author="rognabologna", entry_type=EEntryType.COMMENT,
+               entry_level=2, score=72, upvote_ratio=1., gilded_count=3, comments_count=0,
+               is_controversial=True, file_date="2026-01-01"
     )
 ]

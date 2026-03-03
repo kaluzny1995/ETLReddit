@@ -1,20 +1,20 @@
-import nltk
-from nltk.sentiment.vader import SentimentIntensityAnalyzer
-from sqlmodel import SQLModel
-from textblob import TextBlob
-from autocorrect import Speller
 from typing import List
 
-from model.util.sentiment import TextblobSentiment, NLTKSentiment
-from service import ISentimentAnalysisService
+import nltk
+from nltk.sentiment.vader import SentimentIntensityAnalyzer
+from textblob import TextBlob
+from autocorrect import Speller
+
+from model import ETLParams, TextblobSentiment, NLTKSentiment, Reddit, Comment, Sentiment
+from service import ISentimentService
 
 
-class SentimentAnalysisServiceStub(ISentimentAnalysisService):
-    """ SentimentAnalysis service class """
+class SentimentServiceStub(ISentimentService):
+    """ Sentiment service class """
     speller: Speller
     nltk_sentiment_analyzer: SentimentIntensityAnalyzer
 
-    def __init__(self) -> None:
+    def __init__(self):
         nltk.download("vader_lexicon")
 
         self.speller = Speller()
@@ -41,6 +41,10 @@ class SentimentAnalysisServiceStub(ISentimentAnalysisService):
             sentiments = TextBlob(text).sentiment
             return TextblobSentiment(polarity=sentiments.polarity, subjectivity=sentiments.subjectivity)
 
-    def run_etl(self, entries: List[SQLModel]) -> List[SQLModel]:
-        """ Returns a list of sentiment analysis objects according to the provided reddits and comments """
+    def get_sentiments(self, entries: List[Reddit | Comment], params: ETLParams) -> List[Sentiment]:
+        """ Returns the processed sentiments from given entries """
+        pass
+
+    def run_etl(self, **etl_params) -> None:
+        """ Returns a list of sentiment objects according to the provided reddits and comments """
         pass
