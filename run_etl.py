@@ -3,8 +3,8 @@ import datetime as dt
 import logging
 
 import util
-from model import AppConfig, ETLParams
-from service import SentimentService
+from model import AppConfig, EETLScript, ETLParams
+from service import SentimentService, PopularityService
 
 
 def get_config() -> AppConfig:
@@ -14,7 +14,7 @@ def get_config() -> AppConfig:
 def parse_args(defaults: AppConfig) -> argparse.Namespace:
     parser = argparse.ArgumentParser(description="Reddits ETL Python 3.11 application.")
 
-    parser.add_argument("script", type=str, choices=["sentiment", "vectorization"],
+    parser.add_argument("script", type=str, choices=list(map(lambda v: v.lower(), EETLScript.__members__)),
                         help="ETL script to run")
     parser.add_argument("phrase", type=str,
                         help="phrase which contain reddits to do the ETL with")
@@ -69,9 +69,34 @@ def run_sentiment(args: argparse.Namespace, logger: logging.Logger) -> None:
     sentiment_service.run_etl(**etl_params.model_dump())
 
 
-def run_popularity(args: argparse.Namespace) -> None:
+def run_popularity(args: argparse.Namespace, logger: logging.Logger) -> None:
     """ Executes popularity script """
-    raise NotImplementedError("The popularity script has not been implemented yet.")
+    etl_params = ETLParams.from_argparse_namespace(args)
+
+    # Show parameters
+    print("Reddits phrase:", etl_params.phrase)
+    print("ETL script name:", etl_params.script_name)
+    print("Batch size:", etl_params.batch_size)
+    print("Fill in for missing dates:", etl_params.is_filled_missing_dates)
+    print("Start date of searching missing dates:", etl_params.start_date)
+    print("File date interval:", etl_params.date_interval)
+    print("Is filled in until previous date:", etl_params.is_until_previous_day)
+    print("Use multiprocessing:", etl_params.is_multiprocessing_used)
+    print("Number of processes:", etl_params.num_processes)
+    print()
+
+    logger.info(f"Reddits phrase: {etl_params.phrase}")
+    logger.info(f"ETL script name: {etl_params.script_name}")
+    logger.info(f"Batch size: {etl_params.batch_size}")
+    logger.info(f"Fill in for missing dates: {etl_params.is_filled_missing_dates}")
+    logger.info(f"Start date of searching missing dates: {etl_params.start_date}")
+    logger.info(f"File date interval: {etl_params.date_interval}")
+    logger.info(f"Is filled in until previous date: {etl_params.is_until_previous_day}")
+    logger.info(f"Use multiprocessing: {etl_params.is_multiprocessing_used}")
+    logger.info(f"Number of processes: {etl_params.num_processes}")
+
+    popularity_service = PopularityService(logger=logger)
+    popularity_service.run_etl(**etl_params.model_dump())
 
 
 def run_vectorization(args: argparse.Namespace) -> None:

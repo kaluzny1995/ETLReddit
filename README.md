@@ -67,12 +67,12 @@ Running the help command: `python run_etl.py -h` yields the following:
 ---- Reddits ETL app ----
 
 usage: run_etl.py [-h] [-b BATCH_SIZE] [--skip_missing_dates] [--start_date START_DATE] [--interval {h,d,m,y}] [--until_today] [--no_multiprocessing] [--num_processes NUM_PROCESSES]
-                  {sentiment,vectorization} phrase
+                  {sentiment,popularity,vectorization} phrase
 
 Reddits ETL Python 3.11 application.
 
 positional arguments:
-  {sentiment,vectorization}
+  {sentiment,popularity,vectorization}
                         ETL script to run
   phrase                phrase which contain reddits to do the ETL with
 
@@ -82,7 +82,7 @@ options:
                         size of inserted batch of reddits into database, default: 10000
   --skip_missing_dates  flag whether not to add blank records for periods without any data, default: False
   --start_date START_DATE
-                        start date of missing file date gaps detection, default: 2020-01-01
+                        start date of missing file dates detection, default: 2020-01-01
   --interval {h,d,m,y}  period between every file date if for missing dates blank records are added, default: d
   --until_today         flag whether to insert blank records until the current datetime, ie. moment of script launch (if no data for present date), default: False
   --no_multiprocessing  flag whether not to use multiprocessing while processing entries, default: False
@@ -92,7 +92,7 @@ options:
 ```
 
 ### Parameters overview
-1. **script** -- **_required_** -- etl script to run. Currently, **"sentiment"** is only available. The _"vectorization"_ will be developed furtherly.  
+1. **script** -- **_required_** -- etl script to run. Currently, **"sentiment"** and **popularity** are only available. The _"vectorization"_ will be developed furtherly.  
 2. **phrase** -- **_required_** -- word or sentence fragment according to which the reddits should be ingested.
 3. **-b**, **--batch_size** -- _optional_ -- **10000** by default -- maximum number of entries inserted into database at once.
 4. **--skip_missing_dates** -- _optional_ -- **False** by default -- flag whether not to load blank records for file dates for which the data do not exist.
@@ -145,7 +145,7 @@ The illustration above shows the solution dataflow diagram. The dash-frame highl
 
 ## Data model
 ![Data model class diagram](/assets/images/reddits_data_model.png)
-The illustration above shows the data model diagram class. The **Author**, **Reddit** and **Comment** class instances are used during JSON files ingestion (insertion) as well as ETL processes (reading). The **Sentiment** class instances are used (currently) only during persistence of processed reddits and comments (insertion).
+The illustration above shows the data model diagram class. The **Author**, **Reddit** and **Comment** class instances are used during JSON files ingestion (insertion) as well as ETL processes (reading). The **Sentiment** and **Popularity** class instances are used (currently) only during persistence of processed reddits and comments (insertion).
 
 ## Detailed class diagrams
 ### Ingestion

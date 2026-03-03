@@ -1,6 +1,7 @@
 from model.config.app_config import AppConfig
 from model.config.supabase_connection_config import SupabaseConnectionConfig
 
+from model.enum.e_etl_script import EETLScript
 from model.enum.e_file_date_type import EFileDateType
 from model.enum.e_entry_type import EEntryType
 from model.enum.e_sentiment_class import ESentimentClass
