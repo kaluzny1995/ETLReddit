@@ -11,10 +11,6 @@ from provider import JsonFileObjectProvider, \
     JsonRedditProvider, JsonCommentProvider, JsonAuthorProvider
 
 
-logger = util.setup_logger(name="run_ingestion",
-                           log_file=f"logs/run_ingestion/run_ingestion_{dt.datetime.now().isoformat()}.log")
-
-
 def get_config() -> AppConfig:
     return AppConfig.from_json()
 
@@ -38,11 +34,14 @@ def get_source_folder_path(folder_name: str) -> str:
 
 
 def main():
-    print("---- Reddits ingestion app ----\n")
-    logger.info("---- Reddits ingestion app ----")
-
     config = get_config()
     args = parse_args(config)
+
+    logger = util.setup_logger(name="run_ingestion",
+                               log_file=f"logs/run_ingestion/run_ingestion_{args.phrase}_{dt.datetime.now().isoformat()}.log")
+
+    print("---- Reddits ingestion app ----\n")
+    logger.info("---- Reddits ingestion app ----")
 
     phrase = args.phrase
     batch_size = args.batch_size

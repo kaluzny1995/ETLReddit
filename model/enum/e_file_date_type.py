@@ -1,6 +1,6 @@
 from enum import Enum
 
 
-class EFileDateType(Enum):
+class EFileDateType(str, Enum):
     START = "START"
     END = "END"

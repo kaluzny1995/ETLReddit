@@ -1,7 +1,9 @@
 import datetime as dt
 
-from model import ESentimentClass, SentimentResult, Author, Reddit, Comment, Sentiment
+from model import ESentimentClass, SentimentResult, Author, Reddit, Comment, Sentiment, Popularity
+from model.enum.e_entry_type import EEntryType
 
+# Author
 test_author_from_raw_json_cases = [
     (
         {
@@ -87,6 +89,7 @@ test_author_from_raw_json_cases = [
     )
 ]
 
+# Reddit
 test_reddit_from_raw_json_cases = [
     (
         {
@@ -179,6 +182,7 @@ test_reddit_from_raw_json_cases = [
     )
 ]
 
+# Comment
 test_comment_from_raw_json_cases = [
     (
         {
@@ -289,6 +293,7 @@ test_comment_from_raw_json_cases = [
     )
 ]
 
+# Sentiment
 test_sentiment_from_reddit_cases = [
     (
         Reddit(
@@ -312,25 +317,22 @@ test_sentiment_from_reddit_cases = [
             end_file_date="2027-01-01"
         ),
         "We live in a basement suite. So I built a loft for our cgi Wolfgang.",
-        SentimentResult(negative=0., neutral=1., positive=0., compound=0., polarity=0.13636363636363635, subjectivity=0.5, sentiment_class=ESentimentClass.NEUTRAL),
+        SentimentResult(negative=0., neutral=1., positive=0., compound=0.,
+                        polarity=0.13636363636363635, subjectivity=0.5, sentiment_class=ESentimentClass.NEUTRAL),
         Sentiment(
             reddit_id="jgz2uz",
             comment_id="N/A",
             phrase="corgi",
             author="CocaKoller",
-            text="We live in a basement suite. So I built a loft for our cgi Wolfgang.",
-            datetime_created=dt.datetime(2020, 10, 24, 0, 14, 42),
-            score=115320,
-            upvote_ratio=0.94,
-            gilded_number=4,
-            number_of_comments=820,
-            controversiality=False,
+            entry_type=EEntryType.REDDIT,
+            clean_text="We live in a basement suite. So I built a loft for our cgi Wolfgang.",
             s_neg=0.,
             s_neu=1.,
             s_pos=0.,
             s_com=0.,
             s_pol=0.13636363636363635,
             s_sub=0.5,
+            s_class=ESentimentClass.NEUTRAL,
             file_date="2026-01-01"
         )
     ), (
@@ -355,25 +357,22 @@ test_sentiment_from_reddit_cases = [
             end_file_date="2023-01-01"
         ),
         "Corgi-sized meteor as heavy as 4 baby elephants",
-        SentimentResult(negative=0., neutral=1., positive=0., compound=0., polarity=-0.2, subjectivity=0.5, sentiment_class=ESentimentClass.NEUTRAL),
+        SentimentResult(negative=0., neutral=1., positive=0., compound=0.,
+                        polarity=-0.2, subjectivity=0.5, sentiment_class=ESentimentClass.NEUTRAL),
         Sentiment(
             reddit_id="135yzs1",
             comment_id="N/A",
             phrase="corgi",
             author="HELL-OAT",
-            text="Corgi-sized meteor as heavy as 4 baby elephants",
-            datetime_created=dt.datetime(2023, 5, 2, 20, 18, 4),
-            score=37097,
-            upvote_ratio=0.96,
-            gilded_number=0,
-            number_of_comments=643,
-            controversiality=False,
+            entry_type=EEntryType.REDDIT,
+            clean_text="Corgi-sized meteor as heavy as 4 baby elephants",
             s_neg=0.,
             s_neu=1.,
             s_pos=0.,
             s_com=0.,
             s_pol=-0.2,
             s_sub=0.5,
+            s_class=ESentimentClass.NEUTRAL,
             file_date="2022-01-01"
         )
     )
@@ -405,25 +404,22 @@ test_sentiment_from_comment_cases = [
             end_file_date="2023-01-01"
         ),
         "I like Wolfgang.",
-        SentimentResult(negative=0., neutral=0.286, positive=0.714, compound=0.3612, polarity=0., subjectivity=0., sentiment_class=ESentimentClass.POSITIVE),
+        SentimentResult(negative=0., neutral=0.286, positive=0.714, compound=0.3612,
+                        polarity=0., subjectivity=0., sentiment_class=ESentimentClass.POSITIVE),
         Sentiment(
             reddit_id="N/A",
             comment_id="g9tw6ow",
             phrase="corgi",
             author=None,
-            text="I like Wolfgang.",
-            datetime_created=dt.datetime(2020, 10, 24, 3, 6, 39),
-            score=1013,
-            upvote_ratio=1.,
-            gilded_number=0,
-            number_of_comments=7,
-            controversiality=False,
+            entry_type=EEntryType.COMMENT,
+            clean_text="I like Wolfgang.",
             s_neg=0.,
             s_neu=0.286,
             s_pos=0.714,
             s_com=0.3612,
             s_pol=0.,
             s_sub=0.,
+            s_class=ESentimentClass.POSITIVE,
             file_date="2022-01-01"
         )
     ), (
@@ -451,25 +447,177 @@ test_sentiment_from_comment_cases = [
             end_file_date="2027-01-01"
         ),
         "Please tell me he's named Wolfgang Puck, after the chef, but you call him Wolfgang Pup",
-        SentimentResult(negative=0., neutral=0.901, positive=0.099, compound=0.1655, polarity=0., subjectivity=0., sentiment_class=ESentimentClass.NEUTRAL),
+        SentimentResult(negative=0., neutral=0.901, positive=0.099, compound=0.1655,
+                        polarity=0., subjectivity=0., sentiment_class=ESentimentClass.NEUTRAL),
         Sentiment(
             reddit_id="N/A",
             comment_id="g9v8jbi",
             phrase="corgi",
             author="rognabologna",
-            text="Please tell me he's named Wolfgang Puck, after the chef, but you call him Wolfgang Pup",
-            datetime_created=dt.datetime(2020, 10, 24, 8, 50, 1),
-            score=72,
-            upvote_ratio=1.,
-            gilded_number=3,
-            number_of_comments=0,
-            controversiality=True,
+            entry_type=EEntryType.COMMENT,
+            clean_text="Please tell me he's named Wolfgang Puck, after the chef, but you call him Wolfgang Pup",
             s_neg=0.,
             s_neu=0.901,
             s_pos=0.099,
             s_com=0.1655,
             s_pol=0.,
             s_sub=0.,
+            s_class=ESentimentClass.NEUTRAL,
+            file_date="2026-01-01"
+        )
+    )
+]
+
+# Popularity
+test_popularity_from_reddit_cases = [
+    (
+        Reddit(
+            reddit_id="jgz2uz",
+            name="t3_jgz2uz",
+            permalink="/r/aww/comments/jgz2uz/we_live_in_a_basement_suite_so_i_built_a_loft_for/",
+            phrase="corgi",
+            author="CocaKoller",
+            title="We live in a basement suite. So I built a loft for our corgi Wolfgang.",
+            body=None,
+            datetime_created=dt.datetime(2020, 10, 24, 0, 14, 42),
+            datetime_created_utc=dt.datetime(2020, 10, 24, 0, 14, 42),
+            likes=None,
+            ups=115320,
+            downs=0,
+            score=115320,
+            upvote_ratio=0.94,
+            gilded_number=4,
+            number_of_comments=820,
+            start_file_date="2026-01-01",
+            end_file_date="2027-01-01"
+        ),
+        Popularity(
+            reddit_id="jgz2uz",
+            comment_id="N/A",
+            phrase="corgi",
+            author="CocaKoller",
+            entry_type=EEntryType.REDDIT,
+            entry_level=-1,
+            score=115320,
+            upvote_ratio=0.94,
+            gilded_count=4,
+            comments_count=820,
+            is_controversial=False,
+            file_date="2026-01-01"
+        )
+    ), (
+        Reddit(
+            reddit_id="135yzs1",
+            name="t3_135yzs1",
+            permalink="/r/BrandNewSentence/comments/135yzs1/corgisized_meteor_as_heavy_as_4_baby_elephants/",
+            phrase="corgi",
+            author="HELL-OAT",
+            title="Corgi-sized meteor as heavy as 4 baby elephants",
+            body="That's amazing!",
+            datetime_created=dt.datetime(2023, 5, 2, 20, 18, 4),
+            datetime_created_utc=dt.datetime(2023, 5, 2, 20, 18, 4),
+            likes=37,
+            ups=37097,
+            downs=0,
+            score=37097,
+            upvote_ratio=0.96,
+            gilded_number=0,
+            number_of_comments=643,
+            start_file_date="2022-01-01",
+            end_file_date="2023-01-01"
+        ),
+        Popularity(
+            reddit_id="135yzs1",
+            comment_id="N/A",
+            phrase="corgi",
+            author="HELL-OAT",
+            entry_type=EEntryType.REDDIT,
+            entry_level=-1,
+            score=37097,
+            upvote_ratio=0.96,
+            gilded_count=0,
+            comments_count=643,
+            is_controversial=False,
+            file_date="2022-01-01"
+        )
+    )
+]
+
+test_popularity_from_comment_cases = [
+    (
+        Comment(
+            comment_id="g9tw6ow",
+            reddit_id="g9tw6ow",
+            parent_comment_id=None,
+            name="t1_g9tw6ow",
+            permalink="/r/aww/comments/jgz2uz/we_live_in_a_basement_suite_so_i_built_a_loft_for/g9tw6ow/",
+            phrase="corgi",
+            author=None,
+            body="I like Wolfgang.",
+            datetime_created=dt.datetime(2020, 10, 24, 3, 6, 39),
+            datetime_created_utc=dt.datetime(2020, 10, 24, 3, 6, 39),
+            depth_level=0,
+            controversiality=False,
+            likes=0,
+            ups=1013,
+            downs=0,
+            score=1013,
+            upvote_ratio=1.,
+            gilded_number=0,
+            number_of_replies=7,
+            start_file_date="2022-01-01",
+            end_file_date="2023-01-01"
+        ),
+        Popularity(
+            reddit_id="N/A",
+            comment_id="g9tw6ow",
+            phrase="corgi",
+            author=None,
+            entry_type=EEntryType.COMMENT,
+            entry_level=0,
+            score=1013,
+            upvote_ratio=1.,
+            gilded_count=0,
+            comments_count=7,
+            is_controversial=False,
+            file_date="2022-01-01"
+        )
+    ), (
+        Comment(
+            comment_id="g9v8jbi",
+            reddit_id="g9tw6ow",
+            parent_comment_id="g9u5mh6",
+            name="t1_g9v8jbi",
+            permalink="/r/aww/comments/jgz2uz/we_live_in_a_basement_suite_so_i_built_a_loft_for/g9v8jbi/",
+            phrase="corgi",
+            author="rognabologna",
+            body="Please tell me he's named Wolfgang Puck, after the chef, but you call him Wolfgang Pup",
+            datetime_created=dt.datetime(2020, 10, 24, 8, 50, 1),
+            datetime_created_utc=dt.datetime(2020, 10, 24, 8, 50, 1),
+            depth_level=2,
+            controversiality=True,
+            likes=18,
+            ups=72,
+            downs=0,
+            score=72,
+            upvote_ratio=1.,
+            gilded_number=3,
+            number_of_replies=0,
+            start_file_date="2026-01-01",
+            end_file_date="2027-01-01"
+        ),
+        Popularity(
+            reddit_id="N/A",
+            comment_id="g9v8jbi",
+            phrase="corgi",
+            author="rognabologna",
+            entry_type=EEntryType.COMMENT,
+            entry_level=2,
+            score=72,
+            upvote_ratio=1.,
+            gilded_count=3,
+            comments_count=0,
+            is_controversial=True,
             file_date="2026-01-01"
         )
     )

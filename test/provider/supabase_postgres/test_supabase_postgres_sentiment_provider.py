@@ -37,17 +37,13 @@ def test_get_sentiments(sentiments: List[Sentiment], expected_sentiments: List[S
         assert rr.comment_id == er.comment_id
         assert rr.phrase == er.phrase
         assert rr.author == er.author
-        assert rr.text == er.text
-        assert rr.datetime_created == er.datetime_created
-        assert rr.score == er.score
-        assert rr.upvote_ratio == er.upvote_ratio
-        assert rr.gilded_number == er.gilded_number
-        assert rr.number_of_comments == er.number_of_comments
-        assert rr.controversiality == er.controversiality
+        assert rr.entry_type == er.entry_type
+        assert rr.clean_text == er.clean_text
         assert rr.s_neg == er.s_neg
         assert rr.s_neu == er.s_neu
         assert rr.s_pos == er.s_pos
         assert rr.s_com == er.s_com
         assert rr.s_pol == er.s_pol
         assert rr.s_sub == er.s_sub
+        assert rr.s_class == er.s_class
         assert rr.file_date == er.file_date

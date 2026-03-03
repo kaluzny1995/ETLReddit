@@ -120,6 +120,34 @@ class SentimentService(ISentimentService):
 
         queue.put((processed_sentiments, num))
 
+    def _fill_in_for_missing_file_dates(self, sentiments: List[Sentiment], etl_params: ETLParams) -> bool:
+        """
+        Detects missing file dates and fills in with blank records.
+        Returns False in no missing date found, otherwise returns True.
+        """
+        print("Searching for missing file dates.")
+        self.logger.info("Searching for missing file dates.")
+
+        file_dates = self.sentiment_provider.get_file_dates(etl_params.phrase)
+        file_dates.extend(list(map(lambda sa: sa.file_date, sentiments)))
+        file_dates = sorted(set(file_dates))
+
+        checked_date_periods = util.date_range(
+            start_date=dt.datetime.strptime(etl_params.start_date, "%Y-%m-%d"),
+            end_date=dt.datetime.now().replace(hour=0, minute=0, second=0, microsecond=0) - dt.timedelta(seconds=1) \
+                if etl_params.is_until_previous_day else dt.datetime.now(),
+            interval=etl_params.date_interval
+        )
+        is_missing_found = False
+        for start_date, end_date in checked_date_periods:
+            if start_date.isoformat() not in file_dates:
+                print(f"No data for file date '{start_date}'. Inserting blank record.")
+                self.logger.info(f"No data for file date '{start_date}'. Inserting blank record.")
+                is_missing_found = True
+                sentiments.append(Sentiment.blank(etl_params.phrase, start_date.isoformat()))
+
+        return is_missing_found
+
     def run_etl(self, **etl_params_dict) -> None:
         """ Runs ETL process loading expected reddits and comments, processing and persisting expected sentiments """
         etl_params = ETLParams(**etl_params_dict)
@@ -170,30 +198,8 @@ class SentimentService(ISentimentService):
 
         # file date gaps detection and filling in with blank records
         if etl_params.is_filled_missing_dates:
-            print("Searching for missing file dates.")
-            self.logger.info("Searching for missing file dates.")
-
-            file_dates = self.sentiment_provider.get_file_dates(etl_params.phrase)
-            file_dates.extend(list(map(lambda sa: sa.file_date, sentiments)))
-            file_dates = sorted(set(file_dates))
-
-            checked_date_periods = util.date_range(
-                start_date=dt.datetime.strptime(etl_params.start_date, "%Y-%m-%d"),
-                end_date=dt.datetime.now().replace(hour=0, minute=0, second=0, microsecond=0) - dt.timedelta(seconds=1) \
-                    if etl_params.is_until_previous_day else dt.datetime.now(),
-                interval=etl_params.date_interval
-            )
-            is_missing_found = False
-            for start_date, end_date in checked_date_periods:
-                if start_date.isoformat() not in file_dates:
-                    print(f"No data for file date '{start_date}'. Inserting blank record.")
-                    self.logger.info(f"No data for file date '{start_date}'. Inserting blank record.")
-                    is_missing_found = True
-                    sentiments.append(Sentiment.blank(etl_params.phrase, start_date.isoformat()))
-            if not is_missing_found and len(missing_file_dates) == 0:
-                print("No new data available. Finishing.")
-                self.logger.info(f"No new data available. Finishing.")
-                raise error.NoNewDataError("No new data available for ETL.")
+            print("Warning. Filling in for missing dates not supported for sentiment ETL process.")
+            self.logger.warning("Warning. Filling in for missing dates not supported for sentiment ETL process.")
 
         # insert sentiments
         self.sentiment_provider.insert_sentiments(sentiments, batch_size=etl_params.batch_size)

@@ -1,9 +1,7 @@
 import nltk
 from nltk.sentiment.vader import SentimentIntensityAnalyzer
-from sqlmodel import SQLModel
 from textblob import TextBlob
 from autocorrect import Speller
-from typing import List
 
 from model.util.sentiment_result import TextblobSentiment, NLTKSentiment
 from service import ISentimentService
@@ -41,6 +39,6 @@ class SentimentServiceStub(ISentimentService):
             sentiments = TextBlob(text).sentiment
             return TextblobSentiment(polarity=sentiments.polarity, subjectivity=sentiments.subjectivity)
 
-    def run_etl(self, entries: List[SQLModel]) -> List[SQLModel]:
+    def run_etl(self, **etl_params) -> None:
         """ Returns a list of sentiment objects according to the provided reddits and comments """
         pass

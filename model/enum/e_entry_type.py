@@ -1,6 +1,6 @@
 from enum import Enum
 
 
-class EEntryType(Enum):
-    REDDIT = "reddit"
-    COMMENT = "comment"
+class EEntryType(str, Enum):
+    REDDIT = "REDDIT"
+    COMMENT = "COMMENT"

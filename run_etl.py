@@ -1,12 +1,10 @@
 import argparse
 import datetime as dt
+import logging
 
 import util
 from model import AppConfig, ETLParams
 from service import SentimentService
-
-logger = util.setup_logger(name="run_etl",
-                           log_file=f"logs/run_etl/run_etl_{dt.datetime.now().isoformat()}.log")
 
 
 def get_config() -> AppConfig:
@@ -41,7 +39,7 @@ def parse_args(defaults: AppConfig) -> argparse.Namespace:
     return parser.parse_args()
 
 
-def run_sentiment(args: argparse.Namespace) -> None:
+def run_sentiment(args: argparse.Namespace, logger: logging.Logger) -> None:
     """ Executes sentiment script """
     etl_params = ETLParams.from_argparse_namespace(args)
 
@@ -71,24 +69,33 @@ def run_sentiment(args: argparse.Namespace) -> None:
     sentiment_service.run_etl(**etl_params.model_dump())
 
 
+def run_popularity(args: argparse.Namespace) -> None:
+    """ Executes popularity script """
+    raise NotImplementedError("The popularity script has not been implemented yet.")
+
+
 def run_vectorization(args: argparse.Namespace) -> None:
     """ Executes texts vectorization script """
     raise NotImplementedError("The texts vectorization script has not been implemented yet.")
 
 
 def main():
-    print("---- Reddits ETL app ----\n")
-    logger.info("---- Reddits ETL app ----")
-
     config = get_config()
     args = parse_args(config)
 
+    logger = util.setup_logger(name="run_etl",
+                               log_file=f"logs/run_etl/run_etl_{args.script}_{args.phrase}_{dt.datetime.now().isoformat()}.log")
+
+    print("---- Reddits ETL app ----\n")
+    logger.info("---- Reddits ETL app ----")
+
     # run ETL script
-    etl_scripts = dict({
+    run_etl_script = dict({
         'sentiment': run_sentiment,
+        'popularity': run_popularity,
         'vectorization': run_vectorization
     })
-    etl_scripts[args.script](args)
+    run_etl_script[args.script](args, logger)
 
     print("\nDone.")
     logger.info("Done.")
