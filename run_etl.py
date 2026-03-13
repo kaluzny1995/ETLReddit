@@ -39,11 +39,8 @@ def parse_args(defaults: AppConfig) -> argparse.Namespace:
     return parser.parse_args()
 
 
-def run_sentiment(args: argparse.Namespace, logger: logging.Logger) -> None:
-    """ Executes sentiment script """
-    etl_params = ETLParams.from_argparse_namespace(args)
-
-    # Show parameters
+def show_params(etl_params: ETLParams, logger: logging.Logger) -> None:
+    """ Shows the parameters and its values """
     print("Reddits phrase:", etl_params.phrase)
     print("ETL script name:", etl_params.script_name)
     print("Batch size:", etl_params.batch_size)
@@ -64,6 +61,14 @@ def run_sentiment(args: argparse.Namespace, logger: logging.Logger) -> None:
     logger.info(f"Is filled in until previous date: {etl_params.is_until_previous_day}")
     logger.info(f"Use multiprocessing: {etl_params.is_multiprocessing_used}")
     logger.info(f"Number of processes: {etl_params.num_processes}")
+
+
+def run_sentiment(args: argparse.Namespace, logger: logging.Logger) -> None:
+    """ Executes sentiment script """
+    etl_params = ETLParams.from_argparse_namespace(args)
+
+    # Show parameters
+    show_params(etl_params, logger)
 
     sentiment_service = SentimentService(logger=logger)
     sentiment_service.run_etl(**etl_params.model_dump())
@@ -74,26 +79,7 @@ def run_popularity(args: argparse.Namespace, logger: logging.Logger) -> None:
     etl_params = ETLParams.from_argparse_namespace(args)
 
     # Show parameters
-    print("Reddits phrase:", etl_params.phrase)
-    print("ETL script name:", etl_params.script_name)
-    print("Batch size:", etl_params.batch_size)
-    print("Fill in for missing dates:", etl_params.is_filled_missing_dates)
-    print("Start date of searching missing dates:", etl_params.start_date)
-    print("File date interval:", etl_params.date_interval)
-    print("Is filled in until previous date:", etl_params.is_until_previous_day)
-    print("Use multiprocessing:", etl_params.is_multiprocessing_used)
-    print("Number of processes:", etl_params.num_processes)
-    print()
-
-    logger.info(f"Reddits phrase: {etl_params.phrase}")
-    logger.info(f"ETL script name: {etl_params.script_name}")
-    logger.info(f"Batch size: {etl_params.batch_size}")
-    logger.info(f"Fill in for missing dates: {etl_params.is_filled_missing_dates}")
-    logger.info(f"Start date of searching missing dates: {etl_params.start_date}")
-    logger.info(f"File date interval: {etl_params.date_interval}")
-    logger.info(f"Is filled in until previous date: {etl_params.is_until_previous_day}")
-    logger.info(f"Use multiprocessing: {etl_params.is_multiprocessing_used}")
-    logger.info(f"Number of processes: {etl_params.num_processes}")
+    show_params(etl_params, logger)
 
     popularity_service = PopularityService(logger=logger)
     popularity_service.run_etl(**etl_params.model_dump())
@@ -108,7 +94,7 @@ def main():
     config = get_config()
     args = parse_args(config)
 
-    logger = util.setup_logger(name="run_etl",
+    logger = util.setup_logger(name=f"run_etl_{args.script}_{args.phrase}",
                                log_file=f"logs/run_etl/run_etl_{args.script}_{args.phrase}_{dt.datetime.now().isoformat()}.log")
 
     print("---- Reddits ETL app ----\n")
