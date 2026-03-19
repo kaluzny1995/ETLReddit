@@ -14,3 +14,4 @@ from model.entity.reddit import Reddit
 from model.entity.comment import Comment
 from model.entity.sentiment import Sentiment
 from model.entity.popularity import Popularity
+from model.entity.vector import Vector
