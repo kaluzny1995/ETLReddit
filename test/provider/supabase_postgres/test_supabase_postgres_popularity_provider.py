@@ -2,7 +2,7 @@ import pytest
 from typing import List
 
 from model import Popularity
-from test.provider.stub.supabase_postgres_popularity_provider import SupabasePostgresPopularityProviderStub
+from test.provider.stub.supabase_postgres_popularity_provider_stub import SupabasePostgresPopularityProviderStub
 from test.provider.supabase_postgres.fixtures_test_cases import popularities as all_popularities
 
 
