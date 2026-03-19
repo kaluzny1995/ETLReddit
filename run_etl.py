@@ -85,6 +85,11 @@ def run_popularity(args: argparse.Namespace, logger: logging.Logger) -> None:
     popularity_service.run_etl(**etl_params.model_dump())
 
 
+def run_emotion(args: argparse.Namespace) -> None:
+    """ Executes texts vectorization script """
+    raise NotImplementedError("The texts emotion analysis script has not been implemented yet.")
+
+
 def run_vectorization(args: argparse.Namespace) -> None:
     """ Executes texts vectorization script """
     raise NotImplementedError("The texts vectorization script has not been implemented yet.")
@@ -102,8 +107,9 @@ def main():
 
     # run ETL script
     run_etl_script = dict({
-        'sentiment': run_sentiment,
         'popularity': run_popularity,
+        'sentiment': run_sentiment,
+        'emotion': run_emotion,
         'vectorization': run_vectorization
     })
     run_etl_script[args.script](args, logger)
