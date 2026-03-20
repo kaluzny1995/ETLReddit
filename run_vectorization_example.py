@@ -12,12 +12,13 @@ def main():
         "My corgi loves chasing RC Cars. So I strapped a GoPro to one...",
         "Corgi-sized meteor as heavy as 4 baby elephants",
         "Border collies run freely and at full speed",
+        None
     ]
     print("Sentences:\n", sentences)
 
     # Calculate embeddings by calling model.encode()
     embeddings = model.encode(sentences)
-    #print("Embeddings:\n", embeddings)
+    print("Embeddings:\n", embeddings)
     print("Embedding shape:", embeddings.shape)
 
     # Calculate the embedding similarities

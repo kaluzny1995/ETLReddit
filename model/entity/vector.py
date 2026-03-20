@@ -1,8 +1,8 @@
 import json
 from typing import List
-
 from sqlmodel import SQLModel, Field, Column, String
 
+import error
 from model import Reddit, Comment
 
 
@@ -58,3 +58,15 @@ class Vector(SQLModel, table=True):
             embeddings=json.dumps(embeddings),
             file_date=comment.start_file_date
         )
+
+    @staticmethod
+    def get_entry_texts(entries: List[Reddit | Comment]) -> List[str]:
+        texts = list([])
+        for entry in entries:
+            if isinstance(entry, Reddit):
+                texts.append(f"{entry.title} {entry.body}" if entry.body is not None else entry.title)
+            elif isinstance(entry, Comment):
+                texts.append(entry.body if entry.body is not None else "")
+            else:
+                raise error.WrongEntityError(f"Wrong entity type: {type(entry)}. Should be Reddit or Comment.")
+        return texts
