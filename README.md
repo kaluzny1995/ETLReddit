@@ -29,7 +29,7 @@ where "your database username" and "your password" should refer to your own Supa
 ## Running the application
 ### Ingestion
 Running the help command: `python run_ingestion.py -h` yields the following:
-```
+```text
 ---- Reddits ingestion app ----
 
 usage: run_ingestion.py [-h] [-b BATCH_SIZE] [--no_authors_load] phrase
@@ -63,7 +63,7 @@ The application will ingest the "corgi" JSON files however without ingestion of 
 
 ### ETL
 Running the help command: `python run_etl.py -h` yields the following:
-```
+```text
 ---- Reddits ETL app ----
 
 usage: run_etl.py [-h] [-b BATCH_SIZE] [--skip_missing_dates] [--start_date START_DATE] [--interval {h,d,m,y}] [--until_today] [--no_multiprocessing] [--num_processes NUM_PROCESSES]
@@ -134,7 +134,7 @@ The application will perform emotion ETL process for "corgi" entries utilizing m
 
 ### Testing
 To perform application unit testing simply run the command `pytest` in main project directory. The output should look like the following:
-```
+```text
 ================================ test session starts ================================
 platform linux -- Python 3.11.14, pytest-9.0.2, pluggy-1.5.0
 rootdir: /home/jakub/PycharmProjects/ETLReddit
@@ -158,7 +158,7 @@ The illustration above shows the solution dataflow diagram. The dash-frame highl
 
 ## Data model
 ![Data model class diagram](/assets/images/reddits_data_model.png)
-The illustration above shows the data model diagram class. The **Author**, **Reddit** and **Comment** class instances are used during JSON files ingestion (insertion) as well as ETL processes (reading). The **Sentiment** and **Popularity** class instances are used (currently) only during persistence of processed reddits and comments (insertion).
+The illustration above shows the data model diagram class. The **Author**, **Reddit** and **Comment** class instances are used during JSON files ingestion (insertion) as well as ETL processes (reading). The **Sentiment**, **Popularity**, **Vector** and **Emotion** classes instances are used (currently) only during persistence of processed reddits and comments (insertion).
 
 ## Detailed class diagrams
 ### Ingestion
