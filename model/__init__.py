@@ -9,6 +9,7 @@ from model.enum.e_sentiment_class import ESentimentClass
 
 from model.util.etl_params import ETLParams
 from model.util.sentiment_result import NLTKSentiment, TextblobSentiment, SentimentResult
+from model.util.emotion_result import EmotionResult
 
 from model.entity.author import Author
 from model.entity.reddit import Reddit
@@ -16,3 +17,4 @@ from model.entity.comment import Comment
 from model.entity.sentiment import Sentiment
 from model.entity.popularity import Popularity
 from model.entity.vector import Vector
+from model.entity.emotion import Emotion
