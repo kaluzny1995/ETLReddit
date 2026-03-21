@@ -1,6 +1,6 @@
 import datetime as dt
 
-from model import EEntryType, ESentimentClass, Author, Reddit, Comment, Sentiment, Popularity
+from model import EEntryType, ESentimentClass, Author, Reddit, Comment, Sentiment, Popularity, Vector
 
 authors = [
     Author(name="MooseWhisperer09",
@@ -164,3 +164,15 @@ popularities = [
                is_controversial=True, file_date="2026-01-01"
     )
 ]
+
+vectors = [
+    Vector(reddit_id="jgz2uz", comment_id="N/A", phrase="corgi",
+           embeddings="[0.3452, 0.4212, -0.3352, 0.6532, 0.4522, 0.5321]", file_date="2026-01-01"),
+    Vector(reddit_id="135yzs1", comment_id="N/A", phrase="corgi",
+           embeddings="[0.0432, 0.4212, -0.3352, -0.6532, 0.2033, 0.5321]", file_date="2022-01-01"),
+    Vector(reddit_id="N/A", comment_id="g9tw6ow", phrase="corgi",
+           embeddings="[0.3452, 0.4212, -0.3352, 0.6532, 0.4522, 0.5321]", file_date="2022-01-01"),
+    Vector(reddit_id="N/A", comment_id="g9v8jbi", phrase="corgi",
+           embeddings="[0.0432, 0.4212, -0.3352, -0.6532, 0.2033, 0.5321]", file_date="2026-01-01")
+]
+

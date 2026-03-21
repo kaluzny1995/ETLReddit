@@ -1,3 +1,5 @@
+import sqlalchemy
+import pymongo
 from abc import ABC, abstractmethod
 from typing import List, Any
 
@@ -14,8 +16,18 @@ class IDbProvider(ABC):
         pass
 
     @abstractmethod
+    def get_logger(self):
+        """ Returns the providers logger """
+        pass
+
+    @abstractmethod
+    def get_db_engine(self) -> sqlalchemy.engine.Engine | pymongo.MongoClient:
+        """ Returns the database engine """
+        pass
+
+    @abstractmethod
     def create_table_if_not_exists(self, entity: SQLModel, table: str, schema: str) -> None:
-        """ Creates table if not exists """
+        """ Creates table/collection if not exists """
         pass
 
     @abstractmethod

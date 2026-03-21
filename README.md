@@ -21,15 +21,39 @@ To set the Supabase Postgres database server run the folllowing steps:
 ![supabase connection settings](/assets/images/supabase_connection_settings.png)
 4. The illustration above shows you the database connection string you should use to connect `[postgresql://postgres.<YOUR-USERNAME>:<YOUR-PASSWORD>@aws-1-eu-west-1.pooler.supabase.com:5432/postgres]`
 5. Put inside the following content like in the illustration below:
-![supabase config json file content](/assets/images/supabase_config_json.png)
+![supabase config json file content](/assets/images/supabase_config_json.png) where "your database username" and "your password" should refer to your own Supabase credentials.
+6. Voilà! You've done the supabase config setup.
 
-where "your database username" and "your password" should refer to your own Supabase credentials.
-6. Voila! You've done the supabase config setup.
+## Setting up the Mongo database
+The _vectors_ table storing texts embeddings appeared too large to have it on Supabase Postgres database server persisted. Therefore, it is stored in Mongo database. To set it up you need first to install [Docker](https://docs.docker.com/engine/install/) and [Docker Compose](https://docs.docker.com/compose/install/) services from the provided links.
+
+After installation create the `docker-compose.yml` file with the following content ([reference here](https://medium.com/@kaloyanmanev/how-to-run-rabbitmq-in-docker-compose-e5baccc3e644)):
+```yaml
+services:
+    mongo_db:
+        image : mongo
+        restart: always
+        environment:
+        - PUID=1000
+        - PGID=1000
+        - MONGO_INITDB_ROOT_USERNAME=mongo_admin
+        - MONGO_INITDB_ROOT_PASSWORD=mongo_admin
+        volumes:
+        - ./mongo:/data/db
+        ports:
+        - 27017:27017
+```
+**NOTE**: You can set up your own default MongoDB username and password. By default, both are set to: _mongo_admin_.
+Then run command:
+
+    docker compose up -d
+
+Voilà. The Mongo database is now set up.
 
 ## Running the application
 ### Ingestion
 Running the help command: `python run_ingestion.py -h` yields the following:
-```
+```text
 ---- Reddits ingestion app ----
 
 usage: run_ingestion.py [-h] [-b BATCH_SIZE] [--no_authors_load] phrase
@@ -63,16 +87,16 @@ The application will ingest the "corgi" JSON files however without ingestion of 
 
 ### ETL
 Running the help command: `python run_etl.py -h` yields the following:
-```
+```text
 ---- Reddits ETL app ----
 
 usage: run_etl.py [-h] [-b BATCH_SIZE] [--skip_missing_dates] [--start_date START_DATE] [--interval {h,d,m,y}] [--until_today] [--no_multiprocessing] [--num_processes NUM_PROCESSES]
-                  {sentiment,popularity,vectorization} phrase
+                  {emotion,sentiment,popularity,vectorization} phrase
 
 Reddits ETL Python 3.11 application.
 
 positional arguments:
-  {sentiment,popularity,vectorization}
+  {emotion,sentiment,popularity,vectorization}
                         ETL script to run
   phrase                phrase which contain reddits to do the ETL with
 
@@ -92,7 +116,7 @@ options:
 ```
 
 ### Parameters overview
-1. **script** -- **_required_** -- etl script to run. Currently, **"sentiment"** and **popularity** are only available. The _"vectorization"_ will be developed furtherly.  
+1. **script** -- **_required_** -- etl script to run. Currently, **"sentiment"**, **"popularity"** and **"vectorization"** are only available. The _"emotion"_ will be developed furtherly.  
 2. **phrase** -- **_required_** -- word or sentence fragment according to which the reddits should be ingested.
 3. **-b**, **--batch_size** -- _optional_ -- **10000** by default -- maximum number of entries inserted into database at once.
 4. **--skip_missing_dates** -- _optional_ -- **False** by default -- flag whether not to load blank records for file dates for which the data do not exist.
@@ -102,14 +126,14 @@ options:
 8. **--no_multiprocessing** -- _optional_ -- **False** by default -- flag whether not to utilize multiprocess approach for results downloading. Unless set the application will divide the list of input entries and forward them to separate processes.
 9. **--num_processes** -- _optional_ -- **8** by default -- number of processes for multiprocess approach, not applicable if _--no_multiprocessing_ flag is set. **IMPORTANT:** For 2xQuadCore processors the number should not be larger than 8.
 
-### Command examples
+### Command examples (for sentiment ETL process)
 #### Simple
-    python run_etl.py "corgi"
-The application will load all reddits and comments according to "corgi", perform the sentiment utilizing multiprocess approach and store processed data into _sentiment_ table. The solution will also insert blank records for file date gaps.
+    python run_etl.py "sentiment" "corgi"
+The application will load all reddits and comments according to "corgi", perform the sentiment ETL process utilizing multiprocess approach and store processed data into _sentiment_ table. The solution will also insert blank records for file date gaps.
 
 #### Skipping missing dates
     python run_etl.py "corgi" --skip_missing_dates
-The application will load "corgi" entries and then perform the sentiment without filling data with blank records for missing file dates.
+The application will load "corgi" entries and then perform the sentiment ETL process without filling data with blank records for missing file dates.
 
 #### Filling in with blank records until date of launch
     python run_etl.py "corgi" --until_today
@@ -117,11 +141,24 @@ The application will load "corgi" entries and filling in with blank records for 
 
 #### No multiprocessing
     python run_etl.py "corgi" --no_multiprocessing
-The application will load "corgi" entries and then perform the sentiment however not using multiprocess approach and store processed data into _sentiment_ table.
+The application will load "corgi" entries and then perform the sentiment ETL process however not using multiprocess approach and store processed data into _sentiment_ table.
+
+### Command examples (for other ETL processes)
+#### Popularity
+    python run_etl.py "popularity" "corgi"
+The application will perform popularity ETL process for "corgi" entries utilizing multiprocess approach and persist the data into _popularities_ table.
+
+#### Vectorization
+    python run_etl.py "vectorization" "corgi"
+The application will perform vectorization ETL process for "corgi" entries utilizing multiprocess approach and persist the data into _vectors_ table.
+
+#### Emotion
+    python run_etl.py "emotion" "corgi"
+The application will perform emotion ETL process for "corgi" entries utilizing multiprocess approach and persist the data into _emotions_ table.
 
 ### Testing
 To perform application unit testing simply run the command `pytest` in main project directory. The output should look like the following:
-```
+```text
 ================================ test session starts ================================
 platform linux -- Python 3.11.14, pytest-9.0.2, pluggy-1.5.0
 rootdir: /home/jakub/PycharmProjects/ETLReddit
@@ -145,7 +182,8 @@ The illustration above shows the solution dataflow diagram. The dash-frame highl
 
 ## Data model
 ![Data model class diagram](/assets/images/reddits_data_model.png)
-The illustration above shows the data model diagram class. The **Author**, **Reddit** and **Comment** class instances are used during JSON files ingestion (insertion) as well as ETL processes (reading). The **Sentiment** and **Popularity** class instances are used (currently) only during persistence of processed reddits and comments (insertion).
+The illustration above shows the data model diagram class. The **Author**, **Reddit** and **Comment** class instances are used during JSON files ingestion (insertion) as well as ETL processes (reading). 
+The **Sentiment**, **Popularity**, **Vector** and **Emotion** classes instances are used (currently) only during persistence of processed reddits and comments (insertion).
 
 ## Detailed class diagrams
 ### Ingestion
@@ -164,3 +202,6 @@ The illustration above shows the data model diagram class. The **Author**, **Red
 3. **Missing file dates** -- determining of which file dates the application should load the data for
 4. **ETL process** -- loading **reddits** and **comments** from database and sentiment ETL processes
 5. **Results persistence** -- persisting sentiment results in **sentiments** database table
+
+
+**NOTE**: The detailed class diagrams for other ETL processes look the same as above, however instead of _ISentimentService_, _SentimentService_, _IDbSentimentProvider_, _SupabasePostgresDbSentimentProvider_ there should be classes relevant to the ETL process name.

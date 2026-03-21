@@ -8,3 +8,7 @@ from service.sentiment.sentiment_service import SentimentService
 # Popularity service
 from service.popularity.i_popularity_service import IPopularityService
 from service.popularity.popularity_service import PopularityService
+
+# Vector service
+from service.vector.i_vector_service import IVectorService
+from service.vector.vector_service import VectorService
