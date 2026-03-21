@@ -30,6 +30,14 @@ class MongoProvider(IDbProvider):
         """ Connects to the database """
         pass
 
+    def get_logger(self):
+        """ Returns the providers logger """
+        return self.logger
+
+    def get_db_engine(self) -> pymongo.MongoClient:
+        """ Returns the database engine """
+        return self.db_engine
+
     def create_table_if_not_exists(self, entity: SQLModel, table: str, schema: str) -> None:
         """ Creates collection if not exists """
         mcc = MongoConnectionConfig.from_json()

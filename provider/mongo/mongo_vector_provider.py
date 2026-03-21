@@ -22,14 +22,14 @@ class MongoDbVectorProvider(IDbVectorProvider):
         """ Returns the file dates of vector of given phrase """
         self.create_if_not_exists()
 
-        file_dates = self.mongo_provider.db_engine.get_database("reddit").get_collection("vectors").find({'phrase': {"$eq": phrase}}).distinct("file_date")
+        file_dates = self.mongo_provider.get_db_engine().get_database("reddit").get_collection("vectors").find({'phrase': {"$eq": phrase}}).distinct("file_date")
         return file_dates
 
     def get_vectors(self, phrase: str) -> List[Vector]:
         """ Returns the vectors of given phrase """
         self.create_if_not_exists()
 
-        vector_definitions = self.mongo_provider.db_engine.get_database("reddit").get_collection("vectors").find({'phrase': {"$eq": phrase}})
+        vector_definitions = self.mongo_provider.get_db_engine().get_database("reddit").get_collection("vectors").find({'phrase': {"$eq": phrase}})
         return list(map(lambda vd: Vector(**vd), vector_definitions))
 
     def insert_vectors(self, vectors: List[Vector], batch_size: int = 100) -> None:
@@ -40,11 +40,11 @@ class MongoDbVectorProvider(IDbVectorProvider):
         entity_chunks = util.chunk_list_equal_size(vector_definitions, batch_size)
         num_inserted = 0
         print("Inserting vectors:")
-        self.mongo_provider.logger.info("Inserting vectors:")
+        self.mongo_provider.get_logger().info("Inserting vectors:")
         for chunk in entity_chunks:
-            self.mongo_provider.db_engine.get_database("reddit").get_collection("vectors").insert_many(chunk)
+            self.mongo_provider.get_db_engine().get_database("reddit").get_collection("vectors").insert_many(chunk)
             num_inserted += len(chunk)
             print(f"{num_inserted} out of {len(vector_definitions)}")
-            self.mongo_provider.logger.info(f"{num_inserted} out of {len(vector_definitions)}")
+            self.mongo_provider.get_logger().info(f"{num_inserted} out of {len(vector_definitions)}")
         print("Vectors inserted.")
-        self.mongo_provider.logger.info("Vectors inserted.")
+        self.mongo_provider.get_logger().info("Vectors inserted.")

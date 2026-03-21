@@ -1,3 +1,5 @@
+import sqlalchemy
+import pymongo
 from abc import ABC, abstractmethod
 from typing import List, Any
 
@@ -11,6 +13,16 @@ class IDbProvider(ABC):
     @abstractmethod
     def connect(self) -> None:
         """ Connects to the database """
+        pass
+
+    @abstractmethod
+    def get_logger(self):
+        """ Returns the providers logger """
+        pass
+
+    @abstractmethod
+    def get_db_engine(self) -> sqlalchemy.engine.Engine | pymongo.MongoClient:
+        """ Returns the database engine """
         pass
 
     @abstractmethod

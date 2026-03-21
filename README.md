@@ -21,10 +21,34 @@ To set the Supabase Postgres database server run the folllowing steps:
 ![supabase connection settings](/assets/images/supabase_connection_settings.png)
 4. The illustration above shows you the database connection string you should use to connect `[postgresql://postgres.<YOUR-USERNAME>:<YOUR-PASSWORD>@aws-1-eu-west-1.pooler.supabase.com:5432/postgres]`
 5. Put inside the following content like in the illustration below:
-![supabase config json file content](/assets/images/supabase_config_json.png)
+![supabase config json file content](/assets/images/supabase_config_json.png) where "your database username" and "your password" should refer to your own Supabase credentials.
+6. Voilà! You've done the supabase config setup.
 
-where "your database username" and "your password" should refer to your own Supabase credentials.
-6. Voila! You've done the supabase config setup.
+## Setting up the Mongo database
+The _vectors_ table storing texts embeddings appeared too large to have it on Supabase Postgres database server persisted. Therefore, it is stored in Mongo database. To set it up you need first to install [Docker](https://docs.docker.com/engine/install/) and [Docker Compose](https://docs.docker.com/compose/install/) services from the provided links.
+
+After installation create the `docker-compose.yml` file with the following content ([reference here](https://medium.com/@kaloyanmanev/how-to-run-rabbitmq-in-docker-compose-e5baccc3e644)):
+```yaml
+services:
+    mongo_db:
+        image : mongo
+        restart: always
+        environment:
+        - PUID=1000
+        - PGID=1000
+        - MONGO_INITDB_ROOT_USERNAME=mongo_admin
+        - MONGO_INITDB_ROOT_PASSWORD=mongo_admin
+        volumes:
+        - ./mongo:/data/db
+        ports:
+        - 27017:27017
+```
+**NOTE**: You can set up your own default MongoDB username and password. By default, both are set to: _mongo_admin_.
+Then run command:
+
+    docker compose up -d
+
+Voilà. The Mongo database is now set up.
 
 ## Running the application
 ### Ingestion
@@ -158,7 +182,8 @@ The illustration above shows the solution dataflow diagram. The dash-frame highl
 
 ## Data model
 ![Data model class diagram](/assets/images/reddits_data_model.png)
-The illustration above shows the data model diagram class. The **Author**, **Reddit** and **Comment** class instances are used during JSON files ingestion (insertion) as well as ETL processes (reading). The **Sentiment**, **Popularity**, **Vector** and **Emotion** classes instances are used (currently) only during persistence of processed reddits and comments (insertion).
+The illustration above shows the data model diagram class. The **Author**, **Reddit** and **Comment** class instances are used during JSON files ingestion (insertion) as well as ETL processes (reading). 
+The **Sentiment**, **Popularity**, **Vector** and **Emotion** classes instances are used (currently) only during persistence of processed reddits and comments (insertion).
 
 ## Detailed class diagrams
 ### Ingestion
