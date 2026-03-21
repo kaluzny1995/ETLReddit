@@ -1,0 +1,8 @@
+{
+  "username": "mongo_admin",
+  "password": "mongo_admin",
+  "host": "localhost",
+  "port": 27017,
+  "database": "reddit",
+  "collection": "vectors"
+}

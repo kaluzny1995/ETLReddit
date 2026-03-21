@@ -15,7 +15,7 @@ class IDbProvider(ABC):
 
     @abstractmethod
     def create_table_if_not_exists(self, entity: SQLModel, table: str, schema: str) -> None:
-        """ Creates table if not exists """
+        """ Creates table/collection if not exists """
         pass
 
     @abstractmethod

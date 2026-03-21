@@ -13,9 +13,10 @@ from provider.json_file.json_reddit_provider import JsonRedditProvider
 from provider.json_file.json_comment_provider import JsonCommentProvider
 from provider.json_file.json_author_provider import JsonAuthorProvider
 
-# Supabase database providers
+# Database providers
 from provider.db.i_db_provider import IDbProvider
 from provider.supabase_postgres.supabase_postgres_provider import SupabasePostgresProvider
+from provider.mongo.mongo_provider import MongoProvider
 
 # Supabase entities providers
 from provider.db.i_db_reddit_provider import IDbRedditProvider
@@ -30,3 +31,6 @@ from provider.supabase_postgres.supabase_postgres_author_provider import Supabas
 from provider.supabase_postgres.supabase_postgres_sentiment_provider import SupabasePostgresDbSentimentProvider
 from provider.supabase_postgres.supabase_postgres_popularity_provider import SupabasePostgresDbPopularityProvider
 from provider.supabase_postgres.supabase_postgres_vector_provider import SupabasePostgresDbVectorProvider
+
+# Mongo entities providers
+from provider.mongo.mongo_vector_provider import MongoDbVectorProvider

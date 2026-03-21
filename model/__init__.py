@@ -1,5 +1,6 @@
 from model.config.app_config import AppConfig
 from model.config.supabase_connection_config import SupabaseConnectionConfig
+from model.config.mongo_connection_config import MongoConnectionConfig
 
 from model.enum.e_etl_script import EETLScript
 from model.enum.e_file_date_type import EFileDateType

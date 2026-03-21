@@ -8,7 +8,7 @@ import util
 from model import ETLParams, Reddit, Comment, Vector
 from provider import IDbRedditProvider, IDbCommentProvider, IDbVectorProvider, \
     SupabasePostgresProvider, SupabasePostgresDbRedditProvider, \
-    SupabasePostgresDbCommentProvider, SupabasePostgresDbVectorProvider
+    SupabasePostgresDbCommentProvider, SupabasePostgresDbVectorProvider, MongoProvider, MongoDbVectorProvider
 from service import IVectorService
 
 
@@ -30,26 +30,28 @@ class VectorService(IVectorService):
                                                   log_file=f"logs/other/vector_service.log")
 
         supabase_postgres_provider = SupabasePostgresProvider(logger=self.logger)
+        mongo_provider = MongoProvider(logger=self.logger)
         self.reddit_provider = reddit_provider or SupabasePostgresDbRedditProvider(supabase_postgres_provider)
         self.comment_provider = comment_provider or SupabasePostgresDbCommentProvider(supabase_postgres_provider)
-        self.vector_provider = vector_provider or SupabasePostgresDbVectorProvider(supabase_postgres_provider)
+        self.vector_provider = vector_provider or MongoDbVectorProvider(mongo_provider)
 
         self.sentence_transformer = SentenceTransformer("all-MiniLM-L6-v2")
 
     def get_vectors(self, entries: List[Reddit | Comment], params: ETLParams) -> List[Vector]:
         """ Returns the processed vectors from given entries """
         results = list([])
-        entry_texts = Vector.get_entry_texts(entries)
-        embeddings_list = self._multiprocess_texts(entry_texts, params) if params.is_multiprocessing_used \
-            else self._process_texts(entry_texts)
+        if len(entries) > 0:
+            entry_texts = Vector.get_entry_texts(entries)
+            embeddings_list = self._multiprocess_texts(entry_texts, params) if params.is_multiprocessing_used \
+                else self._process_texts(entry_texts)
 
-        for entry, embeddings in zip(entries, embeddings_list):
-            if isinstance(entry, Reddit):
-                results.append(Vector.from_reddit(entry, embeddings))
-            elif isinstance(entry, Comment):
-                results.append(Vector.from_comment(entry, embeddings))
-            else:
-                raise error.WrongEntityError(f"Wrong entity type: {type(entry)}. Should be Reddit or Comment.")
+            for entry, embeddings in zip(entries, embeddings_list):
+                if isinstance(entry, Reddit):
+                    results.append(Vector.from_reddit(entry, embeddings))
+                elif isinstance(entry, Comment):
+                    results.append(Vector.from_comment(entry, embeddings))
+                else:
+                    raise error.WrongEntityError(f"Wrong entity type: {type(entry)}. Should be Reddit or Comment.")
         return results
 
     def _process_texts(self, texts: List[str]) -> List[List[float]]:
