@@ -1,11 +1,12 @@
-conda-forge::supabase=2.25.0
-conda-forge::gotrue=2.12.4
+conda-forge::supabase==2.25.0
+conda-forge::gotrue==2.12.4
 conda-forge::sqlmodel==0.0.27
 anaconda::psycopg2==2.9.3
-conda-forge::pymongo-4.16.0
+conda-forge::pymongo==4.16.0
 anaconda::python-dateutil==2.9.0post0
 conda-forge::tqdm==4.67.1
 conda-forge::autocorrect==2.6.1
+conda-forge::emoji==2.15.0
 anaconda::nltk==3.9.1
 anaconda::textblob==0.18.0.post0
 conda-forge::sentence-transformers==5.3.0
