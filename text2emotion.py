@@ -8,6 +8,7 @@ Changes:
 2. Modified method of stopwords removing with list lambda expressions
 3. Modified get_emotion method to make it returned the numbers of various emotions in text instead of fractions
 4. Method get_emotion returning the words count
+5. New method get_emotions returning the labels of emotions which appeared in text
 """
 
 import nltk
@@ -684,6 +685,6 @@ def get_emotion(input_text):
         pass
 
 
-def get_dominant_emotions(emotions, total_words):
+def get_emotions(emotions, total_words):
     coeffs = dict(map(lambda emotion: (emotion[0], 0. if total_words == 0 else emotion[1]/total_words), emotions.items()))
     return list(map(lambda coeff: coeff[0], filter(lambda coeff: coeff[1] > 0., coeffs.items())))

@@ -70,6 +70,7 @@ def run_sentiment(args: argparse.Namespace, logger: logging.Logger) -> None:
     # Show parameters
     show_params(etl_params, logger)
 
+    # run sentiment ETL process
     sentiment_service = SentimentService(logger=logger)
     sentiment_service.run_etl(**etl_params.model_dump())
 
@@ -81,6 +82,7 @@ def run_popularity(args: argparse.Namespace, logger: logging.Logger) -> None:
     # Show parameters
     show_params(etl_params, logger)
 
+    # run popularity ETL process
     popularity_service = PopularityService(logger=logger)
     popularity_service.run_etl(**etl_params.model_dump())
 
@@ -92,6 +94,7 @@ def run_emotion(args: argparse.Namespace, logger: logging.Logger) -> None:
     # Show parameters
     show_params(etl_params, logger)
 
+    # run emotion ETL process
     emotion_service = EmotionService(logger=logger)
     emotion_service.run_etl(**etl_params.model_dump())
 
@@ -103,6 +106,7 @@ def run_vectorization(args: argparse.Namespace, logger: logging.Logger) -> None:
     # Show parameters
     show_params(etl_params, logger)
 
+    # run vectorization ETL process
     vector_service = VectorService(logger=logger)
     vector_service.run_etl(**etl_params.model_dump())
 

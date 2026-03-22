@@ -45,7 +45,7 @@ class EmotionService(IEmotionService):
     def get_text2emotion(self, text: str | None) -> EmotionResult:
         """ Returns the emotion result from given text """
         text2emotion_result, total_words = text2emotion.get_emotion(text)
-        dominant_emotions = text2emotion.get_dominant_emotions(text2emotion_result, total_words)
+        dominant_emotions = text2emotion.get_emotions(text2emotion_result, total_words)
         return EmotionResult(
             num_happy=text2emotion_result['Happy'],
             num_angry=text2emotion_result['Angry'],
