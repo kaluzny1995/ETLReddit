@@ -16,6 +16,7 @@ def test_from_reddit(reddit: Reddit, emotion_result: EmotionResult, expected_emo
     assert emotion.reddit_id == expected_emotion.reddit_id
     assert emotion.comment_id == expected_emotion.comment_id
     assert emotion.phrase == expected_emotion.phrase
+    assert emotion.author == expected_emotion.author
     assert emotion.num_happy == expected_emotion.num_happy
     assert emotion.num_angry == expected_emotion.num_angry
     assert emotion.num_surprise == expected_emotion.num_surprise
@@ -36,6 +37,7 @@ def test_from_comment(comment: Comment, emotion_result: EmotionResult, expected_
     assert emotion.reddit_id == expected_emotion.reddit_id
     assert emotion.comment_id == expected_emotion.comment_id
     assert emotion.phrase == expected_emotion.phrase
+    assert emotion.author == expected_emotion.author
     assert emotion.num_happy == expected_emotion.num_happy
     assert emotion.num_angry == expected_emotion.num_angry
     assert emotion.num_surprise == expected_emotion.num_surprise

@@ -8,6 +8,7 @@ class Emotion(SQLModel, table=True):
     reddit_id: str | None = Field(sa_column=Column("reddit_id", String, primary_key=True, nullable=False))
     comment_id: str | None = Field(sa_column=Column("comment_id", String, primary_key=True, nullable=False))
     phrase: str = Field(sa_column=Column("phrase", String, primary_key=True, nullable=False))
+    author: str | None = Field(sa_column=Column("author", String, nullable=True))
     num_happy: int = Field(sa_column=Column("num_happy", Integer, nullable=False))
     num_angry: int = Field(sa_column=Column("num_angry", Integer, nullable=False))
     num_surprise: int = Field(sa_column=Column("num_surprise", Integer, nullable=False))
@@ -28,13 +29,14 @@ class Emotion(SQLModel, table=True):
                 "reddit_id": "ekqlk6",
                 "comment_id": "fdd5fo1",
                 "phrase": "corgi",
+                "author": "goswamitulsidas",
                 "num_happy": 4,
                 "num_angry": 0,
                 "num_surprise": 1,
                 "num_sad": 3,
                 "num_fear": 0,
                 "total_words": 10,
-                "emotion_classes": "[HAPPY, SAD]",
+                "emotion_classes": "[\"HAPPY\", \"SAD\"]",
                 "file_date": "2020-01-01"
             }
         }
@@ -45,6 +47,7 @@ class Emotion(SQLModel, table=True):
             reddit_id=f"N/A_{file_date}",
             comment_id=f"N/A_{file_date}",
             phrase=phrase,
+            author="N/A",
             num_happy=0,
             num_angry=0,
             num_surprise=0,
@@ -61,6 +64,7 @@ class Emotion(SQLModel, table=True):
             reddit_id=reddit.reddit_id,
             comment_id="N/A",
             phrase=reddit.phrase,
+            author=reddit.author,
             num_happy=emotion_result.num_happy,
             num_angry=emotion_result.num_angry,
             num_surprise=emotion_result.num_surprise,
@@ -77,6 +81,7 @@ class Emotion(SQLModel, table=True):
             reddit_id="N/A",
             comment_id=comment.comment_id,
             phrase=comment.phrase,
+            author=comment.author,
             num_happy=emotion_result.num_happy,
             num_angry=emotion_result.num_angry,
             num_surprise=emotion_result.num_surprise,

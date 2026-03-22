@@ -181,16 +181,16 @@ vectors = [
 ]
 
 emotions = [
-    Emotion(reddit_id="jgz2uz", comment_id="N/A", phrase="corgi",
+    Emotion(reddit_id="jgz2uz", comment_id="N/A", phrase="corgi", author="CocaKoller",
             num_happy=2, num_angry=1, num_surprise=5, num_sad=0, num_fear=0, total_words=42,
             emotion_classes="[SURPRISE]", file_date="2026-01-01"),
-    Emotion(reddit_id="135yzs1", comment_id="N/A", phrase="corgi",
+    Emotion(reddit_id="135yzs1", comment_id="N/A", phrase="corgi", author="HELL-OAT",
             num_happy=0, num_angry=6, num_surprise=2, num_sad=3, num_fear=1, total_words=65,
             emotion_classes="[ANGRY]", file_date="2022-01-01"),
-    Emotion(reddit_id="N/A", comment_id="g9tw6ow", phrase="corgi",
+    Emotion(reddit_id="N/A", comment_id="g9tw6ow", phrase="corgi", author=None,
             num_happy=2, num_angry=1, num_surprise=5, num_sad=0, num_fear=0, total_words=42,
             emotion_classes="[]", file_date="2022-01-01"),
-    Emotion(reddit_id="N/A", comment_id="g9v8jbi", phrase="corgi",
+    Emotion(reddit_id="N/A", comment_id="g9v8jbi", phrase="corgi", author="rognabologna",
             num_happy=0, num_angry=6, num_surprise=2, num_sad=9, num_fear=1, total_words=65,
             emotion_classes="[ANGRY, SAD]", file_date="2026-01-01")
 ]
