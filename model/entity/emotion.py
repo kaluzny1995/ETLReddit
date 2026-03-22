@@ -3,7 +3,7 @@ from sqlmodel import SQLModel, Field, Column, String, Integer
 from model import Reddit, Comment, EmotionResult
 
 
-class Emotion(SQLModel):
+class Emotion(SQLModel, table=True):
     reddit_id: str | None = Field(sa_column=Column("reddit_id", String, primary_key=True, nullable=False))
     comment_id: str | None = Field(sa_column=Column("comment_id", String, primary_key=True, nullable=False))
     phrase: str = Field(sa_column=Column("phrase", String, primary_key=True, nullable=False))

@@ -4,7 +4,7 @@ import logging
 
 import util
 from model import AppConfig, EETLScript, ETLParams
-from service import SentimentService, PopularityService, VectorService
+from service import SentimentService, PopularityService, VectorService, EmotionService
 
 
 def get_config() -> AppConfig:
@@ -86,12 +86,18 @@ def run_popularity(args: argparse.Namespace, logger: logging.Logger) -> None:
 
 
 def run_emotion(args: argparse.Namespace, logger: logging.Logger) -> None:
-    """ Executes texts vectorization script """
-    raise NotImplementedError("The texts emotion analysis script has not been implemented yet.")
+    """ Executes emotion script """
+    etl_params = ETLParams.from_argparse_namespace(args)
+
+    # Show parameters
+    show_params(etl_params, logger)
+
+    emotion_service = EmotionService(logger=logger)
+    emotion_service.run_etl(**etl_params.model_dump())
 
 
 def run_vectorization(args: argparse.Namespace, logger: logging.Logger) -> None:
-    """ Executes texts vectorization script """
+    """ Executes vectorization script """
     etl_params = ETLParams.from_argparse_namespace(args)
 
     # Show parameters

@@ -154,8 +154,8 @@ class EmotionService(IEmotionService):
 
         emotions = self.get_emotions(entries, etl_params)
 
-        print(f"Popularities processed: {len(emotions)}.\n")
-        self.logger.info(f"Popularities processed: {len(emotions)}.")
+        print(f"Emotions processed: {len(emotions)}.\n")
+        self.logger.info(f"Emotions processed: {len(emotions)}.")
 
         # file date gaps detection and filling in with blank records
         if etl_params.is_filled_missing_dates:
