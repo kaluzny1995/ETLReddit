@@ -7,7 +7,7 @@ from autocorrect import Speller
 import error
 import util
 import text2emotion
-from model import ETLParams, EmotionResult, Reddit, Comment, Emotion
+from model import ETLParams, EEmotionClass, EmotionResult, Reddit, Comment, Emotion
 from provider import IDbRedditProvider, IDbCommentProvider, IDbEmotionProvider, \
     SupabasePostgresProvider, SupabasePostgresDbRedditProvider, \
     SupabasePostgresDbCommentProvider, SupabasePostgresDbEmotionProvider
@@ -45,12 +45,14 @@ class EmotionService(IEmotionService):
     def get_text2emotion(self, text: str | None) -> EmotionResult:
         """ Returns the emotion result from given text """
         text2emotion_result, total_words = text2emotion.get_emotion(text)
+        dominant_emotions = text2emotion.get_dominant_emotions(text2emotion_result, total_words)
         return EmotionResult(
             num_happy=text2emotion_result['Happy'],
             num_angry=text2emotion_result['Angry'],
             num_surprise=text2emotion_result['Surprise'],
             num_sad=text2emotion_result['Sad'],
             num_fear=text2emotion_result['Fear'],
+            emotion_classes=list(map(lambda emotion: EEmotionClass(emotion.upper()), dominant_emotions)),
             total_words=total_words
         )
 

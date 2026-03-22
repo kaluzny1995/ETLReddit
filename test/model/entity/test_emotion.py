@@ -22,6 +22,7 @@ def test_from_reddit(reddit: Reddit, emotion_result: EmotionResult, expected_emo
     assert emotion.num_sad == expected_emotion.num_sad
     assert emotion.num_fear == expected_emotion.num_fear
     assert emotion.total_words == expected_emotion.total_words
+    assert emotion.emotion_classes == expected_emotion.emotion_classes
     assert emotion.file_date == expected_emotion.file_date
 
 
@@ -41,4 +42,5 @@ def test_from_comment(comment: Comment, emotion_result: EmotionResult, expected_
     assert emotion.num_sad == expected_emotion.num_sad
     assert emotion.num_fear == expected_emotion.num_fear
     assert emotion.total_words == expected_emotion.total_words
+    assert emotion.emotion_classes == expected_emotion.emotion_classes
     assert emotion.file_date == expected_emotion.file_date

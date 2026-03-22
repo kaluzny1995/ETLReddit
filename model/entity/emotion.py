@@ -1,3 +1,4 @@
+import json
 from sqlmodel import SQLModel, Field, Column, String, Integer
 
 from model import Reddit, Comment, EmotionResult
@@ -13,6 +14,7 @@ class Emotion(SQLModel, table=True):
     num_sad: int = Field(sa_column=Column("num_sad", Integer, nullable=False))
     num_fear: int = Field(sa_column=Column("num_fear", Integer, nullable=False))
     total_words: int = Field(sa_column=Column("total_words", Integer, nullable=False))
+    emotion_classes: str = Field(sa_column=Column("emotion_classes", String, nullable=False))
     file_date: str = Field(sa_column=Column("file_date", String, nullable=False))
 
     __tablename__ = "emotions"
@@ -26,12 +28,13 @@ class Emotion(SQLModel, table=True):
                 "reddit_id": "ekqlk6",
                 "comment_id": "fdd5fo1",
                 "phrase": "corgi",
-                "num_happy": 1,
-                "num_angry": 1,
+                "num_happy": 4,
+                "num_angry": 0,
                 "num_surprise": 1,
-                "num_sad": 1,
-                "num_fear": 1,
+                "num_sad": 3,
+                "num_fear": 0,
                 "total_words": 10,
+                "emotion_classes": "[HAPPY, SAD]",
                 "file_date": "2020-01-01"
             }
         }
@@ -48,6 +51,7 @@ class Emotion(SQLModel, table=True):
             num_sad=0,
             num_fear=0,
             total_words=0,
+            emotion_classes="[]",
             file_date=file_date
         )
 
@@ -63,6 +67,7 @@ class Emotion(SQLModel, table=True):
             num_sad=emotion_result.num_sad,
             num_fear=emotion_result.num_fear,
             total_words=emotion_result.total_words,
+            emotion_classes=json.dumps(emotion_result.emotion_classes),
             file_date=reddit.start_file_date
         )
 
@@ -78,5 +83,6 @@ class Emotion(SQLModel, table=True):
             num_sad=emotion_result.num_sad,
             num_fear=emotion_result.num_fear,
             total_words=emotion_result.total_words,
+            emotion_classes=json.dumps(emotion_result.emotion_classes),
             file_date=comment.start_file_date
         )

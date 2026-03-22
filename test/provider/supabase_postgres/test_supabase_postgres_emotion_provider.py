@@ -42,4 +42,5 @@ def test_get_sentiments(emotions: List[Emotion], expected_emotions: List[Emotion
         assert rp.num_sad == ep.num_sad
         assert rp.num_fear == ep.num_fear
         assert rp.total_words == ep.total_words
+        assert rp.emotion_classes == ep.emotion_classes
         assert rp.file_date == ep.file_date

@@ -2,6 +2,7 @@ import datetime as dt
 
 from model import EEntryType, ESentimentClass, SentimentResult, EmotionResult, \
     Author, Reddit, Comment, Sentiment, Popularity, Vector, Emotion
+from model.enum.e_emotion_class import EEmotionClass
 
 # Author
 test_author_from_raw_json_cases = [
@@ -783,7 +784,8 @@ test_emotion_from_reddit_cases = [
             num_surprise=5,
             num_sad=0,
             num_fear=0,
-            total_words=42
+            total_words=42,
+            emotion_classes=[EEmotionClass.HAPPY, EEmotionClass.SURPRISE]
         ),
         Emotion(
             reddit_id="jgz2uz",
@@ -795,6 +797,7 @@ test_emotion_from_reddit_cases = [
             num_sad=0,
             num_fear=0,
             total_words=42,
+            emotion_classes="[\"HAPPY\", \"SURPRISE\"]",
             file_date="2026-01-01"
         )
     ), (
@@ -824,7 +827,8 @@ test_emotion_from_reddit_cases = [
             num_surprise=2,
             num_sad=3,
             num_fear=1,
-            total_words=65
+            total_words=65,
+            emotion_classes=[]
         ),
         Emotion(
             reddit_id="135yzs1",
@@ -836,6 +840,7 @@ test_emotion_from_reddit_cases = [
             num_sad=3,
             num_fear=1,
             total_words=65,
+            emotion_classes="[]",
             file_date="2022-01-01"
         )
     )
@@ -872,7 +877,8 @@ test_emotion_from_comment_cases = [
             num_surprise=5,
             num_sad=0,
             num_fear=0,
-            total_words=42
+            total_words=42,
+            emotion_classes=[EEmotionClass.HAPPY, EEmotionClass.SURPRISE]
         ),
         Emotion(
             reddit_id="N/A",
@@ -884,6 +890,7 @@ test_emotion_from_comment_cases = [
             num_sad=0,
             num_fear=0,
             total_words=42,
+            emotion_classes="[\"HAPPY\", \"SURPRISE\"]",
             file_date="2022-01-01"
         )
     ), (
@@ -916,7 +923,8 @@ test_emotion_from_comment_cases = [
             num_surprise=2,
             num_sad=3,
             num_fear=1,
-            total_words=65
+            total_words=65,
+            emotion_classes=[]
         ),
         Emotion(
             reddit_id="N/A",
@@ -928,6 +936,7 @@ test_emotion_from_comment_cases = [
             num_sad=3,
             num_fear=1,
             total_words=65,
+            emotion_classes="[]",
             file_date="2026-01-01"
         )
     )

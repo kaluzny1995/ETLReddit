@@ -6,6 +6,7 @@ from model.enum.e_etl_script import EETLScript
 from model.enum.e_file_date_type import EFileDateType
 from model.enum.e_entry_type import EEntryType
 from model.enum.e_sentiment_class import ESentimentClass
+from model.enum.e_emotion_class import EEmotionClass
 
 from model.util.etl_params import ETLParams
 from model.util.sentiment_result import NLTKSentiment, TextblobSentiment, SentimentResult

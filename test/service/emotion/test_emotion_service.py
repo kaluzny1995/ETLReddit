@@ -33,3 +33,4 @@ def test_get_text2emotion(text: str | None, expected_emotion_result: EmotionResu
     assert emotion_result.num_sad == expected_emotion_result.num_sad
     assert emotion_result.num_fear == expected_emotion_result.num_fear
     assert emotion_result.total_words == expected_emotion_result.total_words
+    assert emotion_result.emotion_classes == expected_emotion_result.emotion_classes
