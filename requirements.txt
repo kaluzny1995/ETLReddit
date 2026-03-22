@@ -7,7 +7,7 @@ anaconda::python-dateutil==2.9.0post0
 conda-forge::tqdm==4.67.1
 conda-forge::autocorrect==2.6.1
 conda-forge::emoji==2.15.0
-anaconda::nltk==3.9.1
+anaconda::nltk==3.8.1
 anaconda::textblob==0.18.0.post0
 conda-forge::sentence-transformers==5.3.0
 conda-forge::pytest

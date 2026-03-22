@@ -2,12 +2,12 @@ from pydantic import BaseModel
 
 
 class EmotionResult(BaseModel):
-    num_happy: float
-    num_angry: float
-    num_surprise: float
-    num_sad: float
-    num_fear: float
-    total_words: float
+    num_happy: int
+    num_angry: int
+    num_surprise: int
+    num_sad: int
+    num_fear: int
+    total_words: int
 
     class ConfigDict:
         frozen = True
