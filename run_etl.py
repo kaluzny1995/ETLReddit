@@ -115,8 +115,8 @@ def main():
     config = get_config()
     args = parse_args(config)
 
-    logger = util.setup_logger(name=f"run_etl_{args.script}_{args.phrase}",
-                               log_file=f"logs/run_etl/run_etl_{args.script}_{args.phrase}_{dt.datetime.now().isoformat()}.log")
+    logger = util.setup_logger(name=f"etl_{args.script}_{args.phrase}",
+                               log_file=f"logs/etl/{args.phrase}/etl_{args.script}_{args.phrase}_{dt.datetime.now().isoformat()}.log")
 
     print("---- Reddits ETL app ----\n")
     logger.info("---- Reddits ETL app ----")
