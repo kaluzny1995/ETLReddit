@@ -1,3 +1,4 @@
+import os
 import logging
 import datetime as dt
 from dateutil.relativedelta import relativedelta
@@ -6,6 +7,9 @@ from typing import List, Any, Generator, Tuple
 
 def setup_logger(name, log_file, level=logging.INFO):
     """ Setup logger """
+    log_file_folder = os.path.dirname(log_file)
+    if not os.path.exists(log_file_folder):
+        os.makedirs(log_file_folder)
 
     handler = logging.FileHandler(log_file)
     handler.setFormatter(logging.Formatter('%(asctime)s %(levelname)s %(message)s'))

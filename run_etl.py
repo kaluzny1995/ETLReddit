@@ -4,7 +4,7 @@ import logging
 
 import util
 from model import AppConfig, EETLScript, ETLParams
-from service import SentimentService, PopularityService, VectorService
+from service import SentimentService, PopularityService, VectorService, EmotionService
 
 
 def get_config() -> AppConfig:
@@ -70,6 +70,7 @@ def run_sentiment(args: argparse.Namespace, logger: logging.Logger) -> None:
     # Show parameters
     show_params(etl_params, logger)
 
+    # run sentiment ETL process
     sentiment_service = SentimentService(logger=logger)
     sentiment_service.run_etl(**etl_params.model_dump())
 
@@ -81,22 +82,31 @@ def run_popularity(args: argparse.Namespace, logger: logging.Logger) -> None:
     # Show parameters
     show_params(etl_params, logger)
 
+    # run popularity ETL process
     popularity_service = PopularityService(logger=logger)
     popularity_service.run_etl(**etl_params.model_dump())
 
 
 def run_emotion(args: argparse.Namespace, logger: logging.Logger) -> None:
-    """ Executes texts vectorization script """
-    raise NotImplementedError("The texts emotion analysis script has not been implemented yet.")
-
-
-def run_vectorization(args: argparse.Namespace, logger: logging.Logger) -> None:
-    """ Executes texts vectorization script """
+    """ Executes emotion script """
     etl_params = ETLParams.from_argparse_namespace(args)
 
     # Show parameters
     show_params(etl_params, logger)
 
+    # run emotion ETL process
+    emotion_service = EmotionService(logger=logger)
+    emotion_service.run_etl(**etl_params.model_dump())
+
+
+def run_vectorization(args: argparse.Namespace, logger: logging.Logger) -> None:
+    """ Executes vectorization script """
+    etl_params = ETLParams.from_argparse_namespace(args)
+
+    # Show parameters
+    show_params(etl_params, logger)
+
+    # run vectorization ETL process
     vector_service = VectorService(logger=logger)
     vector_service.run_etl(**etl_params.model_dump())
 
@@ -105,8 +115,8 @@ def main():
     config = get_config()
     args = parse_args(config)
 
-    logger = util.setup_logger(name=f"run_etl_{args.script}_{args.phrase}",
-                               log_file=f"logs/run_etl/run_etl_{args.script}_{args.phrase}_{dt.datetime.now().isoformat()}.log")
+    logger = util.setup_logger(name=f"etl_{args.script}_{args.phrase}",
+                               log_file=f"logs/etl/{args.phrase}/etl_{args.script}_{args.phrase}_{dt.datetime.now().isoformat()}.log")
 
     print("---- Reddits ETL app ----\n")
     logger.info("---- Reddits ETL app ----")

@@ -37,8 +37,8 @@ def main():
     config = get_config()
     args = parse_args(config)
 
-    logger = util.setup_logger(name="run_ingestion",
-                               log_file=f"logs/run_ingestion/run_ingestion_{args.phrase}_{dt.datetime.now().isoformat()}.log")
+    logger = util.setup_logger(name=f"ingestion_{args.phrase}",
+                               log_file=f"logs/ingestion/{args.phrase}/ingestion_{args.phrase}_{dt.datetime.now().isoformat()}.log")
 
     print("---- Reddits ingestion app ----\n")
     logger.info("---- Reddits ingestion app ----")

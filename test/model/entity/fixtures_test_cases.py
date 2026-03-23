@@ -1,6 +1,8 @@
 import datetime as dt
 
-from model import EEntryType, ESentimentClass, SentimentResult, Author, Reddit, Comment, Sentiment, Popularity, Vector
+from model import EEntryType, ESentimentClass, SentimentResult, EmotionResult, \
+    Author, Reddit, Comment, Sentiment, Popularity, Vector, Emotion
+from model.enum.e_emotion_class import EEmotionClass
 
 # Author
 test_author_from_raw_json_cases = [
@@ -748,6 +750,197 @@ test_vector_from_comment_cases = [
             comment_id="g9v8jbi",
             phrase="corgi",
             embeddings="[0.0432, 0.4212, -0.3352, -0.6532, 0.2033, 0.5321]",
+            file_date="2026-01-01"
+        )
+    )
+]
+
+# Emotion
+test_emotion_from_reddit_cases = [
+    (
+        Reddit(
+            reddit_id="jgz2uz",
+            name="t3_jgz2uz",
+            permalink="/r/aww/comments/jgz2uz/we_live_in_a_basement_suite_so_i_built_a_loft_for/",
+            phrase="corgi",
+            author="CocaKoller",
+            title="We live in a basement suite. So I built a loft for our corgi Wolfgang.",
+            body=None,
+            datetime_created=dt.datetime(2020, 10, 24, 0, 14, 42),
+            datetime_created_utc=dt.datetime(2020, 10, 24, 0, 14, 42),
+            likes=None,
+            ups=115320,
+            downs=0,
+            score=115320,
+            upvote_ratio=0.94,
+            gilded_number=4,
+            number_of_comments=820,
+            start_file_date="2026-01-01",
+            end_file_date="2027-01-01"
+        ),
+        EmotionResult(
+            num_happy=2,
+            num_angry=1,
+            num_surprise=5,
+            num_sad=0,
+            num_fear=0,
+            total_words=42,
+            emotion_classes=[EEmotionClass.HAPPY, EEmotionClass.SURPRISE]
+        ),
+        Emotion(
+            reddit_id="jgz2uz",
+            comment_id="N/A",
+            phrase="corgi",
+            author="CocaKoller",
+            num_happy=2,
+            num_angry=1,
+            num_surprise=5,
+            num_sad=0,
+            num_fear=0,
+            total_words=42,
+            emotion_classes="[\"HAPPY\", \"SURPRISE\"]",
+            file_date="2026-01-01"
+        )
+    ), (
+        Reddit(
+            reddit_id="135yzs1",
+            name="t3_135yzs1",
+            permalink="/r/BrandNewSentence/comments/135yzs1/corgisized_meteor_as_heavy_as_4_baby_elephants/",
+            phrase="corgi",
+            author="HELL-OAT",
+            title="Corgi-sized meteor as heavy as 4 baby elephants",
+            body="That's amazing!",
+            datetime_created=dt.datetime(2023, 5, 2, 20, 18, 4),
+            datetime_created_utc=dt.datetime(2023, 5, 2, 20, 18, 4),
+            likes=37,
+            ups=37097,
+            downs=0,
+            score=37097,
+            upvote_ratio=0.96,
+            gilded_number=0,
+            number_of_comments=643,
+            start_file_date="2022-01-01",
+            end_file_date="2023-01-01"
+        ),
+        EmotionResult(
+            num_happy=0,
+            num_angry=6,
+            num_surprise=2,
+            num_sad=3,
+            num_fear=1,
+            total_words=65,
+            emotion_classes=[]
+        ),
+        Emotion(
+            reddit_id="135yzs1",
+            comment_id="N/A",
+            phrase="corgi",
+            author="HELL-OAT",
+            num_happy=0,
+            num_angry=6,
+            num_surprise=2,
+            num_sad=3,
+            num_fear=1,
+            total_words=65,
+            emotion_classes="[]",
+            file_date="2022-01-01"
+        )
+    )
+]
+
+test_emotion_from_comment_cases = [
+    (
+        Comment(
+            comment_id="g9tw6ow",
+            reddit_id="g9tw6ow",
+            parent_comment_id=None,
+            name="t1_g9tw6ow",
+            permalink="/r/aww/comments/jgz2uz/we_live_in_a_basement_suite_so_i_built_a_loft_for/g9tw6ow/",
+            phrase="corgi",
+            author=None,
+            body="I like Wolfgang.",
+            datetime_created=dt.datetime(2020, 10, 24, 3, 6, 39),
+            datetime_created_utc=dt.datetime(2020, 10, 24, 3, 6, 39),
+            depth_level=0,
+            controversiality=False,
+            likes=0,
+            ups=1013,
+            downs=0,
+            score=1013,
+            upvote_ratio=1.,
+            gilded_number=0,
+            number_of_replies=7,
+            start_file_date="2022-01-01",
+            end_file_date="2023-01-01"
+        ),
+        EmotionResult(
+            num_happy=2,
+            num_angry=1,
+            num_surprise=5,
+            num_sad=0,
+            num_fear=0,
+            total_words=42,
+            emotion_classes=[EEmotionClass.HAPPY, EEmotionClass.SURPRISE]
+        ),
+        Emotion(
+            reddit_id="N/A",
+            comment_id="g9tw6ow",
+            phrase="corgi",
+            author=None,
+            num_happy=2,
+            num_angry=1,
+            num_surprise=5,
+            num_sad=0,
+            num_fear=0,
+            total_words=42,
+            emotion_classes="[\"HAPPY\", \"SURPRISE\"]",
+            file_date="2022-01-01"
+        )
+    ), (
+        Comment(
+            comment_id="g9v8jbi",
+            reddit_id="g9tw6ow",
+            parent_comment_id="g9u5mh6",
+            name="t1_g9v8jbi",
+            permalink="/r/aww/comments/jgz2uz/we_live_in_a_basement_suite_so_i_built_a_loft_for/g9v8jbi/",
+            phrase="corgi",
+            author="rognabologna",
+            body="Please tell me he's named Wolfgang Puck, after the chef, but you call him Wolfgang Pup",
+            datetime_created=dt.datetime(2020, 10, 24, 8, 50, 1),
+            datetime_created_utc=dt.datetime(2020, 10, 24, 8, 50, 1),
+            depth_level=2,
+            controversiality=True,
+            likes=18,
+            ups=72,
+            downs=0,
+            score=72,
+            upvote_ratio=1.,
+            gilded_number=3,
+            number_of_replies=0,
+            start_file_date="2026-01-01",
+            end_file_date="2027-01-01"
+        ),
+        EmotionResult(
+            num_happy=0,
+            num_angry=6,
+            num_surprise=2,
+            num_sad=3,
+            num_fear=1,
+            total_words=65,
+            emotion_classes=[]
+        ),
+        Emotion(
+            reddit_id="N/A",
+            comment_id="g9v8jbi",
+            phrase="corgi",
+            author="rognabologna",
+            num_happy=0,
+            num_angry=6,
+            num_surprise=2,
+            num_sad=3,
+            num_fear=1,
+            total_words=65,
+            emotion_classes="[]",
             file_date="2026-01-01"
         )
     )

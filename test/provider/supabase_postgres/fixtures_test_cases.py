@@ -1,6 +1,6 @@
 import datetime as dt
 
-from model import EEntryType, ESentimentClass, Author, Reddit, Comment, Sentiment, Popularity, Vector
+from model import EEntryType, ESentimentClass, Author, Reddit, Comment, Sentiment, Popularity, Vector, Emotion
 
 authors = [
     Author(name="MooseWhisperer09",
@@ -10,7 +10,7 @@ authors = [
            datetime_created=dt.datetime(2025, 9, 2, 20, 8, 51),
            datetime_created_utc=dt.datetime(2025, 9, 2, 20, 8, 51),
            permalink="/r/nextfuckinglevel/comments/1n6muyq/an_enormous_moose_approaches_the_camera_and_get/nc1yqtj/"
-    ),
+           ),
     Author(name="ch0c0l2te",
            background_color=None, css_class="forsure", richtext="[{\"e\": \"text\", \"t\": \"BWOAHHHHHHH \"}]",
            template_id=None, text="BWOAHHHHHHH ", text_color="dark", type="richtext", fullname="t2_h51w2",
@@ -18,7 +18,7 @@ authors = [
            datetime_created=dt.datetime(2026, 1, 17, 14, 52, 1),
            datetime_created_utc=dt.datetime(2026, 1, 17, 14, 52, 1),
            permalink="/r/formuladank/comments/1qerdow/its_about_time/o03rw1q/"
-    ),
+           ),
     Author(name="OmdiAnomenkinshin",
            background_color=None, css_class=None, richtext=None,
            template_id=None, text=None, text_color=None, type="text", fullname="t2_7k1sc",
@@ -26,15 +26,16 @@ authors = [
            datetime_created=dt.datetime(2021, 3, 7, 20, 45, 29),
            datetime_created_utc=dt.datetime(2021, 3, 7, 20, 45, 29),
            permalink="/r/imaginarymaps/comments/lzy1e3/turning_countries_into_holy_roman_empires_bhutan/"
-    ),
+           ),
     Author(name="aarretuli",
            background_color="cyan", css_class="flair-uusimaa", richtext="[{\"e\": \"text\", \"t\": \"\u2728\u2728\"}]",
-           template_id="8d550740-8fed-11e3-b899-22000ab83216", text="\u2728\u2728", text_color="dark", type="richtext", fullname="t2_1738uera",
+           template_id="8d550740-8fed-11e3-b899-22000ab83216", text="\u2728\u2728", text_color="dark", type="richtext",
+           fullname="t2_1738uera",
            is_blocked=False, is_patreon_flair=False, is_premium=False,
            datetime_created=dt.datetime(2026, 1, 24, 10, 24, 17),
            datetime_created_utc=dt.datetime(2026, 1, 24, 10, 24, 17),
            permalink="/r/Suomi/comments/1qkyue6/lasten_turvaruoan_tarve_on_kasvanut_vanhemmat/o1ekf3z/"
-    )
+           )
 ]
 
 reddits = [
@@ -47,7 +48,7 @@ reddits = [
            datetime_created_utc=dt.datetime(2020, 10, 24, 0, 14, 42),
            likes=None, ups=115320, downs=0, score=115320, upvote_ratio=0.94, gilded_number=4, number_of_comments=820,
            start_file_date="2026-01-01", end_file_date="2027-01-01"
-    ),
+           ),
     Reddit(reddit_id="135yzs1", name="t3_135yzs1",
            permalink="/r/BrandNewSentence/comments/135yzs1/corgisized_meteor_as_heavy_as_4_baby_elephants/",
            phrase="corgi", author="HELL-OAT",
@@ -57,7 +58,7 @@ reddits = [
            datetime_created_utc=dt.datetime(2023, 5, 2, 20, 18, 4),
            likes=37, ups=37097, downs=0, score=37097, upvote_ratio=0.96, gilded_number=0, number_of_comments=643,
            start_file_date="2022-01-01", end_file_date="2023-01-01"
-    ),
+           ),
     Reddit(reddit_id="ip48w1m", name="t1_ip48w1m",
            permalink="/r/CasualUK/comments/xijejh/queen_elizabeth_ii_corgis_waiting_outside_the/",
            phrase="corgi", author="Feisty-Donkey",
@@ -67,7 +68,7 @@ reddits = [
            datetime_created_utc=dt.datetime(2022, 9, 19, 20, 18, 4),
            likes=0, ups=124, downs=0, score=124, upvote_ratio=1., gilded_number=2, number_of_comments=16,
            start_file_date="2022-01-01", end_file_date="2023-01-01"
-    ),
+           ),
     Reddit(reddit_id="1e2b04h", name="t3_1e2b04h",
            permalink="/r/corgi/comments/1e2b04h/whos_corgi_has_a_human_name/",
            phrase="corgi", author="infantkicker_v2",
@@ -77,7 +78,7 @@ reddits = [
            datetime_created_utc=dt.datetime(2024, 7, 13, 13, 55, 55),
            likes=0, ups=2588, downs=0, score=2588, upvote_ratio=0.95, gilded_number=0, number_of_comments=787,
            start_file_date="2024-01-01", end_file_date="2025-01-01"
-    )
+           )
 ]
 
 comments = [
@@ -90,7 +91,7 @@ comments = [
             depth_level=0, controversiality=False,
             likes=0, ups=1013, downs=0, score=1013, upvote_ratio=1., gilded_number=0, number_of_replies=7,
             start_file_date="2022-01-01", end_file_date="2023-01-01"
-    ),
+            ),
     Comment(comment_id="g9v8jbi", reddit_id="g9tw6ow", parent_comment_id="g9u5mh6", name="t1_g9v8jbi",
             permalink="/r/aww/comments/jgz2uz/we_live_in_a_basement_suite_so_i_built_a_loft_for/g9v8jbi/",
             phrase="corgi", author="rognabologna",
@@ -100,7 +101,7 @@ comments = [
             depth_level=2, controversiality=True,
             likes=18, ups=72, downs=0, score=72, upvote_ratio=1., gilded_number=3, number_of_replies=0,
             start_file_date="2026-01-01", end_file_date="2027-01-01"
-    ),
+            ),
     Comment(comment_id="lczs45r", reddit_id="1e2b04h", parent_comment_id=None, name="t1_lczs45r",
             permalink="/r/corgi/comments/1e2b04h/whos_corgi_has_a_human_name/lczs45r/",
             phrase="corgi", author="SparkleWildfire",
@@ -110,7 +111,7 @@ comments = [
             depth_level=0, controversiality=False,
             likes=0, ups=373, downs=0, score=373, upvote_ratio=1., gilded_number=0, number_of_replies=41,
             start_file_date="2024-01-01", end_file_date="2025-01-01"
-    ),
+            ),
     Comment(comment_id="ip48e6j", reddit_id="1e2b04h", parent_comment_id="ip44v7j", name="t1_ip48e6j",
             permalink="/r/CasualUK/comments/xijejh/queen_elizabeth_ii_corgis_waiting_outside_the/ip48e6j/",
             phrase="corgi", author=None,
@@ -120,7 +121,7 @@ comments = [
             depth_level=3, controversiality=False,
             likes=0, ups=144, downs=0, score=144, upvote_ratio=1., gilded_number=0, number_of_replies=16,
             start_file_date="2022-01-01", end_file_date="2024-01-01"
-    )
+            )
 ]
 
 sentiments = [
@@ -128,41 +129,44 @@ sentiments = [
               clean_text="We live in a basement suite. So I built a loft for our cgi Wolfgang.",
               s_neg=0., s_neu=1., s_pos=0., s_com=0., s_pol=0.13636363636363635, s_sub=0.5,
               s_class=ESentimentClass.NEUTRAL, file_date="2026-01-01"
-    ),
+              ),
     Sentiment(reddit_id="135yzs1", comment_id="N/A", phrase="corgi", author="HELL-OAT", entry_type=EEntryType.REDDIT,
               clean_text="Corgi-sized meteor as heavy as 4 baby elephants",
               s_neg=0., s_neu=1., s_pos=0., s_com=0., s_pol=-0.2, s_sub=0.5,
               s_class=ESentimentClass.NEUTRAL, file_date="2022-01-01"
-    ),
-    Sentiment(reddit_id="N/A", comment_id="fddgp16", phrase="aussie", author="num1AusDoto", entry_type=EEntryType.COMMENT,
+              ),
+    Sentiment(reddit_id="N/A", comment_id="fddgp16", phrase="aussie", author="num1AusDoto",
+              entry_type=EEntryType.COMMENT,
               clean_text="Man people really be listening to that man but not a scientist fuck me dead can the fires just take me",
               s_neg=0.215, s_neu=0.649, s_pos=0.136, s_com=-0.4897, s_pol=-0.1333, s_sub=0.4,
               s_class=ESentimentClass.NEGATIVE, file_date="2020-01-01"
-    ),
-    Sentiment(reddit_id="N/A", comment_id="fddgv1o", phrase="aussie", author="LeonardDeVir", entry_type=EEntryType.COMMENT,
+              ),
+    Sentiment(reddit_id="N/A", comment_id="fddgv1o", phrase="aussie", author="LeonardDeVir",
+              entry_type=EEntryType.COMMENT,
               clean_text="She will find better people for her life after her deed.",
               s_neg=0., s_neu=0.775, s_pos=0.225, s_com=-0.4404, s_pol=0.5, s_sub=0.5,
               s_class=ESentimentClass.POSITIVE, file_date="2020-01-01"
-    )
+              )
 ]
 
 popularities = [
     Popularity(reddit_id="jgz2uz", comment_id="N/A", phrase="corgi", author="CocaKoller", entry_type=EEntryType.REDDIT,
                entry_level=-1, score=115320, upvote_ratio=0.94, gilded_count=4, comments_count=820,
                is_controversial=False, file_date="2026-01-01"
-    ),
+               ),
     Popularity(reddit_id="135yzs1", comment_id="N/A", phrase="corgi", author="HELL-OAT", entry_type=EEntryType.REDDIT,
                entry_level=-1, score=37097, upvote_ratio=0.96, gilded_count=0, comments_count=643,
                is_controversial=False, file_date="2022-01-01"
-    ),
+               ),
     Popularity(reddit_id="N/A", comment_id="g9tw6ow", phrase="corgi", author=None, entry_type=EEntryType.COMMENT,
                entry_level=0, score=1013, upvote_ratio=1., gilded_count=0, comments_count=7,
                is_controversial=False, file_date="2022-01-01"
-    ),
-    Popularity(reddit_id="N/A", comment_id="g9v8jbi", phrase="corgi", author="rognabologna", entry_type=EEntryType.COMMENT,
+               ),
+    Popularity(reddit_id="N/A", comment_id="g9v8jbi", phrase="corgi", author="rognabologna",
+               entry_type=EEntryType.COMMENT,
                entry_level=2, score=72, upvote_ratio=1., gilded_count=3, comments_count=0,
                is_controversial=True, file_date="2026-01-01"
-    )
+               )
 ]
 
 vectors = [
@@ -176,3 +180,17 @@ vectors = [
            embeddings="[0.0432, 0.4212, -0.3352, -0.6532, 0.2033, 0.5321]", file_date="2026-01-01")
 ]
 
+emotions = [
+    Emotion(reddit_id="jgz2uz", comment_id="N/A", phrase="corgi", author="CocaKoller",
+            num_happy=2, num_angry=1, num_surprise=5, num_sad=0, num_fear=0, total_words=42,
+            emotion_classes="[SURPRISE]", file_date="2026-01-01"),
+    Emotion(reddit_id="135yzs1", comment_id="N/A", phrase="corgi", author="HELL-OAT",
+            num_happy=0, num_angry=6, num_surprise=2, num_sad=3, num_fear=1, total_words=65,
+            emotion_classes="[ANGRY]", file_date="2022-01-01"),
+    Emotion(reddit_id="N/A", comment_id="g9tw6ow", phrase="corgi", author=None,
+            num_happy=2, num_angry=1, num_surprise=5, num_sad=0, num_fear=0, total_words=42,
+            emotion_classes="[]", file_date="2022-01-01"),
+    Emotion(reddit_id="N/A", comment_id="g9v8jbi", phrase="corgi", author="rognabologna",
+            num_happy=0, num_angry=6, num_surprise=2, num_sad=9, num_fear=1, total_words=65,
+            emotion_classes="[ANGRY, SAD]", file_date="2026-01-01")
+]
