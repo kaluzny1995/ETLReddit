@@ -1,7 +1,7 @@
 import datetime as dt
 
-from model import EEntryType, ESentimentClass, SentimentResult, EmotionResult, \
-    Author, Reddit, Comment, Sentiment, Popularity, Vector, Emotion
+from model import EEntryType, ESentimentClass, SentimentResult, EmotionResult, ReductionResult, \
+    Author, Reddit, Comment, Sentiment, Popularity, Vector, Emotion, Reduction
 from model.enum.e_emotion_class import EEmotionClass
 
 # Author
@@ -941,6 +941,155 @@ test_emotion_from_comment_cases = [
             num_fear=1,
             total_words=65,
             emotion_classes="[]",
+            file_date="2026-01-01"
+        )
+    )
+]
+
+# Reduction
+test_reduction_from_vector_cases = [
+    (
+        Vector(
+            reddit_id="jgz2uz",
+            comment_id="N/A",
+            phrase="corgi",
+            embeddings="[0.3452, 0.4212, -0.3352, 0.6532, 0.4522, 0.5321]",
+            file_date="2026-01-01"
+        ),
+        ReductionResult(
+            pca2_0=0.34223,
+            pca2_1=0.45223,
+            pca3_0=-0.34212,
+            pca3_1=-0.45343,
+            pca3_2=0.93241,
+            sne2_0=0.34211,
+            sne2_1=-0.35211,
+            sne3_0=0.35452,
+            sne3_1=-0.93241,
+            sne3_2=-0.72112
+        ),
+        Reduction(
+            reddit_id="jgz2uz",
+            comment_id="N/A",
+            phrase="corgi",
+            pca2_0=0.34223,
+            pca2_1=0.45223,
+            pca3_0=-0.34212,
+            pca3_1=-0.45343,
+            pca3_2=0.93241,
+            sne2_0=0.34211,
+            sne2_1=-0.35211,
+            sne3_0=0.35452,
+            sne3_1=-0.93241,
+            sne3_2=-0.72112,
+            file_date="2026-01-01"
+        )
+    ), (
+        Vector(
+            reddit_id="135yzs1",
+            comment_id="N/A",
+            phrase="corgi",
+            embeddings="[0.0432, 0.4212, -0.3352, -0.6532, 0.2033, 0.5321]",
+            file_date="2022-01-01"
+        ),
+        ReductionResult(
+            pca2_0=0.64536,
+            pca2_1=-0.43224,
+            pca3_0=-0.45332,
+            pca3_1=-0.7775,
+            pca3_2=0.43423,
+            sne2_0=-0.34234,
+            sne2_1=0.54353,
+            sne3_0=0.35452,
+            sne3_1=-0.01113,
+            sne3_2=-0.72112
+        ),
+        Reduction(
+            reddit_id="135yzs1",
+            comment_id="N/A",
+            phrase="corgi",
+            pca2_0=0.64536,
+            pca2_1=-0.43224,
+            pca3_0=-0.45332,
+            pca3_1=-0.7775,
+            pca3_2=0.43423,
+            sne2_0=-0.34234,
+            sne2_1=0.54353,
+            sne3_0=0.35452,
+            sne3_1=-0.01113,
+            sne3_2=-0.72112,
+            file_date="2022-01-01"
+        )
+    ), (
+        Vector(
+            reddit_id="N/A",
+            comment_id="g9tw6ow",
+            phrase="corgi",
+            embeddings="[0.3452, 0.4212, -0.3352, 0.6532, 0.4522, 0.5321]",
+            file_date="2022-01-01"
+        ),
+        ReductionResult(
+            pca2_0=0.35223,
+            pca2_1=0.98789,
+            pca3_0=-0.08787,
+            pca3_1=-0.03456,
+            pca3_2=0.06575,
+            sne2_0=0.06577,
+            sne2_1=-0.01166,
+            sne3_0=0.65643,
+            sne3_1=-0.06453,
+            sne3_2=-0.01234
+        ),
+        Reduction(
+            reddit_id="N/A",
+            comment_id="g9tw6ow",
+            phrase="corgi",
+            pca2_0=0.35223,
+            pca2_1=0.98789,
+            pca3_0=-0.08787,
+            pca3_1=-0.03456,
+            pca3_2=0.06575,
+            sne2_0=0.06577,
+            sne2_1=-0.01166,
+            sne3_0=0.65643,
+            sne3_1=-0.06453,
+            sne3_2=-0.01234,
+            file_date="2022-01-01"
+        )
+    ), (
+        Vector(
+            reddit_id="N/A",
+            comment_id="g9v8jbi",
+            phrase="corgi",
+            embeddings="[0.0432, 0.4212, -0.3352, -0.6532, 0.2033, 0.5321]",
+            file_date="2026-01-01"
+        ),
+        ReductionResult(
+            pca2_0=0.04345,
+            pca2_1=0.76742,
+            pca3_0=-0.02432,
+            pca3_1=-0.76454,
+            pca3_2=0.93241,
+            sne2_0=-0.56546,
+            sne2_1=-0.35211,
+            sne3_0=0.14322,
+            sne3_1=-0.00655,
+            sne3_2=-0.72112
+        ),
+        Reduction(
+            reddit_id="N/A",
+            comment_id="g9v8jbi",
+            phrase="corgi",
+            pca2_0=0.04345,
+            pca2_1=0.76742,
+            pca3_0=-0.02432,
+            pca3_1=-0.76454,
+            pca3_2=0.93241,
+            sne2_0=-0.56546,
+            sne2_1=-0.35211,
+            sne3_0=0.14322,
+            sne3_1=-0.00655,
+            sne3_2=-0.72112,
             file_date="2026-01-01"
         )
     )
