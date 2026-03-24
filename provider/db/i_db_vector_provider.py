@@ -18,7 +18,7 @@ class IDbVectorProvider(ABC):
         pass
 
     @abstractmethod
-    def get_vectors(self, phrase: str) -> List[Vector]:
+    def get_vectors(self, phrase: str | None = None) -> List[Vector]:
         """ Returns the vectors of given phrase """
         pass
 

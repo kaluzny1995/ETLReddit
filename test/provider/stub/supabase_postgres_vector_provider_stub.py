@@ -20,7 +20,7 @@ class SupabasePostgresVectorProviderStub(IDbVectorProvider):
         """ Returns the file dates of vector of given phrase """
         return list(map(lambda x: x.file_date, self.data))
 
-    def get_vectors(self, phrase: str) -> List[Vector]:
+    def get_vectors(self, phrase: str | None = None) -> List[Vector]:
         """ Returns the vectors of given phrase """
         return self.data
 
