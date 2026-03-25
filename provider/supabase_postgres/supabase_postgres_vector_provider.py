@@ -26,13 +26,15 @@ class SupabasePostgresDbVectorProvider(IDbVectorProvider):
         file_dates = self.supabase_postgres_provider.run_select_statement(statement)
         return list(file_dates)
 
-    def get_vectors(self, phrase: str | None = None) -> List[Vector]:
-        """ Returns the vectors of given phrase """
+    def get_vectors(self, phrase: str | None = None, file_dates: List[str] | None = None) -> List[Vector]:
+        """ Returns the vectors of given phrase for given list of file dates """
         self.create_if_not_exists()
 
         statement = select(Vector)
         if phrase is not None:
             statement = statement.where(Vector.phrase == phrase)
+        if file_dates is not None:
+            statement = statement.where(Vector.file_date.in_(file_dates))
         vectors = self.supabase_postgres_provider.run_select_statement(statement)
         return vectors
 

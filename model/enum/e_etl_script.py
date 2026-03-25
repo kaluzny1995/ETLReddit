@@ -6,3 +6,4 @@ class EETLScript(Enum):
     SENTIMENT = "sentiment"
     EMOTION = "emotion"
     VECTORIZATION = "vectorization"
+    REDUCTION = "reduction"

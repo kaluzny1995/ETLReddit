@@ -15,14 +15,14 @@ class Reduction(SQLModel, table=True):
     pca3_0: float = Field(sa_column=Column("pca3_0", Float, nullable=False))
     pca3_1: float = Field(sa_column=Column("pca3_1", Float, nullable=False))
     pca3_2: float = Field(sa_column=Column("pca3_2", Float, nullable=False))
-    sne2_0: float = Field(sa_column=Column("sne2_0", Float, nullable=False))
-    sne2_1: float = Field(sa_column=Column("sne2_1", Float, nullable=False))
-    sne3_0: float = Field(sa_column=Column("sne3_0", Float, nullable=False))
-    sne3_1: float = Field(sa_column=Column("sne3_1", Float, nullable=False))
-    sne3_2: float = Field(sa_column=Column("sne3_2", Float, nullable=False))
+    sne2_0: float = Field(sa_column=Column("iso2_0", Float, nullable=False))
+    sne2_1: float = Field(sa_column=Column("iso2_1", Float, nullable=False))
+    sne3_0: float = Field(sa_column=Column("iso3_0", Float, nullable=False))
+    sne3_1: float = Field(sa_column=Column("iso3_1", Float, nullable=False))
+    sne3_2: float = Field(sa_column=Column("iso3_2", Float, nullable=False))
     file_date: str = Field(sa_column=Column("file_date", String, nullable=False))
 
-    __tablename__ = "reduction"
+    __tablename__ = "reductions"
     __table_args__ = (
         {'schema': "reddit"}
     )
@@ -38,11 +38,11 @@ class Reduction(SQLModel, table=True):
                 "pca3_0": 0.64211,
                 "pca3_1": -0.87232,
                 "pca3_2": 0.32411,
-                "sne2_0": 0.43398,
-                "sne2_1": -0.21388,
-                "sne3_0": 0.32411,
-                "sne3_1": -0.47382,
-                "sne3_2": -0.03923,
+                "iso2_0": 0.43398,
+                "iso2_1": -0.21388,
+                "iso3_0": 0.32411,
+                "iso3_1": -0.47382,
+                "iso3_2": -0.03923,
                 "file_date": "2020-01-01"
             }
         }
@@ -77,10 +77,15 @@ class Reduction(SQLModel, table=True):
             pca3_0=reduction_result.pca3_0,
             pca3_1=reduction_result.pca3_1,
             pca3_2=reduction_result.pca3_2,
-            sne2_0=reduction_result.sne2_0,
-            sne2_1=reduction_result.sne2_1,
-            sne3_0=reduction_result.sne3_0,
-            sne3_1=reduction_result.sne3_1,
-            sne3_2=reduction_result.sne3_2,
+            sne2_0=reduction_result.iso2_0,
+            sne2_1=reduction_result.iso2_1,
+            sne3_0=reduction_result.iso3_0,
+            sne3_1=reduction_result.iso3_1,
+            sne3_2=reduction_result.iso3_2,
             file_date=vector.file_date
         )
+
+    @staticmethod
+    def get_embeddings(vectors: List[Vector]) -> List[List[float]]:
+        """ Returns vector embeddings """
+        return list(map(lambda v: json.loads(v.embeddings), vectors))

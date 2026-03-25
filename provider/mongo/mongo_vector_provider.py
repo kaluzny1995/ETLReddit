@@ -25,13 +25,17 @@ class MongoDbVectorProvider(IDbVectorProvider):
         file_dates = self.mongo_provider.get_db_engine().get_database("reddit").get_collection("vectors").find({'phrase': {"$eq": phrase}}).distinct("file_date")
         return file_dates
 
-    def get_vectors(self, phrase: str | None = None) -> List[Vector]:
-        """ Returns the vectors of given phrase """
+    def get_vectors(self, phrase: str | None = None, file_dates: List[str] | None = None) -> List[Vector]:
+        """ Returns the vectors of given phrase for given list of file dates """
         self.create_if_not_exists()
 
         vector_definitions = self.mongo_provider.get_db_engine().get_database("reddit").get_collection("vectors")
+        query = dict({})
         if phrase is not None:
-            vector_definitions = vector_definitions.find({'phrase': {"$eq": phrase}})
+            query['phrase'] = {"$eq": phrase}
+        if file_dates is not None:
+            query['file_date'] = {"$in": file_dates}
+        vector_definitions = vector_definitions.find(query)
         return list(map(lambda vd: Vector(**vd), vector_definitions))
 
     def insert_vectors(self, vectors: List[Vector], batch_size: int = 100) -> None:

@@ -4,7 +4,7 @@ import logging
 
 import util
 from model import AppConfig, EETLScript, ETLParams
-from service import SentimentService, PopularityService, VectorService, EmotionService
+from service import SentimentService, PopularityService, VectorService, EmotionService, ReductionService
 
 
 def get_config() -> AppConfig:
@@ -111,6 +111,18 @@ def run_vectorization(args: argparse.Namespace, logger: logging.Logger) -> None:
     vector_service.run_etl(**etl_params.model_dump())
 
 
+def run_reduction(args: argparse.Namespace, logger: logging.Logger) -> None:
+    """ Executes reduction script """
+    etl_params = ETLParams.from_argparse_namespace(args)
+
+    # Show parameters
+    show_params(etl_params, logger)
+
+    # run vectorization ETL process
+    reduction_service = ReductionService(logger=logger)
+    reduction_service.run_etl(**etl_params.model_dump())
+
+
 def main():
     config = get_config()
     args = parse_args(config)
@@ -126,7 +138,8 @@ def main():
         'popularity': run_popularity,
         'sentiment': run_sentiment,
         'emotion': run_emotion,
-        'vectorization': run_vectorization
+        'vectorization': run_vectorization,
+        'reduction': run_reduction
     })
     run_etl_script[args.script](args, logger)
 

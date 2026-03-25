@@ -61,6 +61,7 @@ class Vector(SQLModel, table=True):
 
     @staticmethod
     def get_entry_texts(entries: List[Reddit | Comment]) -> List[str]:
+        """ Returns entry texts """
         texts = list([])
         for entry in entries:
             if isinstance(entry, Reddit):

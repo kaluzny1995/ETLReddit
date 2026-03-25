@@ -18,8 +18,8 @@ class IDbVectorProvider(ABC):
         pass
 
     @abstractmethod
-    def get_vectors(self, phrase: str | None = None) -> List[Vector]:
-        """ Returns the vectors of given phrase """
+    def get_vectors(self, phrase: str | None = None, file_dates: List[str] | None = None) -> List[Vector]:
+        """ Returns the vectors of given phrase for given list of file dates """
         pass
 
     @abstractmethod

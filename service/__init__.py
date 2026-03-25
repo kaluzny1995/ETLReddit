@@ -16,3 +16,7 @@ from service.vector.vector_service import VectorService
 # Emotion service
 from service.emotion.i_emotion_service import IEmotionService
 from service.emotion.emotion_service import EmotionService
+
+# Reduction service
+from service.reduction.i_reduction_service import IReductionService
+from service.reduction.reduction_service import ReductionService

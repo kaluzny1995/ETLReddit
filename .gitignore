@@ -1,3 +1,4 @@
 .idea
 logs
+stored_pkls/*.pkl
 supabase_config.json
