@@ -132,15 +132,15 @@ options:
 The application will load all reddits and comments according to "corgi", perform the sentiment ETL process utilizing multiprocess approach and store processed data into _sentiment_ table. The solution will also insert blank records for file date gaps.
 
 #### Skipping missing dates
-    python run_etl.py "corgi" --skip_missing_dates
+    python run_etl.py "sentiment" "corgi" --skip_missing_dates
 The application will load "corgi" entries and then perform the sentiment ETL process without filling data with blank records for missing file dates.
 
 #### Filling in with blank records until date of launch
-    python run_etl.py "corgi" --until_today
+    python run_etl.py "sentiment" "corgi" --until_today
 The application will load "corgi" entries and filling in with blank records for missing file dates including the day of script launch (if no data for such date).
 
 #### No multiprocessing
-    python run_etl.py "corgi" --no_multiprocessing
+    python run_etl.py "sentiment" "corgi" --no_multiprocessing
 The application will load "corgi" entries and then perform the sentiment ETL process however not using multiprocess approach and store processed data into _sentiment_ table.
 
 ### Command examples (for other ETL processes)
@@ -155,6 +155,10 @@ The application will perform vectorization ETL process for "corgi" entries utili
 #### Emotion
     python run_etl.py "emotion" "corgi"
 The application will perform emotion ETL process for "corgi" entries utilizing multiprocess approach and persist the data into _emotions_ table.
+
+#### Dimensionality reduction
+    python run_etl.py "reduction" "corgi"
+The application will perform dimensionality reduction ETL process for "corgi" entries utilizing multiprocess approach and persist the data into _reductions_ table.
 
 ### Testing
 To perform application unit testing simply run the command `pytest` in main project directory. The output should look like the following:
@@ -183,7 +187,7 @@ The illustration above shows the solution dataflow diagram. The dash-frame highl
 ## Data model
 ![Data model class diagram](/assets/images/reddits_data_model.png)
 The illustration above shows the data model diagram class. The **Author**, **Reddit** and **Comment** class instances are used during JSON files ingestion (insertion) as well as ETL processes (reading). 
-The **Sentiment**, **Popularity**, **Vector** and **Emotion** classes instances are used (currently) only during persistence of processed reddits and comments (insertion).
+The **Sentiment**, **Popularity**, **Vector**, **Emotion** and **Reduction** classes instances are used (currently) only during persistence of processed reddits and comments (insertion).
 
 ## Detailed class diagrams
 ### Ingestion

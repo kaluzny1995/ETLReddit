@@ -104,7 +104,7 @@ class ReductionService(IReductionService):
         embeddings = Reduction.get_embeddings(vectors)
         reductions = list([])
 
-        if len(reductions) > 0:
+        if len(vectors) > 0:
             pca2_out = self.pca2.transform(np.array(embeddings)).tolist()
             pca3_out = self.pca3.transform(np.array(embeddings)).tolist()
             iso2_out = self.iso2.transform(np.array(embeddings)).tolist()
